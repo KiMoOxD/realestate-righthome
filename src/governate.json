@@ -1,0 +1,110 @@
+[
+  {
+    "value": 1,
+    "label": "Cairo"
+  },
+  {
+    "value": 2,
+    "label": "Alexandria"
+  },
+  {
+    "value": 3,
+    "label": "Giza"
+  },
+  {
+    "value": 4,
+    "label": "Qalyubia"
+  },
+  {
+    "value": 5,
+    "label": "Port Said"
+  },
+  {
+    "value": 6,
+    "label": "Suez"
+  },
+  {
+    "value": 7,
+    "label": "Luxor"
+  },
+  {
+    "value": 8,
+    "label": "Aswan"
+  },
+  {
+    "value": 9,
+    "label": "Asyut"
+  },
+  {
+    "value": 10,
+    "label": "Beheira"
+  },
+  {
+    "value": 11,
+    "label": "Beni Suef"
+  },
+  {
+    "value": 12,
+    "label": "Dakahlia"
+  },
+  {
+    "value": 13,
+    "label": "Damietta"
+  },
+  {
+    "value": 14,
+    "label": "Faiyum"
+  },
+  {
+    "value": 15,
+    "label": "Gharbia"
+  },
+  {
+    "value": 16,
+    "label": "Ismailia"
+  },
+  {
+    "value": 17,
+    "label": "Kafr El Sheikh"
+  },
+  {
+    "value": 18,
+    "label": "Matrouh"
+  },
+  {
+    "value": 19,
+    "label": "Minya"
+  },
+  {
+    "value": 20,
+    "label": "Monufia"
+  },
+  {
+    "value": 21,
+    "label": "New Valley"
+  },
+  {
+    "value": 22,
+    "label": "North Sinai"
+  },
+  {
+    "value": 23,
+    "label": "Red Sea"
+  },
+  {
+    "value": 24,
+    "label": "Sharqia"
+  },
+  {
+    "value": 25,
+    "label": "Sohag"
+  },
+  {
+    "value": 26,
+    "label": "South Sinai"
+  },
+  {
+    "value": 27,
+    "label": "Qena"
+  }
+]

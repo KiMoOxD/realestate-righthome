@@ -97,7 +97,7 @@ export default function Hero() {
             )}
           </button>
         </div>
-        <div className="md:flex flex-wrap grid grid-cols-1 items-center bg-white gap-1 text-sm pt-3 pb-2 px-6 md:rounded-full mt-7 text-stone-500">
+        <div className="md:flex flex-wrap grid grid-cols-2 items-center bg-white gap-1 text-sm pt-3 pb-2 px-6 rounded-lg md:rounded-full mt-7 text-stone-500">
           <div className="flex flex-col gap-0.5 basis-1/4">
             <p className="self-start pl-2">
               {lang === "en" ? "Type" : "النوع"}
@@ -116,7 +116,7 @@ export default function Hero() {
               styles={customStyles}
             />
           </div>
-          <div className="flex flex-grow flex-col gap-0.5">
+          <div className="flex flex-grow flex-col col-span-2 gap-0.5">
             <p className="self-start pl-2">
               {lang === "en" ? "Search" : "بـحـث"}{" "}
             </p>
@@ -127,38 +127,12 @@ export default function Hero() {
           </div>
           <button
             type="button"
-            className="flex justify-center gap-1  items-center mt-2 md:mt-0 bg-blue-500 hover:bg-blue-600 ml-4 px-6 py-3 h-fit text-white rounded-full mb-2"
+            className="flex justify-center gap-1 col-span-2  items-center mt-2 md:mt-0 bg-blue-500 hover:bg-blue-600 md:ml-4 px-6 py-3 h-fit text-white rounded-full mb-2"
           >
             {lang === "en" ? "Search" : "ابحث"} <CiSearch className="text-lg" />
           </button>
         </div>
       </div>
-      {/* <div className={`relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 md:flex lg:h-screen ${lang === 'en' ? 'sm:justify-start' : 'sm:justify-end'} lg:items-center lg:px-8`}>
-        <div className={`max-w-xl text-center ${lang === 'en' ? 'sm:text-left' : 'sm:text-right'}`}>
-          <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-          {lang === 'en' ? 'Let us find your' : 'خلي علينا البحث عن'}
-            <p className="block font-extrabold text-rose-500">
-            {lang === 'en' ? 'Forever Home.' : 'شالية الساحل'}
-            </p>
-          </h1>
-
-          <p className={`mt-4 ${lang === 'ar' && 'ml-auto'} max-w-lg text-white ${lang === 'en' ? 'sm:text-left' : 'sm:text-right'} sm:text-xl/relaxed`}>
-          {lang === 'en' ? 
-            `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt
-            illo tenetur fuga ducimus numquam ea! Home.` 
-            : `اي كلام بالعربي لحد ما نلاقي اي كلام بس كدا سهلة اهي زود اي كلام`}
-          </p>
-
-          <div className={`mt-8 flex ${lang === 'en' ? 'sm:justify-start' : 'sm:justify-end'} flex-wrap gap-4 text-center`}>
-            <a
-              href="#"
-              className="block w-full rounded bg-cyan-900 px-12 py-3 text-sm font-medium text-white shadow hover:bg-cyan-950 focus:outline-none sm:w-auto"
-            >
-              {lang === 'en' ? 'Get Started' : 'يلا بينا'}
-            </a>
-          </div>
-        </div>
-      </div> */}
     </section>
   );
 }

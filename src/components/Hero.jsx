@@ -97,7 +97,7 @@ export default function Hero() {
             )}
           </button>
         </div>
-        <div className="md:flex flex-wrap grid grid-cols-2 items-center bg-white gap-1 text-sm pt-3 pb-2 px-6 rounded-lg md:rounded-full mt-7 text-stone-500">
+        <div className={`md:flex flex-wrap grid grid-cols-2 items-center bg-white gap-1 text-sm pt-3 pb-2 px-6 rounded-lg md:rounded-full mt-7 text-stone-500`}>
           <div className="flex flex-col gap-0.5 basis-1/4">
             <p className="self-start pl-2">
               {lang === "en" ? "Type" : "النوع"}

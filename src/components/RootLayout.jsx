@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header/Header";
 import ScrollToTop from "./ScrollToTop";
+import Footer from "./Footer";
 
 export default function RootLayout() {
   return (
@@ -11,6 +12,8 @@ export default function RootLayout() {
         <ScrollToTop />
         <Outlet />
       </div>
+      <div className="wspikes"></div>
+      <Footer />
     </>
   );
 }

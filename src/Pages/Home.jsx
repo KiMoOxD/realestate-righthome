@@ -383,7 +383,7 @@ export default function Home() {
               OUR BENEFIT
             </p>
             <p className="text-3xl font-semibold text-stone-800 mb-4">
-              Why to Choose RightHome
+              Why to Choose Right Home
             </p>
             <p className="text-sm max-w-[500px] text-stone-500">
               Our Seasoned team excels in real estate with years of successful

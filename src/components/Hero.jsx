@@ -105,6 +105,7 @@ export default function Hero() {
             <Select
               options={lang === "en" ? TypeOptions : ArTypeOptions}
               styles={customStyles}
+              placeholder={lang === 'en' ? 'Select...' : 'اختر...'}
             />
           </div>
           <div className="flex flex-col gap-0.5 basis-1/4">
@@ -114,6 +115,7 @@ export default function Hero() {
             <Select
               options={lang === "en" ? LocationOptions : ArLocationOptions}
               styles={customStyles}
+              placeholder={lang === 'en' ? 'Select...' : 'اختر...'}
             />
           </div>
           <div className="flex flex-grow flex-col col-span-2 gap-0.5">

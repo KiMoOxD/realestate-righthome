@@ -7,12 +7,11 @@ import Footer from "./Footer";
 export default function RootLayout() {
   return (
     <>
+      <Header />
+      <ScrollToTop />
       <div className="relative mx-auto">
-        <Header />
-        <ScrollToTop />
         <Outlet />
       </div>
-      <div className="wspikes"></div>
       <Footer />
     </>
   );

@@ -4,7 +4,9 @@ import Home from "./Pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AllContextProvider from "./context/AllContext";
 import BrowsePage from "./Pages/BrowsePage";
-
+import AddApartmentForm from './Pages/TestPage'
+import PropertyPage from "./Pages/PropertyPage";
+import { loader } from "./Pages/PropertyPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -12,7 +14,10 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "browse", element: <BrowsePage /> },
+      { path: "browse", element: <BrowsePage />},
+      { path: 'browse/:collection', element: <PropertyPage />, loader: loader},
+      { path: 'browse/:collection/:id', element: <PropertyPage />, loader: loader},
+      { path: "test", element: <AddApartmentForm /> },
     ],
   },
 ]);

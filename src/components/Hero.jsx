@@ -5,6 +5,8 @@ import { CiSearch } from "react-icons/ci";
 import governoratesEn from "../governate.json";
 import governoratesAr from "../governateAr.json";
 import { useState } from "react";
+import { TextEffect } from '../components/TextEffect/TextEffectBase.tsx';
+
 
 const TypeOptions = [
   { value: "1", label: "Apartement" },
@@ -69,12 +71,12 @@ export default function Hero() {
         <p className="mt-3 sm:mt-0 text-5xl sm:text-6xl md:text-7xl font-semibold mb-5">
           {lang === "en" ? "Find Your Dream Home" : "دور علي بيت احلامك"}
         </p>
-        <p className="max-w-xl text-sm mx-auto text-stone-200">
-          {lang === "en"
-            ? `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tempore praesentium quos molestias aliquam, facere pariatur, suscipit quod, blanditiis dolorem et atque doloremque sit officiis sed corrupti ipsum. Ea, voluptate!
-`
-            : `استكشف عالماً من الفرص العقارية المذهلة وابحث عن المنزل المثالي الذي يلبي جميع احتياجاتك وتطلعاتك، حيث تجد الراحة والأناقة في كل زاوية من بيت أحلامك`}
-        </p>
+        {lang === 'en' && <TextEffect per="char" isRTL preset="fade" className="max-w-xl text-sm mx-auto text-stone-200">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tempore praesentium quos molestias aliquam, facere pariatur, suscipit quod, blanditiis dolorem et atque doloremque sit officiis sed corrupti ipsum. Ea, voluptate!
+`        </TextEffect>}
+        {lang === 'ar' && <p className="max-w-xl text-sm mx-auto text-stone-200">
+          استكشف عالماً من الفرص العقارية المذهلة وابحث عن المنزل المثالي الذي يلبي جميع احتياجاتك وتطلعاتك، حيث تجد الراحة والأناقة في كل زاوية من بيت أحلامك
+        </p>}
         <div className="relative flex justify-center gap-2 mt-12">
           <button
             type="button"

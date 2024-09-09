@@ -6,7 +6,7 @@ import { useAllContext } from "../../context/AllContext";
 export default function Header() {
   let {lang, toggleLang} = useAllContext()
   return (
-    <div className="bg-white sticky top-0 z-40">
+    <div className="bg-white sticky top-0 z-40 shadow-md">
       <div className="flex px-4 rounded-lg max-w-screen-2xl h-14 mx-auto justify-between items-center">
         <h1 className="font-semibold">Right Home</h1>
         <NavLinks />

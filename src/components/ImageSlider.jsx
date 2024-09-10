@@ -31,7 +31,7 @@ export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
   return (
     <>
       {modal && (
-        <div className={`absolute w-full h-[100dvh] flex items-center justify-center left-0 z-50`} style={{top: `${window.scrollY}px`}}>
+        <div className={`absolute w-full h-[calc(100vh-50px)] flex items-center justify-center left-0 z-50`} style={{top: `${window.scrollY}px`}}>
           <div
             onClick={CloseModal}
             className="absolute w-full h-full bg-black/80"
@@ -46,7 +46,7 @@ export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{type: 'tween'}}
-            className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[800px]"
+            className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[85%]"
           >
             {isLoading && <CgSpinner className="animate-spin text-5xl my-20 mx-auto"/>}
             <img

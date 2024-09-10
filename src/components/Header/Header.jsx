@@ -39,7 +39,7 @@ export default function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 80 }}
                   transition={{type: 'tween'}}
-                  className="absolute h-[100vh] w-full sm:w-3/4 md:w-[400px] top-0 right-0 bg-stone-50 flex flex-col gap-1 *:transition"
+                  className="absolute z-50 h-[100vh] w-full sm:w-3/4 md:w-[400px] top-0 right-0 bg-stone-50 flex flex-col gap-1 *:transition"
                 >
                   <p className="text-2xl text-center font-semibold py-3">
                     Right Home

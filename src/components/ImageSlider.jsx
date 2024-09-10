@@ -10,10 +10,10 @@ export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
   let [isLoading, setIsLoading] = useState(true);
   let [index, setIndex] = useState(imgIdx)
   let [ActiveImg, setActiveImg] = useState(imgs[index])
-  console.log(ActiveImg, index,imgIdx)
 
   useEffect(() => {
     setActiveImg(imgs[index])
+    setIsLoading(true)
   }, [index, imgs])
 
   function CloseModal() {
@@ -31,7 +31,7 @@ export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
   return (
     <>
       {modal && (
-        <div className={`absolute w-full h-[calc(100vh-50px)] flex items-center justify-center left-0 z-50`} style={{top: `${window.scrollY}px`}}>
+        <div className={`absolute w-full h-[calc(100vh-50px)] flex items-center justify-center left-0 z-20`} style={{top: `${window.scrollY}px`}}>
           <div
             onClick={CloseModal}
             className="absolute w-full h-full bg-black/80"
@@ -48,7 +48,7 @@ export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
             transition={{type: 'tween'}}
             className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[85%]"
           >
-            {isLoading && <CgSpinner className="animate-spin text-5xl my-20 mx-auto"/>}
+            {isLoading && <CgSpinner className="animate-spin text-5xl my-20 mx-auto text-blue-700"/>}
             <img
               src={ActiveImg}
               alt=""

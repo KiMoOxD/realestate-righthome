@@ -37,28 +37,29 @@ export default function ImageSlider({imgs, modal, setModal}) {
   return (
     <>
       {modal && (
-        <div className="absolute w-full h-[100vh] flex items-center justify-center top-0 left-0 z-50">
+        <div className={`absolute w-full h-[100dvh] flex items-center justify-center left-0 z-50`} style={{top: `${window.scrollY}px`}}>
           <div
             onClick={CloseModal}
             className="absolute w-full h-full bg-black/80"
           ></div>
-          <span onClick={bkdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] left-5 md:left-[10%] xl:left-[20%] text-4xl text-stone-100 rounded-full p-2 cursor-pointer">
+          <span onClick={bkdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] left-5 md:left-[10%] xl:left-[20%] text-4xl text-stone-100 bg-black/50 rounded-full pr-1.5 p-1 cursor-pointer">
             <IoIosArrowBack />
           </span>
-          <span onClick={fwdToggle} className="absolute top-1/2 translate-y-[-50%] right-5 md:right-[10%] xl:right-[20%] text-4xl text-stone-100 rounded-full p-2 cursor-pointer">
+          <span onClick={fwdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] right-5 md:right-[10%] xl:right-[20%] text-4xl text-stone-100 bg-black/50 rounded-full pl-1.5 p-1 cursor-pointer">
             <IoIosArrowForward />
           </span>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{type: 'tween'}}
-            className="relative w-[210px] sm:w-[350px] md:w-[450px] lg:w-[450px] p-1 bg-white"
+            className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[800px]"
           >
             {isLoading && <CgSpinner className="animate-spin text-5xl my-20 mx-auto"/>}
             <img
               src={ActiveImg}
               alt=""
               onLoad={() => setIsLoading(false)}
+              className="max-h-full max-w-full w-fit object-contain"
             />
           </motion.div>
           <span

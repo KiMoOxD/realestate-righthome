@@ -5,18 +5,12 @@ import { IoIosArrowForward } from "react-icons/io";
 import { motion } from "framer-motion";
 import { CgSpinner } from "react-icons/cg";
 
-// let imgs = [
-//   "https://images.unsplash.com/photo-1633183921767-2e0c740bada2?q=80&w=2004&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1690987601363-83022d125159?q=80&w=1936&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1501876725168-00c445821c9e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1527772482340-7895c3f2b3f7?q=80&w=2151&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-// ];
 
-export default function ImageSlider({imgs, modal, setModal}) {
+export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
   let [isLoading, setIsLoading] = useState(true);
-  let [index, setIndex] = useState(0)
+  let [index, setIndex] = useState(imgIdx)
   let [ActiveImg, setActiveImg] = useState(imgs[index])
-  console.log(ActiveImg, index)
+  console.log(ActiveImg, index,imgIdx)
 
   useEffect(() => {
     setActiveImg(imgs[index])

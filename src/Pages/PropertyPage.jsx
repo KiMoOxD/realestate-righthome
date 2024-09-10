@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from "react-router-dom";
 import { getDocumentData } from "../utils/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageSlider from "../components/ImageSlider";
 import ImagesList from "../components/PropertyPage/ImagesList";
 import MainImage from "../components/PropertyPage/MainImage";
@@ -16,9 +16,13 @@ export default function PropertyPage() {
     document.body.style.overflow = "hidden";
   }
 
+  useEffect(() => {
+    return () => document.body.style.overflow = "auto";
+  }, [])
+
   return (
     <div className="min-h-[100vh] flex flex-col max-w-screen-xl mx-auto pt-10">
-    <ImageSlider imgs={property.images} modal={modal} setModal={setModal} />
+    <ImageSlider imgs={property.images} modal={modal} setModal={setModal} imgIdx={property.images.indexOf(imgCont)}/>
       {property === 0 && (
         <div className="p-5 text-center">
           <p className="text-3xl mb-5">Looks Like The Page Doesn't exist...</p>

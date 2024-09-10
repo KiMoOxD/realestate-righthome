@@ -1,6 +1,6 @@
 export default function ImagesList({ images, imgCont, setImgCont }) {
   return (
-    <ul className="flex order-1 lg:order-none lg:flex-col gap-2 *:size-3 cursor-pointer overflow-scroll hide-scrollbar max-w-full">
+    <ul className="flex order-1 lg:order-none lg:flex-col gap-2 *:size-3 cursor-pointer overflow-scroll hide-scrollbar max-w-full min-w-fit">
       {images.map((image, index) => {
         return (
           <li

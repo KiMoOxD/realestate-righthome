@@ -3,7 +3,7 @@ import { useAllContext } from "../context/AllContext";
 import expIcon from "../images/experience.svg";
 import PropertyCard from "../components/PropertyCard";
 import { useState, useEffect } from "react";
-import { getApartments } from "../utils/data.js";
+import { getCollectionData } from "../utils/data.js";
 import SkeletonCard from "../components/SkeletonCard.jsx";
 import TypesList from "../components/TypesList.jsx";
 import { Link } from "react-router-dom";
@@ -12,21 +12,20 @@ import { IoArrowForward } from "react-icons/io5";
 export default function Home() {
   let { lang } = useAllContext();
   const [apartments, setApartments] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+  let [collectionType, setCollectionType] = useState('apartments')
 
   useEffect(() => {
     const fetchApartments = async () => {
       try {
-        let apartmentsList = await getApartments();
-        setApartments(apartmentsList);
+        let propertiesData = await getCollectionData(collectionType);
+        setApartments(propertiesData);
       } catch (error) {
         console.error("Error fetching apartments: ", error);
       }
     };
-
     fetchApartments();
-  }, []);
+  }, [collectionType]);
+
   return (
     <div>
       <Hero />
@@ -34,7 +33,7 @@ export default function Home() {
         <p className="text-3xl font-semibold text-stone-800">
           {lang === "en" ? "Recommended for you" : "مـوصـي بـه لـك"}
         </p>
-        <TypesList />
+        <TypesList setCollectionType={setCollectionType} />
         <div className="px-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3">
           {apartments.length > 0 ? (
             apartments.map((apartment) => (

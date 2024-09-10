@@ -10,7 +10,7 @@ export default function MainImage({ imgCont, title, OpenModal}) {
         onClick={OpenModal}
         className="absolute h-full w-full flex items-center justify-center cursor-pointer"
       >
-        <button className="text-stone-300 hover:text-stone-00 bg-stone-900/40 hover:bg-slate-50/5 transition px-4 py-1">
+        <button className="text-stone-300 hover:text-stone-900 bg-stone-900/40 hover:bg-slate-50/90 transition px-4 py-1">
           View full Images
         </button>
       </div>

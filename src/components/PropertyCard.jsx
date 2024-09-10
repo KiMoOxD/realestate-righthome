@@ -3,16 +3,28 @@ import { BiArea } from "react-icons/bi";
 import { IoIosBed } from "react-icons/io";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaDisease } from "react-icons/fa";
-// import { FaCity } from "react-icons/fa";
+import { FaCity } from "react-icons/fa";
 import { useAllContext } from "../context/AllContext";
 import { IoIosCall } from "react-icons/io";
 import { Link } from "react-router-dom";
 
+const tourismGovernates = [
+  "Alexandria",
+  "Red Sea",
+  "South Sinai",
+  "Matrouh",
+  "Port Said",
+  "Damietta",
+  "Kafr El Sheikh"
+];
+
+
 export default function PropertyCard({ property }) {
   let { lang } = useAllContext();
+  let isTourism = tourismGovernates.some(gov => property.governate.en === gov)
   return (
     <div className="rounded-md overflow-hidden bg-white shadow-md  group cursor-pointer">
-      <Link to={`browse/${property.category}s/${property.id}`}>
+      <Link to={`/browse/${property.category}s/${property.id}`}>
         <div className="relative h-[280px] overflow-hidden">
           <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-20 text-xs">
             {property.status === "sale"
@@ -23,8 +35,9 @@ export default function PropertyCard({ property }) {
               ? "For Rent"
               : "للايجار"}
           </span>
-          <span className="absolute flex items-center gap-1 top-4 left-20 py-1 min-w-16 px-2 text-center bg-blue-500 rounded-full z-20 text-xs text-white">
-            <FaDisease />{" "}
+          <span className={`absolute flex items-center gap-1 top-4 left-20 py-1 min-w-16 px-2 text-center ${isTourism ? 'bg-blue-500' : 'bg-cyan-900'} rounded-full z-20 text-xs text-white`}>
+            {!isTourism && <FaCity/>}{" "}
+            {isTourism && <FaDisease />}{" "}
             {lang === "en" ? property.governate.en : property.governate.ar}
           </span>
           <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-10 transition opacity-0 group-hover:opacity-100"></div>

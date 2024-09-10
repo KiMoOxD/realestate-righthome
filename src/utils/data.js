@@ -12,8 +12,8 @@ export async function getApartments() {
   return apartmentsList;
 }
 
-export async function getCollectionData(collection) {
-  const apartmentsCollection = collection(db, collection); // Make sure 'apartments' is correct
+export async function getCollectionData(collectionName) {
+  const apartmentsCollection = collection(db, collectionName); // Make sure 'apartments' is correct
   const apartmentsSnapshot = await getDocs(apartmentsCollection);
   const apartmentsList = apartmentsSnapshot.docs.map((doc) => ({
     id: doc.id,

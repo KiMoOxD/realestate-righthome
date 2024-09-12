@@ -26,7 +26,7 @@ export default function PropertyCard({ property }) {
     <div className="rounded-md overflow-hidden bg-white shadow-md  group cursor-pointer">
       <Link to={`/browse/${property.category}s/${property.id}`}>
         <div className="relative h-[280px] overflow-hidden">
-          <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-20 text-xs">
+          <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-10 text-xs">
             {property.status === "sale"
               ? lang === "en"
                 ? "For Sale"
@@ -35,7 +35,7 @@ export default function PropertyCard({ property }) {
               ? "For Rent"
               : "للايجار"}
           </span>
-          <span className={`absolute flex items-center gap-1 top-4 left-20 py-1 min-w-16 px-2 text-center ${isTourism ? 'bg-blue-500' : 'bg-cyan-900'} rounded-full z-20 text-xs text-white`}>
+          <span className={`absolute flex items-center gap-1 top-4 left-20 py-1 min-w-16 px-2 text-center ${isTourism ? 'bg-blue-500' : 'bg-cyan-900'} rounded-full z-10 text-xs text-white`}>
             {!isTourism && <FaCity/>}{" "}
             {isTourism && <FaDisease />}{" "}
             {lang === "en" ? property.governate.en : property.governate.ar}

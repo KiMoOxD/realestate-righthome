@@ -18,7 +18,7 @@ export default function PropertyInfo({ property }) {
     currency: 'EGP',
   })
   return (
-    <div className="max-w-[600px] lg:min-w-[450px] order-2  flex flex-col">
+    <div className="w-full lg:w-auto lg:max-w-[600px] lg:min-w-[450px] order-2  flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && 'justify-end arabic'}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.status === "sale"
@@ -33,7 +33,7 @@ export default function PropertyInfo({ property }) {
           {property.category.toUpperCase()}
         </p>
       </div>
-      <h1 className={`text-3xl mt-1.5 ${lang === "ar" && 'text-right arabic'}`}>
+      <h1 className={`text-2xl md:text-3xl mt-1.5 ${lang === "ar" && 'text-right arabic'}`}>
         {lang === "en" ? property.title.en : property.title.ar}
       </h1>
       <p className={`text-xs text-stone-400 ${lang === 'ar' && 'text-right'}`}>{lang === 'en' ? 'Price' : 'الـسعر'}</p>
@@ -60,7 +60,7 @@ export default function PropertyInfo({ property }) {
           </div>   
       </div>
       <hr className="my-2"/>
-      <div className="flex items-center gap-1 mt-2 *:flex-grow text-white">
+      <div className="flex items-center gap-1 mt-2 *:w-1/2 *:text-sm md:*:text-base *:flex-grow text-white">
           <button className="flex justify-center items-center gap-2 text-lg bg-green-500 py-2">
             <FaWhatsapp className="text-2xl"/> WhatsApp
           </button>

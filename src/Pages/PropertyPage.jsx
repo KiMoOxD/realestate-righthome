@@ -10,11 +10,11 @@ import SkeletonCard from "../components/SkeletonCard.jsx";
 import PropertyCard from "../components/PropertyCard";
 
 export default function PropertyPage() {
-  let property = useLoaderData();
-  let [imgCont, setImgCont] = useState(property.images[0]);
-  let [modal, setModal] = useState(false);
-  let { lang } = useAllContext();
-  let params = useParams(),
+  let property = useLoaderData(),
+    [imgCont, setImgCont] = useState(property.images[0]),
+    [modal, setModal] = useState(false),
+    { lang } = useAllContext(),
+    params = useParams(),
     [properties, setProperties] = useState([]);
 
   function OpenModal() {

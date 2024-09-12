@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function Header() {
   let { lang, toggleLang, isMenuOpen, toggleMenu } = useAllContext();
   return (
-    <div className="bg-white sticky w-full top-0 z-40 shadow-md">
+    <div className={`bg-white sticky w-full top-0 z-40 shadow-md ${lang === 'ar' && 'arabic'}`}>
       <div className="flex px-4 rounded-lg max-w-screen-2xl h-14 mx-auto justify-between items-center">
         <h1 className="font-semibold">Right Home</h1>
         <NavLinks />
@@ -21,12 +21,12 @@ export default function Header() {
           >
             {lang === "en" ? "AR" : "EN"}
           </button>
-          <button
-            type="button"
-            className="text-xs w-20 py-2 rounded-full text-black border border-black hidden lg:block"
+          <Link
+            to={'/admin'}
+            className="text-xs w-20 text-center py-2 rounded-full text-black border border-black hidden lg:block"
           >
             {lang === "en" ? "Admin" : "الادارة"}
-          </button>
+          </Link>
           <div className="p-2 text-2xl lg:hidden overflow-hidden max-w-full">
             <RiMenuLine
               onClick={toggleMenu}

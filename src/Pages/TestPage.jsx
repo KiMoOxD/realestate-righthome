@@ -5,34 +5,36 @@ const AddApartmentForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const apartmentData =   {
-      area: 150,
-      baths: 2,
-      beds: 3,
-      price: 10000000,
-      category: 'villa',
+    const officeData = {
+      area: 240,
+      baths: 4,
+      beds: 5,
+      price: 20000000,
+      category: 'house',
+      status: 'rent',
       description: {
-        ar: "فيلا عائلية مريحة بالقرب من النيل.",
-        en: "Comfortable family Villa near the Nile.",
+        ar: "منزل فسيح للإيجار في حي هادئ.",
+        en: "Spacious house for rent in a quiet neighborhood.",
       },
       governate: {
-        ar: "القاهرة",
-        en: "Cairo",
+        ar: "شرم الشيخ",
+        en: "Sharm El Sheikh",
       },
       images: [
-        "https://images.unsplash.com/photo-1551918120-9739bb14436b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",  
-        "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",  
-        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1562677045-7d82e8f6c30c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1566934471-452382b42d4c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1552648272-4ae1c2e4cc30?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       ],
       title: {
-        ar: "شقة عائلية في القاهرة",
-        en: "Family Apartment in Cairo",
+        ar: "منزل للإيجار في شرم الشيخ",
+        en: "House for Rent in Sharm El Sheikh",
       },
     }
     
     
+    
       
-      addToCollection('villas', apartmentData)
+      addToCollection('houses', officeData)
   };
 
   return (

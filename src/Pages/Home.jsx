@@ -18,6 +18,8 @@ export default function Home() {
     const fetchApartments = async () => {
       try {
         let propertiesData = await getCollectionData(collectionType);
+            propertiesData = propertiesData.slice(0, 8)
+            console.log(propertiesData)
         setApartments(propertiesData);
       } catch (error) {
         console.error("Error fetching apartments: ", error);

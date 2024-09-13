@@ -25,7 +25,7 @@ export default function PropertyCard({ property }) {
   return (
     <div className="rounded-md overflow-hidden bg-white shadow-md  group cursor-pointer">
       <Link to={`/browse/${property.category}s/${property.id}`}>
-        <div className="relative h-[280px] overflow-hidden">
+        <div className="relative h-[220px] overflow-hidden">
           <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-10 text-xs">
             {property.status === "sale"
               ? lang === "en"

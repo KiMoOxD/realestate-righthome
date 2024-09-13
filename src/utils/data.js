@@ -1,17 +1,6 @@
 import { collection, getDocs, addDoc, doc, getDoc, deleteDoc, updateDoc  } from "firebase/firestore";
 import { db } from "../utils/firebase.js"; // Import your Firebase setup
 
-// export async function getApartments() {
-//   const apartmentsCollection = collection(db, "apartments"); // Make sure 'apartments' is correct
-//   const apartmentsSnapshot = await getDocs(apartmentsCollection);
-//   const apartmentsList = apartmentsSnapshot.docs.map((doc) => ({
-//     id: doc.id,
-//     ...doc.data(),
-//   }));
-
-//   return apartmentsList;
-// }
-
 export async function getCollectionData(collectionName) {
   const apartmentsCollection = collection(db, collectionName); // Make sure 'apartments' is correct
   const apartmentsSnapshot = await getDocs(apartmentsCollection);
@@ -50,18 +39,6 @@ export async function getDocumentData(collection, id) {
     return 0
   }
 }
-
-// export async function AddToApartments(apartmentData) {
-//   try {
-//     const apartmentsCollection = collection(db, "apartments");
-//     // Add a new document with a generated ID
-//     const docRef = await addDoc(apartmentsCollection, apartmentData);
-
-//     console.log("Apartment added with ID: ", docRef.id);
-//   } catch (error) {
-//     console.error("Error adding apartment: ", error);
-//   }
-// }
 
 export async function addToCollection(collectionName, documentData) {
   try {

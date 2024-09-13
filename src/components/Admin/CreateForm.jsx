@@ -9,6 +9,7 @@ import { CgSpinner } from "react-icons/cg";
 
 
 const LocationOptions = governoratesEn;
+const statusOptions = [{label: 'For Sale', value: 'sale'}, {label: 'For Rent', value: 'rent'}];
 
 const customStyles = {
   control: (provided, state) => ({
@@ -52,6 +53,7 @@ export default function CreateForm({ CloseModal }) {
   let [selectedImages, setSelectedImages] = useState([]);
   let [title, setTitle] = useState({en: '', ar: ''});
   let [description, setDescription] = useState({en: '', ar: ''}),
+      [selectedStatus, setSelectedStatus] = useState(''),
       [selectedCategory, setSelectedCategory] = useState(''),
       [error, setError] = useState({isErr: false, content: ''}),
       [loading, setLoading] = useState(false),
@@ -65,6 +67,11 @@ export default function CreateForm({ CloseModal }) {
     console.log('Selected option:', option); // This will print the selected option
   };
 
+  function handleStatusChange(option) {
+    setSelectedStatus(option)
+    console.log('Selected option:', option); 
+  }
+
   useEffect(() => {
     return () => (document.body.style.overflow = "auto");
   }, []);
@@ -75,6 +82,7 @@ export default function CreateForm({ CloseModal }) {
   
     if (
       !selectedCategory ||
+      !selectedStatus ||
       !governoratesMap[`${selectedOption?.value}`] ||
       selectedImages.length === 0 ||
       !title.en ||
@@ -104,6 +112,7 @@ export default function CreateForm({ CloseModal }) {
         beds: bedroomsRef.current.value,
         price: priceRef.current.value,
         category: selectedCategory,
+        status: selectedStatus,
         description: {
           ar: description.ar,
           en: description.en,
@@ -132,7 +141,6 @@ export default function CreateForm({ CloseModal }) {
     }
   }
   
-  // Modify handleUpload to return the array of uploaded image URLs
   const handleUpload = async () => {
     const cloudName = 'dpheca8vj'; 
     const uploadPreset = 'realestateImages';
@@ -165,20 +173,21 @@ export default function CreateForm({ CloseModal }) {
 
   function handleImageChange(e) {
     console.log(e.target.files)
-    const files = Array.from(e.target.files); // Convert FileList to array
+    const files = Array.from(e.target.files); 
     setSelectedImages(files);
   }
 
   const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value); // Set the selected category value
-    console.log("Selected Category:", selectedCategory); // Log the selected category
-
+    setSelectedCategory(event.target.value);
+    console.log("Selected Category:", selectedCategory); 
   };
+
+
 
 
   return (
     <div
-      className={`absolute w-full h-[calc(100vh-56px)] p-10 md:p-0 flex items-center justify-center left-0 z-20`}
+      className={`absolute w-full h-[calc(100vh-56px)] p-5 md:p-0 flex items-center justify-center left-0 z-20`}
       style={{ top: `${window.scrollY}px` }}
     >
       <div
@@ -244,6 +253,14 @@ export default function CreateForm({ CloseModal }) {
               <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />
               <input ref={bathroomsRef} type="number" placeholder="Bathrooms" />
               <input ref={areaRef} type="number" placeholder="Area (Sq/M)" />
+          </div>
+          <div>
+            <Select
+                  options={statusOptions}
+                  styles={customStyles}
+                  placeholder={'Status...'}
+                  onChange={handleStatusChange}
+              />
           </div>
           <div className="flex gap-1 items-center">
             <button type="button" onClick={() => setLanguage('en')} className="bg-stone-200 p-1 text-xs rounded hover:bg-stone-300">EN</button>

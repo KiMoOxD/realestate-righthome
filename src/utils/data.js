@@ -2,6 +2,12 @@ import { collection, getDocs, addDoc, doc, getDoc, deleteDoc, updateDoc  } from 
 import { db } from "../utils/firebase.js"; // Import your Firebase setup
 
 export async function getCollectionData(collectionName) {
+
+  if (collectionName === 'all') {
+    let allData = await getAllCollectionsData();
+    return allData
+  }
+  
   const apartmentsCollection = collection(db, collectionName); // Make sure 'apartments' is correct
   const apartmentsSnapshot = await getDocs(apartmentsCollection);
   const apartmentsList = apartmentsSnapshot.docs.map((doc) => ({

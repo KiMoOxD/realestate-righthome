@@ -182,7 +182,7 @@ export default function Hero() {
           className={`relative md:flex flex-wrap grid grid-cols-2 items-center bg-white gap-1 text-sm pt-3 pb-2 px-6 rounded-lg md:rounded-full mt-7 text-stone-500`}
         >
           {SearchResult.length > 0 && (
-            <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded-md lg:rounded-3xl bg-white flex flex-col gap-1 py-1">
+            <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll shadow-lg overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded-md lg:rounded-3xl bg-white flex flex-col gap-1 p-1">
               {SearchResult.map((result) => {
                 return (
                   <Link

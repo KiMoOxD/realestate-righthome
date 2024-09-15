@@ -18,7 +18,7 @@ export default function Home() {
     const fetchApartments = async () => {
       try {
         let propertiesData = await getCollectionData(collectionType);
-            propertiesData = propertiesData.slice(0, 8)
+            propertiesData = propertiesData.slice(0, 6)
             console.log(propertiesData)
         setApartments(propertiesData);
       } catch (error) {
@@ -31,19 +31,21 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <div className="flex flex-col items-center justify-center py-20 max-w-screen-2xl mx-auto">
+      <div className="flex flex-col items-center justify-center py-20 max-w-screen-xl mx-auto">
+        <p className="text-md font-semibold text-blue-500 arabic-bold mx-auto mt-10">
+          {lang === "en" ? 'Featured Properties' : 'عقارات مميزة'}
+        </p>
         <p className="text-3xl font-semibold text-stone-800">
           {lang === "en" ? "Recommended for you" : "مـوصـي بـه لـك"}
         </p>
         <TypesList setCollectionType={setCollectionType} />
-        <div className="px-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3">
+        <div className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-3">
           {apartments.length > 0 ? (
             apartments.map((apartment) => (
               <PropertyCard key={apartment.id} property={apartment} />
             ))
           ) : (
             <>
-              <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
@@ -59,14 +61,14 @@ export default function Home() {
       </div>
       <div className="lg:px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:rounded-2xl lg:mx-4 2xl:mx-auto overflow-hidden bg-blue-50 max-w-screen-2xl mb-10">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden max-h-[600px]">
             <img
               className="min-w-[768px] h-full"
-              src="https://plus.unsplash.com/premium_photo-1684175656320-5c3f701c082c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1481026469463-66327c86e544?q=80&w=2108&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt=""
             />
           </div>
-          <div className="p-5 md:p-10">
+          <div className="p-5 md:p-10 flex flex-col justify-center">
             <p className="text-xs text-blue-600 font-semibold mb-2">
               OUR BENEFIT
             </p>

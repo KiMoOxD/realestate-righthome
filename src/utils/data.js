@@ -25,8 +25,22 @@ export async function getAllCollectionsData() {
   let studios = await getCollectionData('studios');
   let houses = await getCollectionData('houses');
   let final = [...apartments, ...villas, ...offices, ...studios, ...houses];
+  final = shuffleArray(final)
   return final;
 }
+
+function shuffleArray(array) {
+  // Loop through the array from the last element to the first
+  for (let i = array.length - 1; i > 0; i--) {
+    // Pick a random index from 0 to i
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    
+    // Swap the element at i with the element at randomIndex
+    [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+  }
+  return array; // Return the shuffled array
+}
+
 
 
 export async function getDocumentData(collection, id) {

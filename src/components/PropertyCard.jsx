@@ -7,6 +7,10 @@ import { FaCity } from "react-icons/fa";
 import { useAllContext } from "../context/AllContext";
 import { IoIosCall } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { TiCameraOutline } from "react-icons/ti";
+
+import { CiCamera } from "react-icons/ci";
+
 
 const tourismGovernates = [
   "Alexandria",
@@ -39,6 +43,9 @@ export default function PropertyCard({ property }) {
             {!isTourism && <FaCity/>}{" "}
             {isTourism && <FaDisease />}{" "}
             {lang === "en" ? property.governate.en : property.governate.ar}
+          </span>
+          <span className={`absolute flex items-center gap-1.5 bottom-2 left-3 py-1 bg-black/30 px-1.5 text-center rounded-lg z-10 text-xs text-white`}>
+              <TiCameraOutline className="text-xl text-stone-300"/> {property.images.length}
           </span>
           <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-10 transition opacity-0 group-hover:opacity-100"></div>
           <img

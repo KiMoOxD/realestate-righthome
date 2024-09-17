@@ -73,7 +73,7 @@ export default function PropertyCard({ property }) {
               } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
             >
               <PiBathtubLight /> {lang === "en" ? `Baths:` : "دورة مياة :"}{" "}
-              {property.beds}
+              {property.baths}
             </span>
             <span
               className={`flex ${

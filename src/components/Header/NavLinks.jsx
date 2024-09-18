@@ -13,9 +13,6 @@ export default function NavLinks() {
       <NavLink className="hover:bg-blue-400/40" to={'browse'}>
         <li>{lang === 'en' ? 'Browse' : 'تصفح'}</li>
       </NavLink>
-      <NavLink className="hover:bg-blue-400/40">
-        <li>{lang === 'en' ? 'Contact us' : 'تواصل معنا'}</li>
-      </NavLink>
     </ul>
   );
 }

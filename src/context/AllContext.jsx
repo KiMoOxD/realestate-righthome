@@ -16,7 +16,6 @@ export default function AllContextProvider({ children }) {
     setLang(prev => prev === 'ar' ? 'en' : 'ar')
   }
 
-  console.log(lang)
   return (
     <AllContext.Provider
       value={{

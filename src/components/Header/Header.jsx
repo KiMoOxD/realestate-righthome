@@ -52,16 +52,16 @@ export default function Header() {
                     Home
                   </Link>
                   <Link
-                    to={"browse"}
+                    to={"/browse"}
                     className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-md text-center"
                   >
                     Browse
                   </Link>
                   <Link
-                    to={"about"}
+                    to={"/admin"}
                     className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-md text-center"
                   >
-                    About
+                    Admin
                   </Link>
                   <IoMdClose
                     onClick={toggleMenu}

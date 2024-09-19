@@ -36,10 +36,10 @@ export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
             onClick={CloseModal}
             className="absolute w-full h-full bg-black/80"
           ></div>
-          <span onClick={bkdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] left-5 md:left-[10%] xl:left-[20%] text-4xl text-stone-100 bg-black/50 rounded-full pr-1.5 p-1 cursor-pointer">
+          <span onClick={bkdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] left-5 md:left-[10%] xl:left-[20%] text-4xl text-blue-600 bg-white rounded-full pr-1.5 p-1 cursor-pointer">
             <IoIosArrowBack />
           </span>
-          <span onClick={fwdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] right-5 md:right-[10%] xl:right-[20%] text-4xl text-stone-100 bg-black/50 rounded-full pl-1.5 p-1 cursor-pointer">
+          <span onClick={fwdToggle} className="absolute z-20 top-1/2 translate-y-[-50%] right-5 md:right-[10%] xl:right-[20%] text-4xl text-blue-600 bg-white rounded-full pl-1.5 p-1 cursor-pointer">
             <IoIosArrowForward />
           </span>
           <motion.div

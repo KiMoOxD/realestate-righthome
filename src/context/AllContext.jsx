@@ -6,7 +6,7 @@ let AllContext = createContext();
 export default function AllContextProvider({ children }) {
   let [isMenuOpen, setIsMenuOpen] = useState(false);
   let [lang, setLang] = useState('en')
-  
+  let [selectedProp, setSelectedProp] = useState(null)
 
   function toggleMenu() {
     setIsMenuOpen((prev) => !prev);
@@ -22,7 +22,9 @@ export default function AllContextProvider({ children }) {
         isMenuOpen,
         toggleMenu,
         lang,
-        toggleLang
+        toggleLang,
+        selectedProp,
+        setSelectedProp
       }}
     >
       {children}

@@ -3,53 +3,58 @@ import { IoMdClose } from "react-icons/io";
 import Select from "react-select";
 import governoratesEn from "../../governate.json";
 import governoratesMap from "../../governatesmap.json";
+import governatesInfo from "../../governatesInfo.json";
 import { AnimatePresence, motion } from "framer-motion";
-import { addToCollection } from "../../utils/data";
+import { addToCollection, getDocumentData } from "../../utils/data";
 import { CgSpinner } from "react-icons/cg";
+import { useAllContext } from "../../context/AllContext";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 
 const LocationOptions = governoratesEn;
 const statusOptions = [{label: 'For Sale', value: 'sale'}, {label: 'For Rent', value: 'rent'}];
 
-const customStyles = {
-  control: (provided, state) => ({
-    ...provided,
- // Remove the border
-    boxShadow: "none", // Remove box shadow on focus
-    "&:hover": {
-      boxShadow: "none", // Remove hover effect on input
-    },
-    textAlign: "left", // Ensure text aligns to the left
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    textAlign: "left", // Align placeholder text to the left
-    color: "black", // Change placeholder text color to black
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    textAlign: "left", // Align selected option text to the left
-    color: "black", // Change selected text color to black
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    color: "black", // Change the color of the options text to black
-    backgroundColor: state.isSelected
-      ? "#f0f0f0"
-      : state.isFocused
-      ? "#e6e6e6"
-      : "white", // Highlight selected and hovered option
-    textAlign: "left", // Align option text to the left
-    "&:hover": {
-      backgroundColor: "#e6e6e6", // Add hover effect on options
-    },
-  }),
-};
+// const customStyles = {
+//   control: (provided, state) => ({
+//     ...provided,
+//  // Remove the border
+//     boxShadow: "none", // Remove box shadow on focus
+//     "&:hover": {
+//       boxShadow: "none", // Remove hover effect on input
+//     },
+//     textAlign: "left", // Ensure text aligns to the left
+//   }),
+//   placeholder: (provided) => ({
+//     ...provided,
+//     textAlign: "left", // Align placeholder text to the left
+//     color: "black", // Change placeholder text color to black
+//   }),
+//   singleValue: (provided) => ({
+//     ...provided,
+//     textAlign: "left", // Align selected option text to the left
+//     color: "black", // Change selected text color to black
+//   }),
+//   option: (provided, state) => ({
+//     ...provided,
+//     color: "black", // Change the color of the options text to black
+//     backgroundColor: state.isSelected
+//       ? "#f0f0f0"
+//       : state.isFocused
+//       ? "#e6e6e6"
+//       : "white", // Highlight selected and hovered option
+//     textAlign: "left", // Align option text to the left
+//     "&:hover": {
+//       backgroundColor: "#e6e6e6", // Add hover effect on options
+//     },
+//   }),
+// };
 
 
-export default function CreateForm({ CloseModal }) {
+
+export default function EditForm({ CloseEditModal, setSingleImage, setSingleModal }) {
   let [language, setLanguage] = useState('en')
-  let [selectedOption, setSelectedOption] = useState(null);
+  let {selectedProp} = useAllContext()
+  let [defaultGovOption, setDefaultGovOption] = useState(null)
   let [selectedImages, setSelectedImages] = useState([]);
   let [title, setTitle] = useState({en: '', ar: ''});
   let [description, setDescription] = useState({en: '', ar: ''}),
@@ -62,14 +67,37 @@ export default function CreateForm({ CloseModal }) {
       bathroomsRef = useRef(),
       areaRef = useRef()
 
+
+    useEffect(() => {
+        async function getDocData() {
+            let property = await getDocumentData(`${selectedProp.cName}s`, selectedProp.id)
+            // setProperty(property)
+            setDefaultGovOption(governatesInfo[property.governate.en])
+            setTitle({en: property.title.en, ar: property.title.ar})
+            setDescription({en: property.description.en, ar: property.description.ar})
+            setSelectedStatus(property.status === 'sale' ? {label: 'For Sale', value: 'sale'} : {label: 'For Rent', value: 'rent'})
+            setSelectedCategory(property.category)
+            setSelectedImages(property.images)
+            priceRef.current.value = property.price
+            bedroomsRef.current.value = property.beds
+            bathroomsRef.current.value = property.baths
+            areaRef.current.value = property.area
+        }
+        getDocData()
+        // eslint-disable-next-line
+    }, [selectedProp])
+
+    console.log('1sd23s', defaultGovOption)
+    console.log('cat', selectedCategory)
+
   const handleSelectChange = (option) => {
-    setSelectedOption(option);
-    console.log('Selected option:', option); // This will print the selected option
+    setDefaultGovOption(option);
+    console.log('Selected Gov:', option); // This will print the selected option
   };
 
   function handleStatusChange(option) {
     setSelectedStatus(option)
-    console.log('Selected option:', option); 
+    console.log('Selected Status:', option); 
   }
 
   useEffect(() => {
@@ -81,7 +109,7 @@ export default function CreateForm({ CloseModal }) {
     if (
       !selectedCategory ||
       !selectedStatus ||
-      !governoratesMap[`${selectedOption?.value}`] ||
+      !governoratesMap[`${defaultGovOption?.value}`] ||
       selectedImages.length === 0 ||
       !title.en ||
       !title.ar ||
@@ -118,8 +146,8 @@ export default function CreateForm({ CloseModal }) {
           en: description.en,
         },
         governate: {
-          en: governoratesMap[`${selectedOption?.value}`].governate.en,
-          ar: governoratesMap[`${selectedOption?.value}`].governate.ar
+          en: governoratesMap[`${defaultGovOption?.value}`].governate.en,
+          ar: governoratesMap[`${defaultGovOption?.value}`].governate.ar
         },
         images: uploadedImageUrls,  // Use the returned URLs directly
         title: {
@@ -131,7 +159,7 @@ export default function CreateForm({ CloseModal }) {
       // console.log(PropertyData);
       addToCollection(`${selectedCategory}s`, PropertyData);
       setLoading(false)
-      CloseModal()
+      CloseEditModal()
     } catch (error) {
       console.error("Error during submission:", error);
       setError({isErr: true, content: "An error occurred during submission."});
@@ -171,11 +199,11 @@ export default function CreateForm({ CloseModal }) {
     return filteredUrls; // Return the array of URLs
   };
 
-  function handleImageChange(e) {
-    console.log(e.target.files)
-    const files = Array.from(e.target.files); 
-    setSelectedImages(files);
-  }
+//   function handleImageChange(e) {
+//     console.log(e.target.files)
+//     const files = Array.from(e.target.files); 
+//     setSelectedImages(files);
+//   }
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
@@ -191,11 +219,11 @@ export default function CreateForm({ CloseModal }) {
       style={{ top: `${window.scrollY}px` }}
     >
       <div
-        onClick={CloseModal}
+        onClick={CloseEditModal}
         className="absolute w-full h-full bg-black/80"
       ></div>
       <span
-        onClick={CloseModal}
+        onClick={CloseEditModal}
         className="absolute top-8 left-[10%] xl:left-[20%] text-3xl text-stone-50 rounded-full cursor-pointer"
       >
         <IoMdClose />
@@ -205,47 +233,43 @@ export default function CreateForm({ CloseModal }) {
           {error.isErr && <motion.p initial={{opacity: 0, scale: 0}} animate={{opacity: 1, scale: 1}} exit={{opacity: 0, scale: 0}} className="text-center text-sm py-1 bg-red-500 text-red-100">{error.content}</motion.p>}
         </AnimatePresence>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <div className="flex items-center justify-center w-full">
-              <label for="dropzone-file" className="flex flex-col items-center justify-center w-full h-12 lg:h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg className="w-8 h-8 ;g:mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                      </svg>
-                      <p className="hidden lg:block mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                      <p className="hidden lg:block text-xs text-gray-500">PNG or JPG</p>
-                  </div>
-                  <input id="dropzone-file" onChange={handleImageChange} type="file" className="hidden" multiple/>
-              </label>
-          </div> 
-
+          <div className="flex flex-wrap gap-2">
+            {selectedImages.map(img => { 
+                return <div className="relative bg-black cursor-pointer border hover:border-blue-600 transition">
+                    <img src={img} alt="" className="size-10" onClick={() => {setSingleImage(img); setSingleModal(true)}} />
+                    <IoMdCloseCircleOutline className="absolute top-0 left-full translate-x-[-50%] translate-y-[-50%] text-blue-700 text-base bg-white rounded-full z-10" onClick={() => setSelectedImages(prev => prev.filter(item => item !== img))} />
+                </div>
+            })}
+          </div>
+            
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
               <Select
                   options={LocationOptions}
-                  styles={customStyles}
                   placeholder={'Governate...'}
                   onChange={handleSelectChange}
+                  value={defaultGovOption}
               />
               <input ref={priceRef} className="p-2 border text-sm rounded outline-none" type="text" placeholder="Price" />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-1">
               <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input onClick={handleCategoryChange} id="apartment" type="radio" value="apartment" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
+                  <input checked={selectedCategory === 'apartment'} onClick={handleCategoryChange} id="apartment" type="radio" value="apartment" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
                   <label for="apartment" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Apartment</label>
               </div>
               <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input onClick={handleCategoryChange} id="villa" type="radio" value="villa" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
+                  <input checked={selectedCategory === 'villa'} onClick={handleCategoryChange} id="villa" type="radio" value="villa" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
                   <label for="villa" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Villa</label>
               </div>
               <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input onClick={handleCategoryChange} id="office" type="radio" value="office" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
+                  <input checked={selectedCategory === 'office'} onClick={handleCategoryChange} id="office" type="radio" value="office" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
                   <label for="office" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Office</label>
               </div>
               <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input onClick={handleCategoryChange} id="house" type="radio" value="house" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
+                  <input checked={selectedCategory === 'house'} onClick={handleCategoryChange} id="house" type="radio" value="house" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
                   <label for="house" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">House</label>
               </div>
               <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input onClick={handleCategoryChange} id="studio" type="radio" value="studio" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
+                  <input checked={selectedCategory === 'studio'} onClick={handleCategoryChange} id="studio" type="radio" value="studio" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
                   <label for="studio" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Studio</label>
               </div>
           </div>
@@ -257,9 +281,9 @@ export default function CreateForm({ CloseModal }) {
           <div>
             <Select
                   options={statusOptions}
-                  styles={customStyles}
                   placeholder={'Status...'}
                   onChange={handleStatusChange}
+                  value={selectedStatus}
               />
           </div>
           <div className="flex gap-1 items-center">
@@ -273,7 +297,7 @@ export default function CreateForm({ CloseModal }) {
               {language === 'ar' && <textarea value={description.ar} onChange={(e) => setDescription(prev => {return {...prev, ar: e.target.value}})} placeholder="الـوصـف" className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"></textarea>}
           </div>
           <div className="flex justify-end gap-2">
-            <button onClick={CloseModal} className="bg-stone-200 text-stone-500 py-2 px-4 rounded">Cancel</button>
+            <button onClick={CloseEditModal} className="bg-stone-200 text-stone-500 py-2 px-4 rounded">Cancel</button>
             <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded"> {loading ? <CgSpinner className="animate-spin text-lg" /> : 'Create'}</button>
           </div>
         </form>

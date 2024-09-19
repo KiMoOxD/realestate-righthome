@@ -5,6 +5,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+::-webkit-scrollbar {
+  width: 10px; /* Narrow scrollbar width */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Optional: Change background color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3b82f6; /* Scrollbar color */
+  border-radius: 10px; /* Rounded corners */
+  border: 2px solid #f1f1f1; /* Optional: Adjust border to make it appear detached */
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin; /* Narrow scrollbar width */
+  scrollbar-color: #3b82f6 #f1f1f1; /* Scrollbar color and background track color */
+}
+
+
 body {
 font-family: 'Roboto';
 }

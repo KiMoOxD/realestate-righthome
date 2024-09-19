@@ -7,6 +7,7 @@ import { PiBathtubLight } from "react-icons/pi";
 import { BiArea } from "react-icons/bi";
 import { IoIosBed } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   let { lang } = useAllContext();
@@ -49,14 +50,18 @@ export default function Hero() {
     >
       <div className="absolute inset-0 z-2 bg-gray-900/30 sm:from-cyan-900/95 sm:to-gray-900/25"></div>
       <div className="relative p-2 text-center text-white w-[780px]">
-        <p className="mt-3 sm:mt-0 text-5xl sm:text-6xl md:text-7xl font-semibold mb-5">
+        <motion.p className="mt-3 sm:mt-0 text-4xl sm:text-6xl md:text-7xl font-semibold mb-5" 
+          initial={{opacity: 0, scale: 0}}
+          animate={{opacity: 1, scale: 1}}
+          transition={{duration: 1}}
+        >
           {lang === "en" ? "Find Your Dream Home" : "دور علي بيت احلامك"}
-        </p>
+        </motion.p>
         {lang === "en" && (
           <TextEffect
             per="word"
             preset="fade"
-            className="max-w-xl text-sm mx-auto text-stone-200"
+            className="max-w-lg text-sm mx-auto text-stone-200"
           >
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa
             tempore praesentium quos molestias aliquam, facere pariatur,
@@ -72,29 +77,38 @@ export default function Hero() {
           </p>
         )}
         <div className="relative flex justify-center gap-2 mt-12">
-          <button
+          <motion.button
             type="button"
             className="bg-blue-500 px-6 py-2 rounded-full relative"
             onClick={() => setStatus(0)}
+            initial={{opacity: 0, x: -20}}
+            animate={{opacity: 1, x: 0}}
+            transition={{duration: 1}}
           >
             {lang === "en" ? "For Rent" : "للايجار"}
             {!status && (
               <div className="absolute top-full left-1/2 translate-x-[-50%] size-4 border-8 border-blue-500 border-l-transparent border-r-transparent border-b-transparent"></div>
             )}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
             className="bg-blue-500 px-6 py-2 rounded-full relative"
             onClick={() => setStatus(1)}
+            initial={{opacity: 0, x: 20}}
+            animate={{opacity: 1, x: 0}}
+            transition={{duration: 1}}
           >
             {lang === "en" ? "For Sale" : "للـبيع"}
             {status === 1 && (
               <div className="absolute top-full left-1/2 translate-x-[-50%] size-4 border-8 border-blue-500 border-l-transparent border-r-transparent border-b-transparent"></div>
             )}
-          </button>
+          </motion.button>
         </div>
-        <form
+        <motion.form
           className={`relative bg-transparent text-sm rounded-full mt-6 text-stone-500`}
+          initial={{opacity: 0, y: -50}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 1}}
         >
           {SearchResult.length > 0 && (
             <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll shadow-lg overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded-md lg:rounded-3xl bg-white flex flex-col gap-1 p-1">
@@ -145,7 +159,7 @@ export default function Hero() {
               onChange={handleSearch}
             />
           </div>
-        </form>
+        </motion.form>
       </div>
     </section>
   );

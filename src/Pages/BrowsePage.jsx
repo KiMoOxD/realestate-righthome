@@ -24,7 +24,7 @@ export default function BrowsePage() {
     studios: { rent: [], sale: [] },
     houses: { rent: [], sale: [] },
   });
-  let [showFilters, setShowFilters] = useState(true);
+  let [showFilters, setShowFilters] = useState(false);
   let { lang } = useAllContext();
   let [bedroomsCount, setBedroomsCount] = useState(1);
   let [bathroomsCount, setBathroomsCount] = useState(1);
@@ -184,7 +184,7 @@ export default function BrowsePage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-114px)] max-w-screen-3xl px-4 pb-5 mx-auto">
+    <div className="min-h-[calc(100vh-114px)] max-w-screen-3xl px-0 pb-5 mx-auto">
       <div className="flex flex-col md:flex-row gap-2 mt-6">
         <form className={`p-5 border md:w-[350px]`} onSubmit={handleSubmit}>
           <div
@@ -455,14 +455,14 @@ export default function BrowsePage() {
 
         {searchResult.length > 0 && (
           <div className="px-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mt-5">
-            {searchResult.slice(0, 8).map((prop) => {
+            {searchResult.map((prop) => {
               return <PropertyCard key={prop.id} property={prop} />;
             })}
           </div>
         )}
 
         {searchResult.length === 0 && firstTime && (
-          <div className="px-4 w-full">
+          <div className="w-full">
             <Section
               title={{ en: "Villas", ar: "فـيـلا" }}
               subtitle={{

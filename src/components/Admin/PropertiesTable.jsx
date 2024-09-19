@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { deleteFromCollection, getAllCollectionsData } from "../../utils/data";
+import { useAllContext } from "../../context/AllContext";
 
-export default function PropertiesTable({setModal}) {
+export default function PropertiesTable({setModal, setEditModal}) {
   let [propertiesData, setPropertiesData] = useState(null);
   let [data, setData] = useState(propertiesData);
-  console.log(data);
+  let {selectedProp, setSelectedProp} = useAllContext()
+  console.log(selectedProp);
   useEffect(() => {
     async function getData() {
       let properties = await getAllCollectionsData();
@@ -158,7 +160,17 @@ export default function PropertiesTable({setModal}) {
                   <td className="px-6 py-4">{prop.governate.en}</td>
                   <td className="px-6 py-4">{prop.category}</td>
                   <td className="px-6 py-4">${prop.price}</td>
-                  <td className="px-6 py-4">
+                  <td className="flex gap-5 px-6 py-4 cursor-pointer">
+                    <div
+                      className="font-medium text-blue-500 hover:underline"
+                      onClick={() =>{
+                        console.log('clicked')
+                        setEditModal(true)
+                        setSelectedProp({id: prop.id, cName: prop.category})
+                      }}
+                    >
+                      Edit
+                    </div>
                     <button
                       href="#"
                       className="font-medium text-red-500 hover:underline"

@@ -1,8 +1,8 @@
 export default function MainImage({ imgCont, title, OpenModal}) {
   return (
-    <div className="relative lg:self-start group flex flex-grow justify-center overflow-hidden items-center max-w-full w-full max-h-[300px] md:w-[100%] lg:max-w-[605px] xl:max-w-[705px] min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[450px] xl:min-h-[500px] lg:max-h-[500px]">
+    <div className="relative lg:self-start flex flex-grow justify-center overflow-hidden items-center max-w-full w-full min-h-[300px] max-h-[300px] md:max-h-[500px] lg:max-h-[500px] md:w-[100%] lg:max-w-[700px] xl:max-w-[750px] h-fit shadow-[inset_0px_0px_9px_rgba(0,0,0,0.1)] border border-[#cccccc47] rounded-lg ">
       <img
-        className="w-full lg:w-full max-h-full transition brightness-50 group-hover:brightness-100"
+        className=" min-w-full max-w-full min-h-full max-h-full transition brightness-50"
         src={imgCont}
         alt={title.en}
       />
@@ -10,8 +10,8 @@ export default function MainImage({ imgCont, title, OpenModal}) {
         onClick={OpenModal}
         className="absolute h-full w-full flex items-center justify-center cursor-pointer"
       >
-        <button className="text-stone-300 hover:text-stone-900 bg-stone-900/40 hover:bg-slate-50/90 transition px-4 py-1">
-          View full Images
+        <button className="text-blue-600 bg-slate-50/90 transition px-4 py-1 text-sm rounded">
+          Click to View
         </button>
       </div>
     </div>

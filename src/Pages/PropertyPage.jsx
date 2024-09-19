@@ -31,9 +31,13 @@ export default function PropertyPage() {
     return () => (document.body.style.overflow = "auto");
   }, [params.collection]);
 
+  useEffect(() => {
+    setImgCont(property.images[0])
+  }, [property.id, property.images])
+
   return (
     <>
-      <div className="flex flex-col max-w-screen-xl mx-auto">
+      <div className="flex flex-col max-w-screen-2xl mx-auto">
         <ImageSlider
           imgs={property.images}
           modal={modal}

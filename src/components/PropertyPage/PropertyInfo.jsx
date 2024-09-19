@@ -4,6 +4,8 @@ import { BiArea } from "react-icons/bi";
 import { IoIosBed } from "react-icons/io";
 import { FaWhatsapp } from "react-icons/fa";
 import { IoIosCall } from "react-icons/io";
+import { LiaMoneyBillWaveAltSolid } from "react-icons/lia";
+
 
 
 
@@ -18,7 +20,7 @@ export default function PropertyInfo({ property }) {
     currency: 'EGP',
   })
   return (
-    <div className="w-full lg:w-auto lg:max-w-[600px] lg:min-w-[450px] order-2  flex flex-col">
+    <div className="w-full  order-2  flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && 'justify-end arabic'}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.status === "sale"
@@ -37,9 +39,16 @@ export default function PropertyInfo({ property }) {
         {lang === "en" ? property.title.en : property.title.ar}
       </h1>
       <p className={`text-xs text-stone-400 ${lang === 'ar' && 'text-right'}`}>{lang === 'en' ? 'Price' : 'الـسعر'}</p>
-      {lang === 'en' &&<p className="font-semibold text-2xl">{formattedPriceEn.format(property.price).replace('$', '')} EGP</p>}
-      {lang === 'ar' && <p className="font-semibold text-2xl text-right ">{formattedPriceAR.format(property.price)}</p>}
-      <div className={`bg-stone-100 p-3 text-stone-700 mt-2 ${lang === "ar" && 'text-right arabic'}`}>
+      {lang === 'en' &&<p className="relative font-semibold text-2xl">
+        {formattedPriceEn.format(property.price).replace('$', '')} EGP
+        <span className="absolute top-1/2 translate-y-[-50%] right-0 text-xs bg-stone-200/60 p-1 font-medium text-stone-800">Installment</span>
+      </p>}
+      {lang === 'ar' && <p className="relative font-semibold text-2xl text-right ">
+        {formattedPriceAR.format(property.price)}
+        <span className="absolute top-1/2 translate-y-[-50%] left-0 text-xs bg-stone-200/60 p-1 font-medium text-stone-800">تقسيط</span>
+      </p>}
+      <p className={`text-xs text-stone-400 ${lang === 'ar' && 'text-right'}`}>{lang === 'en' ? 'Description' : 'الوصف'}</p>
+      <div className={`bg-stone-100 text-sm p-3 max-h-[174px] overflow-y-auto text-stone-700 mt-2 ${lang === "ar" && 'text-right arabic'}`}>
         {lang === 'en' ? property.description.en : property.description.ar}
       </div>
       <div className="flex justify-evenly items-center mt-4">
@@ -56,8 +65,13 @@ export default function PropertyInfo({ property }) {
           <div className="flex flex-col items-center">
             <BiArea className="text-xl text-stone-500"/>
             <p className="text-xs text-stone-500 arabic">{lang === 'en' ? 'Area' : 'مساحة'}</p>
-            <p className="text-sm">{property.area}</p>
-          </div>   
+            <p className="text-sm">{property.area} <span className="text-xs">m²</span></p>
+          </div>
+          <div className="flex flex-col items-center">
+            <LiaMoneyBillWaveAltSolid className="text-xl text-stone-500"/>
+            <p className="text-xs text-stone-500 arabic">{lang === 'en' ? 'Installment' : 'التقسيط'}</p>
+            <p className="text-sm">Monthly or Quarterly</p>
+          </div>  
       </div>
       <hr className="my-2"/>
       <div className="flex items-center gap-1 mt-2 *:w-1/2 *:text-sm md:*:text-base *:flex-grow text-white">

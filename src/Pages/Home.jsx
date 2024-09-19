@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <div className="flex flex-col items-center justify-center py-20 max-w-screen-xl mx-auto">
+      <div className="flex flex-col items-center justify-center py-10 max-w-screen-xl mx-auto">
         <p className="text-md font-semibold text-blue-500 arabic-bold mx-auto mt-10">
           {lang === "en" ? 'Featured Properties' : 'عقارات مميزة'}
         </p>

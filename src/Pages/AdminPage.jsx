@@ -8,7 +8,7 @@ export default function AdminPage() {
 
   let [modal, setModal] = useState(false);
   let [editModal, setEditModal] = useState(false);
-  let [singleModal, setSingleModal] = useState(true);
+  let [singleModal, setSingleModal] = useState(false);
   let [singleImage, setSingleImage] = useState(null);
   function CloseModal() {
     setModal(false);

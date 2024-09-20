@@ -5,7 +5,7 @@ import governoratesEn from "../../governate.json";
 import governoratesMap from "../../governatesmap.json";
 import governatesInfo from "../../governatesInfo.json";
 import { AnimatePresence, motion } from "framer-motion";
-import { addToCollection, getDocumentData } from "../../utils/data";
+import { addToCollection, getDocumentData, updateDocument } from "../../utils/data";
 import { CgSpinner } from "react-icons/cg";
 import { useAllContext } from "../../context/AllContext";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -13,42 +13,6 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 
 const LocationOptions = governoratesEn;
 const statusOptions = [{label: 'For Sale', value: 'sale'}, {label: 'For Rent', value: 'rent'}];
-
-// const customStyles = {
-//   control: (provided, state) => ({
-//     ...provided,
-//  // Remove the border
-//     boxShadow: "none", // Remove box shadow on focus
-//     "&:hover": {
-//       boxShadow: "none", // Remove hover effect on input
-//     },
-//     textAlign: "left", // Ensure text aligns to the left
-//   }),
-//   placeholder: (provided) => ({
-//     ...provided,
-//     textAlign: "left", // Align placeholder text to the left
-//     color: "black", // Change placeholder text color to black
-//   }),
-//   singleValue: (provided) => ({
-//     ...provided,
-//     textAlign: "left", // Align selected option text to the left
-//     color: "black", // Change selected text color to black
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: "black", // Change the color of the options text to black
-//     backgroundColor: state.isSelected
-//       ? "#f0f0f0"
-//       : state.isFocused
-//       ? "#e6e6e6"
-//       : "white", // Highlight selected and hovered option
-//     textAlign: "left", // Align option text to the left
-//     "&:hover": {
-//       backgroundColor: "#e6e6e6", // Add hover effect on options
-//     },
-//   }),
-// };
-
 
 
 export default function EditForm({ CloseEditModal, setSingleImage, setSingleModal }) {
@@ -59,7 +23,6 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
   let [title, setTitle] = useState({en: '', ar: ''});
   let [description, setDescription] = useState({en: '', ar: ''}),
       [selectedStatus, setSelectedStatus] = useState(''),
-      [selectedCategory, setSelectedCategory] = useState(''),
       [error, setError] = useState({isErr: false, content: ''}),
       [loading, setLoading] = useState(false),
       priceRef = useRef(),
@@ -71,12 +34,10 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
     useEffect(() => {
         async function getDocData() {
             let property = await getDocumentData(`${selectedProp.cName}s`, selectedProp.id)
-            // setProperty(property)
             setDefaultGovOption(governatesInfo[property.governate.en])
             setTitle({en: property.title.en, ar: property.title.ar})
             setDescription({en: property.description.en, ar: property.description.ar})
             setSelectedStatus(property.status === 'sale' ? {label: 'For Sale', value: 'sale'} : {label: 'For Rent', value: 'rent'})
-            setSelectedCategory(property.category)
             setSelectedImages(property.images)
             priceRef.current.value = property.price
             bedroomsRef.current.value = property.beds
@@ -86,9 +47,6 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
         getDocData()
         // eslint-disable-next-line
     }, [selectedProp])
-
-    console.log('1sd23s', defaultGovOption)
-    console.log('cat', selectedCategory)
 
   const handleSelectChange = (option) => {
     setDefaultGovOption(option);
@@ -107,7 +65,6 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
   async function handleSubmit(e) {
     e.preventDefault();  
     if (
-      !selectedCategory ||
       !selectedStatus ||
       !governoratesMap[`${defaultGovOption?.value}`] ||
       selectedImages.length === 0 ||
@@ -131,15 +88,15 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
     setLoading(true)
   
     try {
-      // Wait for handleUpload to complete and return the uploaded image URLs
-      const uploadedImageUrls = await handleUpload();
+  
+      //const uploadedImageUrls = await handleUpload();
   
       let PropertyData = {
         area: areaRef.current.value,
         baths: bathroomsRef.current.value,
         beds: bedroomsRef.current.value,
         price: priceRef.current.value,
-        category: selectedCategory,
+        category: selectedProp.cName,
         status: selectedStatus.value,
         description: {
           ar: description.ar,
@@ -149,15 +106,14 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
           en: governoratesMap[`${defaultGovOption?.value}`].governate.en,
           ar: governoratesMap[`${defaultGovOption?.value}`].governate.ar
         },
-        images: uploadedImageUrls,  // Use the returned URLs directly
+        images: selectedImages,
         title: {
           ar: title.ar,
           en: title.en,
         },
       };
   
-      // console.log(PropertyData);
-      addToCollection(`${selectedCategory}s`, PropertyData);
+      updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
       setLoading(false)
       CloseEditModal()
     } catch (error) {
@@ -168,48 +124,44 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
       }, 3000);
     }
   }
-  
-  const handleUpload = async () => {
-    const cloudName = 'dpheca8vj'; 
-    const uploadPreset = 'realestateImages';
-  
-    const imagePromises = selectedImages.map(async (image) => {
-      const formData = new FormData();
-      formData.append('file', image);
-      formData.append('upload_preset', uploadPreset);
-  
-      try {
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-          method: 'POST',
-          body: formData,
-        });
-  
-        const data = await response.json();
-        console.log(data.secure_url);
-        return data.secure_url;
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        return null;
-      }
-    });
-  
-    const imageUrls = await Promise.all(imagePromises);
-    const filteredUrls = imageUrls.filter(url => url !== null);
-    // setUploadedImages(filteredUrls); // Update state
-    return filteredUrls; // Return the array of URLs
-  };
 
-//   function handleImageChange(e) {
-//     console.log(e.target.files)
-//     const files = Array.from(e.target.files); 
-//     setSelectedImages(files);
-//   }
+  async function handleImageAdd(e) {
+    console.log(e.target.files)
+    const files = Array.from(e.target.files); 
+    const handleUpload = async () => {
+      const cloudName = 'dpheca8vj'; 
+      const uploadPreset = 'realestateImages';
+    
+      const imagePromises = files.map(async (image) => {
+        const formData = new FormData();
+        formData.append('file', image);
+        formData.append('upload_preset', uploadPreset);
+    
+        try {
+          const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData,
+          });
+    
+          const data = await response.json();
+          console.log(data.secure_url);
+          return data.secure_url;
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          return null;
+        }
+      });
+    
+      const imageUrls = await Promise.all(imagePromises);
+      const filteredUrls = imageUrls.filter(url => url !== null);
+      // setUploadedImages(filteredUrls); // Update state
+      return filteredUrls; // Return the array of URLs
+    };
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-    console.log("Selected Category:", selectedCategory); 
-  };
-
+    const uploadedImageUrls = await handleUpload();
+    
+    setSelectedImages(prev => [...prev, ...uploadedImageUrls]);
+  }
 
 
 
@@ -240,6 +192,12 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
                     <IoMdCloseCircleOutline className="absolute top-0 left-full translate-x-[-50%] translate-y-[-50%] text-blue-700 text-base bg-white rounded-full z-10" onClick={() => setSelectedImages(prev => prev.filter(item => item !== img))} />
                 </div>
             })}
+            <div className="size-10 bg-stone-100 flex items-center justify-center border rounded hover:shadow cursor-pointer">
+              <label htmlFor="dropzone-file" className="text-stone-400 text-xl cursor-pointer">
+                +
+                <input id="dropzone-file" onChange={handleImageAdd} type="file" className="hidden cursor-pointer" multiple/>
+              </label>
+            </div>
           </div>
             
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -250,28 +208,6 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
                   value={defaultGovOption}
               />
               <input ref={priceRef} className="p-2 border text-sm rounded outline-none" type="text" placeholder="Price" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-1">
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input checked={selectedCategory === 'apartment'} onClick={handleCategoryChange} id="apartment" type="radio" value="apartment" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
-                  <label for="apartment" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Apartment</label>
-              </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input checked={selectedCategory === 'villa'} onClick={handleCategoryChange} id="villa" type="radio" value="villa" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
-                  <label for="villa" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Villa</label>
-              </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input checked={selectedCategory === 'office'} onClick={handleCategoryChange} id="office" type="radio" value="office" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
-                  <label for="office" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Office</label>
-              </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input checked={selectedCategory === 'house'} onClick={handleCategoryChange} id="house" type="radio" value="house" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
-                  <label for="house" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">House</label>
-              </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
-                  <input checked={selectedCategory === 'studio'} onClick={handleCategoryChange} id="studio" type="radio" value="studio" name="category" class="text-blue-600 bg-gray-100 border-gray-300" />
-                  <label for="studio" class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer">Studio</label>
-              </div>
           </div>
           <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
               <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />
@@ -298,7 +234,7 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
           </div>
           <div className="flex justify-end gap-2">
             <button onClick={CloseEditModal} className="bg-stone-200 text-stone-500 py-2 px-4 rounded">Cancel</button>
-            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded"> {loading ? <CgSpinner className="animate-spin text-lg" /> : 'Create'}</button>
+            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded"> {loading ? <CgSpinner className="animate-spin text-lg" /> : 'Save'}</button>
           </div>
         </form>
       </div>

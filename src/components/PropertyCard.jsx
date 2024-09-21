@@ -9,8 +9,6 @@ import { IoIosCall } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { TiCameraOutline } from "react-icons/ti";
 
-import { CiCamera } from "react-icons/ci";
-
 
 const tourismGovernates = [
   "Alexandria",

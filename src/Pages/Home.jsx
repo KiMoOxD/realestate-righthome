@@ -14,7 +14,7 @@ import { IoIosCall } from "react-icons/io";
 export default function Home() {
   let { lang } = useAllContext();
   const [apartments, setApartments] = useState([]);
-  let [collectionType, setCollectionType] = useState('apartments')
+  let [collectionType, setCollectionType] = useState('all')
 
   useEffect(() => {
     const fetchApartments = async () => {
@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <div className="flex flex-col items-center justify-center py-10 max-w-screen-xl mx-auto">
+      <div className="flex flex-col items-center justify-center py-10 max-w-screen-2xl mx-auto">
         <p className="text-md font-semibold text-blue-500 arabic-bold mx-auto mt-10">
           {lang === "en" ? 'Featured Properties' : 'عقارات مميزة'}
         </p>
@@ -57,7 +57,7 @@ export default function Home() {
           to={"browse"}
           className="flex items-center gap-1 bg-blue-500 rounded-full text-white px-4 py-2 mt-6"
         >
-          {lang === 'en' ? 'View All Properties' : 'عرض جميع الممتلكات'} <IoArrowForward />
+          {lang === 'en' ? 'View All Properties' : 'عرض جميع العقارات'} <IoArrowForward />
         </Link>
       </div>
       <div className="lg:px-4">

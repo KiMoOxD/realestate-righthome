@@ -5,7 +5,7 @@ import governoratesEn from "../../governate.json";
 import governoratesMap from "../../governatesmap.json";
 import governatesInfo from "../../governatesInfo.json";
 import { AnimatePresence, motion } from "framer-motion";
-import { addToCollection, getDocumentData, updateDocument } from "../../utils/data";
+import { getDocumentData, updateDocument } from "../../utils/data";
 import { CgSpinner } from "react-icons/cg";
 import { useAllContext } from "../../context/AllContext";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -126,7 +126,6 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
   }
 
   async function handleImageAdd(e) {
-    console.log(e.target.files)
     const files = Array.from(e.target.files); 
     const handleUpload = async () => {
       const cloudName = 'dpheca8vj'; 
@@ -187,8 +186,8 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div className="flex flex-wrap gap-2">
             {selectedImages.map(img => { 
-                return <div className="relative bg-black cursor-pointer border hover:border-blue-600 transition">
-                    <img src={img} alt="" className="size-10" onClick={() => {setSingleImage(img); setSingleModal(true)}} />
+                return <div className="relative cursor-pointer border rounded hover:border-blue-600 transition">
+                    <img src={img} alt="" className="size-10 rounded" onClick={() => {setSingleImage(img); setSingleModal(true)}} />
                     <IoMdCloseCircleOutline className="absolute top-0 left-full translate-x-[-50%] translate-y-[-50%] text-blue-700 text-base bg-white rounded-full z-10" onClick={() => setSelectedImages(prev => prev.filter(item => item !== img))} />
                 </div>
             })}

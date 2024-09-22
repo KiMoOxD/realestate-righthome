@@ -11,86 +11,87 @@ import PropertyCard from "../components/PropertyCard";
 
 export default function PropertyPage() {
   let property = useLoaderData(),
-    [imgCont, setImgCont] = useState(property.images[0]),
-    [modal, setModal] = useState(false),
-    { lang } = useAllContext(),
     params = useParams(),
+    { lang } = useAllContext(),
+    [imgCont, setImgCont] = useState(null),
+    [modal, setModal] = useState(false),
     [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    async function getData() {
+      if (property) {
+        let propertiesData = await getCollectionData(params.collection);
+        setProperties(propertiesData.filter((item) => item.id !== params.id));
+        setImgCont(property.images[0]);
+      }
+    }
+    getData();
+    return () => (document.body.style.overflow = "auto");
+  }, [params.collection, params.id, property.images, property]);
 
   function OpenModal() {
     setModal(true);
     document.body.style.overflow = "hidden";
   }
 
-  useEffect(() => {
-    async function getData() {
-      let propertiesData = await getCollectionData(params.collection);
-      setProperties(propertiesData);
-    }
-    getData();
-    return () => (document.body.style.overflow = "auto");
-  }, [params.collection]);
-
-  useEffect(() => {
-    setImgCont(property.images[0])
-  }, [property.id, property.images])
-
   return (
     <>
-      <div className="flex flex-col max-w-screen-2xl mx-auto">
-        <ImageSlider
-          imgs={property.images}
-          modal={modal}
-          setModal={setModal}
-          imgIdx={property.images.indexOf(imgCont)}
-        />
-        {property === 0 && (
-          <div className="p-5 text-center">
-            <p className="text-3xl mb-5">
-              Looks Like The Page Doesn't exist...
-            </p>
-            <Link to={".."} className="text-sm">
-              Back to{" "}
-              <span className="rounded-lg px-4 py-2 bg-blue-500 text-white">
-                Home
-              </span>
-            </Link>
-          </div>
-        )}
-        <div className="flex flex-col lg:flex-row items-center gap-4 px-4 2xl:px-0 mt-5">
-          <ImagesList
-            images={property.images}
-            imgCont={imgCont}
-            setImgCont={setImgCont}
-          />
-          <MainImage
-            imgCont={imgCont}
-            title={property.title}
-            OpenModal={OpenModal}
-          />
-          <PropertyInfo property={property} />
+      {property === 0 ? (
+        <div className="p-5 flex flex-col justify-center items-center min-h-[calc(100vh-114px)]">
+          <p className="text-3xl mb-5">Looks Like The Page Doesn't exist...</p>
+          <Link to={".."} className="text-sm">
+            Back to{" "}
+            <span className="rounded-lg px-4 py-2 bg-blue-500 text-white">
+              Home
+            </span>
+          </Link>
         </div>
-        <p className="text-md font-semibold text-blue-600 arabic-bold mx-auto mt-5">
-          {lang === "en" ? "Discover" : "اسـتكـشف"}
-        </p>
-        <p className="text-3xl font-semibold text-stone-800 arabic-bold mx-auto mt-1">
-          {lang === "en" ? "Simillar Properties" : "عقارات مشابهة"}
-        </p>
-      </div>
-      <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mx-auto my-7">
-        {properties.length > 0 ? (
-          properties.map((apartment) => (
-            <PropertyCard key={apartment.id} property={apartment} />
-          ))
-        ) : (
-          <>
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-          </>
-        )}
-      </div>
+      ) : (
+        <>
+          {" "}
+          <div className="flex flex-col max-w-screen-2xl mx-auto">
+            <ImageSlider
+              imgs={property.images}
+              modal={modal}
+              setModal={setModal}
+              imgIdx={property.images.indexOf(imgCont)}
+            />
+            <div className="flex flex-col lg:flex-row items-center gap-4 px-4 2xl:px-0 mt-5">
+              <ImagesList
+                images={property.images}
+                imgCont={imgCont}
+                setImgCont={setImgCont}
+              />
+              <MainImage
+                imgCont={imgCont}
+                title={property.title}
+                OpenModal={OpenModal}
+              />
+              <PropertyInfo property={property} />
+            </div>
+            <p className="text-md font-semibold text-blue-600 arabic-bold mx-auto mt-5">
+              {lang === "en" ? "Discover" : "اسـتكـشف"}
+            </p>
+            <p className="text-3xl font-semibold text-stone-800 arabic-bold mx-auto mt-1">
+              {lang === "en" ? "Simillar Properties" : "عقارات مشابهة"}
+            </p>
+          </div>
+          <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mx-auto my-7">
+            {properties.length > 0 ? (
+              properties.map((apartment) => (
+                <PropertyCard key={apartment.id} property={apartment} />
+              ))
+            ) : (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            )}
+          </div>{" "}
+        </>
+      )}
     </>
   );
 }
@@ -99,7 +100,6 @@ export async function loader({ params }) {
   let id = params.id;
   let collection = params.collection;
   let property = getDocumentData(collection, id);
-  console.log(property);
 
   return property ? property : null;
 }

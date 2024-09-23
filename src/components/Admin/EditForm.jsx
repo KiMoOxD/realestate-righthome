@@ -13,6 +13,10 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 
 const LocationOptions = governoratesEn;
 const statusOptions = [{label: 'For Sale', value: 'sale'}, {label: 'For Rent', value: 'rent'}];
+const PaymentOptions = [
+  { label: "Cash", value: "cash" },
+  { label: "Installment", value: "installment" },
+];
 
 
 export default function EditForm({ CloseEditModal, setSingleImage, setSingleModal }) {
@@ -25,6 +29,8 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
       [selectedStatus, setSelectedStatus] = useState(''),
       [error, setError] = useState({isErr: false, content: ''}),
       [loading, setLoading] = useState(false),
+      [paymentType, setPaymentType] = useState(PaymentOptions[0]),
+      [insYears, setInsYears] = useState(0),
       priceRef = useRef(),
       bedroomsRef = useRef(),
       bathroomsRef = useRef(),
@@ -39,6 +45,8 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
             setDescription({en: property.description.en, ar: property.description.ar})
             setSelectedStatus(property.status === 'sale' ? {label: 'For Sale', value: 'sale'} : {label: 'For Rent', value: 'rent'})
             setSelectedImages(property.images)
+            setPaymentType(property.paymentType === 'cash' ? {label: 'Cash', value: 'cash'} : {label: 'Installment', value: 'installment'})
+            property.paymentType === 'installment' && setInsYears(property.insYears)
             priceRef.current.value = property.price
             bedroomsRef.current.value = property.beds
             bathroomsRef.current.value = property.baths
@@ -47,6 +55,15 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
         getDocData()
         // eslint-disable-next-line
     }, [selectedProp])
+
+  function handlePaymentChange(option) {
+    console.log(option)
+    setPaymentType(option)
+  }
+
+  function handleInsYears(e) {
+    setInsYears(e.target.value)
+  }
 
   const handleSelectChange = (option) => {
     setDefaultGovOption(option);
@@ -66,6 +83,8 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
     e.preventDefault();  
     if (
       !selectedStatus ||
+      (paymentType.value === 'installment' && !insYears) ||
+      !paymentType ||
       !governoratesMap[`${defaultGovOption?.value}`] ||
       selectedImages.length === 0 ||
       !title.en ||
@@ -98,6 +117,7 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
         price: priceRef.current.value,
         category: selectedProp.cName,
         status: selectedStatus.value,
+        paymentType: paymentType.value,
         description: {
           ar: description.ar,
           en: description.en,
@@ -111,6 +131,7 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
           ar: title.ar,
           en: title.en,
         },
+        ...(paymentType.value === 'installment' && { insYears: insYears }),
       };
   
       updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
@@ -213,13 +234,20 @@ export default function EditForm({ CloseEditModal, setSingleImage, setSingleModa
               <input ref={bathroomsRef} type="number" placeholder="Bathrooms" />
               <input ref={areaRef} type="number" placeholder="Area (Sq/M)" />
           </div>
-          <div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 ">
             <Select
-                  options={statusOptions}
-                  placeholder={'Status...'}
-                  onChange={handleStatusChange}
-                  value={selectedStatus}
-              />
+              options={statusOptions}
+              placeholder={"Status..."}
+              onChange={handleStatusChange}
+              value={selectedStatus}
+            />
+            <Select
+              options={PaymentOptions}
+              placeholder={"Payment..."}
+              onChange={handlePaymentChange}
+              value={paymentType}
+            />
+            <input type="number" min={0} value={insYears} disabled={paymentType.value === 'cash'} onChange={handleInsYears} className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1" placeholder="Installment Years..."/>
           </div>
           <div className="flex gap-1 items-center">
             <button type="button" onClick={() => setLanguage('en')} className="bg-stone-200 p-1 text-xs rounded hover:bg-stone-300">EN</button>

@@ -6,13 +6,12 @@ import SingleImageModal from "../components/Admin/SingleImageModal";
 import { TextEffect } from "../components/TextEffect/TextEffectBase.tsx";
 import { motion } from "framer-motion";
 
-
 export default function AdminPage() {
   let [modal, setModal] = useState(false);
   let [editModal, setEditModal] = useState(false);
   let [singleModal, setSingleModal] = useState(false);
   let [singleImage, setSingleImage] = useState(null);
-  let [isAdmin, setIsAdmin] = useState(false);
+  let [isAdmin, setIsAdmin] = useState(true);
   let [magicWord, setMagicWord] = useState(false);
 
   function CloseModal() {
@@ -25,13 +24,13 @@ export default function AdminPage() {
   }
 
   function handleChange(e) {
-    setMagicWord(e.target.value)
+    setMagicWord(e.target.value);
   }
 
   function handleClick() {
     if (magicWord.toLowerCase() === "right home") {
-      setIsAdmin(true)
-    } 
+      setIsAdmin(true);
+    }
   }
 
   return (
@@ -39,7 +38,13 @@ export default function AdminPage() {
       {isAdmin ? (
         <div className="min-h-[calc(100vh-114px)] flex justify-center items-center max-w-screen-xl mx-auto p-2">
           <PropertiesTable setModal={setModal} setEditModal={setEditModal} />
-          {modal && <CreateForm CloseModal={CloseModal} />}
+          {modal && (
+            <CreateForm
+              CloseModal={CloseModal}
+              setSingleImage={setSingleImage}
+              setSingleModal={setSingleModal}
+            />
+          )}
           {editModal && (
             <EditForm
               CloseEditModal={CloseEditModal}
@@ -57,7 +62,11 @@ export default function AdminPage() {
         </div>
       ) : (
         <div className="min-h-[calc(100vh-114px)] flex flex-col justify-center items-center">
-          <motion.div initial={{opacity: 0, x: 100}} animate={{opacity: 1, x: 0}} transition={{duration: 2}}>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 2 }}
+          >
             <TextEffect
               per="char"
               preset="fade"
@@ -66,7 +75,12 @@ export default function AdminPage() {
               Hello, Captain of Right Home!
             </TextEffect>
           </motion.div>
-          <motion.div initial={{opacity: 0, x: 100}} animate={{opacity: 1, x: 0}} transition={{duration: 1, delay: 1.9}} className="mt-5 lg:mt-10">
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 1.9 }}
+            className="mt-5 lg:mt-10"
+          >
             <TextEffect
               per="char"
               preset="fade"
@@ -76,10 +90,26 @@ export default function AdminPage() {
               What's the magic word ?
             </TextEffect>
           </motion.div>
-          <motion.div initial={{opacity: 0, x: 100}} animate={{opacity: 1, x: 0}} transition={{duration: 1, delay: 2.2}} className="mt-5">
-            <input type="text" className="w-[200px] h-[40px] px-2 border-2 rounded outline-none" placeholder="Magic word goes here..." onChange={handleChange}/>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 2.2 }}
+            className="mt-5"
+          >
+            <input
+              type="text"
+              className="w-[200px] h-[40px] px-2 border-2 rounded outline-none"
+              placeholder="Magic word goes here..."
+              onChange={handleChange}
+            />
           </motion.div>
-          <motion.button initial={{opacity: 0, x: 100}} animate={{opacity: 1, x: 0}} transition={{duration: 1, delay: 2.2}} className="mt-5 bg-blue-500 px-4 py-1 rounded shadow-md transition hover:bg-blue-600 text-white" onClick={handleClick}>
+          <motion.button
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 2.2 }}
+            className="mt-5 bg-blue-500 px-4 py-1 rounded shadow-md transition hover:bg-blue-600 text-white"
+            onClick={handleClick}
+          >
             Lets go ?
           </motion.button>
         </div>

@@ -8,6 +8,8 @@ import { LiaMoneyBillWaveAltSolid } from "react-icons/lia";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { GiProgression } from "react-icons/gi";
+
 
 export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
@@ -27,7 +29,7 @@ export default function PropertyInfo({ property }) {
     I would like to get more information about this property:\n\n
     Type: ${property.category}\n
     Price: ${property.price} EGP\n
-    Location: ${property.governate}\n
+    Location: ${property.region.en}\n
     Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n\n
   `;
 
@@ -61,7 +63,7 @@ export default function PropertyInfo({ property }) {
         <p className="relative font-semibold text-2xl">
           {formattedPriceEn.format(property.price).replace("$", "")} EGP
           <span className="absolute top-1/2 translate-y-[-50%] right-0 text-xs bg-stone-200/60 p-1 font-medium text-stone-800">
-            Installment
+            {property.paymentType === 'cash' ? (lang === 'en' ? 'Cash' : 'كاش') : (lang === 'en' ? 'Installment' : 'تقسيط')}
           </span>
         </p>
       )}
@@ -69,7 +71,7 @@ export default function PropertyInfo({ property }) {
         <p className="relative font-semibold text-2xl text-right ">
           {formattedPriceAR.format(property.price)}
           <span className="absolute top-1/2 translate-y-[-50%] left-0 text-xs bg-stone-200/60 p-1 font-medium text-stone-800">
-            تقسيط
+            {property.paymentType === 'cash' ? (lang === 'en' ? 'Cash' : 'كاش') : (lang === 'en' ? 'Installment' : 'تقسيط')}
           </span>
         </p>
       )}
@@ -83,6 +85,26 @@ export default function PropertyInfo({ property }) {
       >
         {lang === "en" ? property.description.en : property.description.ar}
       </div>
+      {property.paymentType === 'installment' && <p className={`text-xs text-stone-400 mt-2 ${lang === "ar" && "text-right"}`}>
+        {lang === "en" ? "Installment" : "التقسيط"}
+      </p>}
+      {property.paymentType === 'installment' && <div className="flex justify-evenly items-center mt-4">
+        <div className="flex flex-col items-center">
+          <LiaMoneyBillWaveAltSolid className="text-xl text-stone-500" />
+          <p className="text-xs text-stone-500 arabic">
+            {lang === "en" ? "Down Payment" : "مقدم"}
+          </p>
+          <p className="text-sm">100000000</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <GiProgression className="text-xl text-stone-500" />
+          <p className="text-xs text-stone-500 arabic">
+            {lang === "en" ? "Duration (Year)" : "(سنة) مدة التقسيط"}
+          </p>
+          <p className="text-sm">{property.insYears}</p>
+        </div>
+      </div>}
+      {property.paymentType === 'installment' && <hr className="my-2" />}
       <div className="flex justify-evenly items-center mt-4">
         <div className="flex flex-col items-center">
           <PiBathtubLight className="text-xl text-stone-500" />
@@ -106,13 +128,6 @@ export default function PropertyInfo({ property }) {
           <p className="text-sm">
             {property.area} <span className="text-xs">m²</span>
           </p>
-        </div>
-        <div className="flex flex-col items-center">
-          <LiaMoneyBillWaveAltSolid className="text-xl text-stone-500" />
-          <p className="text-xs text-stone-500 arabic">
-            {lang === "en" ? "Installment" : "التقسيط"}
-          </p>
-          <p className="text-sm">Monthly or Quarterly</p>
         </div>
       </div>
       <hr className="my-2" />
@@ -148,7 +163,7 @@ export default function PropertyInfo({ property }) {
                 initial={{ opacity: 0, scale: 0, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0, y: 50 }}
-                className="py-0.5"
+                className="py-0.5 md:py-0"
               >
                 +201145034531
               </motion.span>

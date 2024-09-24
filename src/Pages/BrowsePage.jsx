@@ -120,6 +120,7 @@ export default function BrowsePage() {
     e.preventDefault();
     let array = searchData;
     setFirstTime(false);
+    setShowFilters(false)
 
     if (selectedTypes.length > 0) {
       array = array.filter((property) =>

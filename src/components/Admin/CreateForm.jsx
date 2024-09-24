@@ -32,6 +32,7 @@ export default function CreateForm({
     [loading, setLoading] = useState(false),
     [paymentType, setPaymentType] = useState(PaymentOptions[0]),
     [insYears, setInsYears] = useState(0),
+    downPaymentRef = useRef(),
     priceRef = useRef(),
     bedroomsRef = useRef(),
     bathroomsRef = useRef(),
@@ -57,8 +58,8 @@ export default function CreateForm({
       !selectedCategory ||
       !selectedStatus ||
       (paymentType.value === "installment" && !insYears) ||
+      (paymentType.value === "installment" && !downPaymentRef.current.value) ||
       !paymentType ||
-      // !governoratesMap[`${selectedOption?.value}`] ||
       selectedImages.length === 0 ||
       !title.en ||
       !title.ar ||
@@ -102,6 +103,7 @@ export default function CreateForm({
           en: title.en,
         },
         ...(paymentType.value === "installment" && { insYears: insYears }),
+        ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
       };
 
       console.log(PropertyData);
@@ -299,18 +301,24 @@ export default function CreateForm({
               </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               <Select
                 options={regionOptionsEn}
                 placeholder={"Region..."}
                 onChange={handleRegionChange}
               />
+              <Select
+                options={PaymentOptions}
+                placeholder={"Payment..."}
+                onChange={handlePaymentChange}
+              />
               <input
                 ref={priceRef}
-                className="p-2 border text-sm rounded outline-none"
+                className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
                 type="text"
                 placeholder="Price"
               />
+
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-1">
@@ -408,10 +416,13 @@ export default function CreateForm({
                 placeholder={"Status..."}
                 onChange={handleStatusChange}
               />
-              <Select
-                options={PaymentOptions}
-                placeholder={"Payment..."}
-                onChange={handlePaymentChange}
+              <input
+                ref={downPaymentRef}
+                className="p-2 border text-sm rounded outline-none"
+                type="number"
+                min={0}
+                disabled={paymentType.value === "cash"}
+                placeholder="Down Payment"
               />
               <input
                 type="number"

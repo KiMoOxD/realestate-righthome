@@ -35,6 +35,7 @@ export default function EditForm({
     priceRef = useRef(),
     bedroomsRef = useRef(),
     bathroomsRef = useRef(),
+    downPaymentRef = useRef(),
     areaRef = useRef();
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function EditForm({
       bedroomsRef.current.value = property.beds;
       bathroomsRef.current.value = property.baths;
       areaRef.current.value = property.area;
+      downPaymentRef.current.value = property.downPayment
     }
     getDocData();
     // eslint-disable-next-line
@@ -93,6 +95,7 @@ export default function EditForm({
     if (
       !selectedStatus ||
       (paymentType.value === "installment" && !insYears) ||
+      (paymentType.value === "installment" && !downPaymentRef.current.value) ||
       !paymentType ||
       selectedImages.length === 0 ||
       !title.en ||
@@ -136,6 +139,7 @@ export default function EditForm({
           en: title.en,
         },
         ...(paymentType.value === "installment" && { insYears: insYears }),
+        ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
       };
 
       updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
@@ -263,16 +267,22 @@ export default function EditForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             <Select
               options={regionOptionsEn}
               placeholder={"Region..."}
               onChange={handleRegionChange}
               value={region}
             />
+            <Select
+              options={PaymentOptions}
+              placeholder={"Payment..."}
+              onChange={handlePaymentChange}
+              value={paymentType}
+            />
             <input
               ref={priceRef}
-              className="p-2 border text-sm rounded outline-none"
+              className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
               type="text"
               placeholder="Price"
             />
@@ -289,11 +299,12 @@ export default function EditForm({
               onChange={handleStatusChange}
               value={selectedStatus}
             />
-            <Select
-              options={PaymentOptions}
-              placeholder={"Payment..."}
-              onChange={handlePaymentChange}
-              value={paymentType}
+            <input
+              ref={downPaymentRef}
+              className="p-2 border text-sm rounded outline-none"
+              type="number"
+              disabled={paymentType.value === "cash"}
+              placeholder="Down Payment..."
             />
             <input
               type="number"

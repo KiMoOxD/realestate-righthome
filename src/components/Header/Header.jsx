@@ -47,19 +47,19 @@ export default function Header() {
                   <hr />
                   <Link
                     to={"/"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-md text-center"
+                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm text-center"
                   >
                     Home
                   </Link>
                   <Link
                     to={"/browse"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-md text-center"
+                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm text-center"
                   >
                     Browse
                   </Link>
                   <Link
                     to={"/admin"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-md text-center"
+                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm text-center"
                   >
                     Admin
                   </Link>

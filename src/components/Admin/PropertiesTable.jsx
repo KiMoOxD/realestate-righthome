@@ -4,6 +4,7 @@ import { useAllContext } from "../../context/AllContext";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function PropertiesTable({ setModal, setEditModal }) {
   let [propertiesData, setPropertiesData] = useState(null);
@@ -74,6 +75,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
             className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 outline-none max-w-full"
             placeholder="Search by Title/Governate/Description/id"
             onChange={handleSearch}
+            disabled={propertiesData === null}
           />
         </div>
         <button
@@ -158,14 +160,14 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                 />
                 <div className="w-full pr-2">
                   <p className="text-xs text-stone-500/90">{prop.id}</p>
-                  <p className="text-md font-medium flex items-center justify-between">
+                  <Link to={`/browse/${prop.category}s/${prop.id}`} className="text-md font-medium flex items-center justify-between hover:underline">
                     <span className="truncate max-w-[160px] lg:max-w-[250px] xl:max-w-[190px] 2xl:max-w-[190px]">
                       {prop.title?.en}
                     </span>
                     <span className="text-xs truncate max-w-[100px] sm:max-w-[400px]">
                       {prop.region?.en}
                     </span>
-                  </p>
+                  </Link>
                   <p className="font-medium flex items-center justify-between">
                     <span className="truncate">{prop.price} EGP</span>
                     <span className="text-xs">{prop.category}</span>

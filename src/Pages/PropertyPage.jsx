@@ -54,7 +54,6 @@ export default function PropertyPage() {
               imgs={property.images}
               modal={modal}
               setModal={setModal}
-              imgIdx={property.images.indexOf(imgCont)}
             />
             <div className="flex flex-col lg:flex-row items-center gap-4 px-4 2xl:px-0 mt-5">
               <ImagesList

@@ -138,7 +138,7 @@ export default function PropertyInfo({ property }) {
                 initial={{ opacity: 0, scale: 0, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0, y: 50 }}
-                className="flex gap-2"
+                className="flex gap-2 items-center"
               >
                 <IoIosCall className="text-2xl" /> Phone Number
               </motion.span>
@@ -148,6 +148,7 @@ export default function PropertyInfo({ property }) {
                 initial={{ opacity: 0, scale: 0, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0, y: 50 }}
+                className="py-0.5"
               >
                 +201145034531
               </motion.span>

@@ -102,3 +102,30 @@ export const updateDocument = async (collectionName, docId, updateData) => {
     console.error("Error updating document: ", error);
   }
 };
+
+
+export const regionOptionsAr = [
+  { label: 'أكتوبر', value: { en: 'October', ar: 'أكتوبر' } },
+  { label: 'زايد', value: { en: 'Zayed', ar: 'زايد' } },
+  { label: 'التجمع الخامس', value: { en: 'The Fifth Settlement', ar: 'التجمع الخامس' } },
+  { label: 'المستقبل سيتي', value: { en: 'Mostakbal City', ar: 'المستقبل سيتي' } },
+  { label: 'العاصمة الإدارية', value: { en: 'New Capital', ar: 'العاصمة الإدارية' } },
+  { label: 'مدينة الجلالة', value: { en: 'Galala City', ar: 'مدينة الجلالة' } },
+  { label: 'السخنة', value: { en: 'Sokhna', ar: 'السخنة' } },
+  { label: 'العلمين الجديدة', value: { en: 'New Alamein', ar: 'العلمين الجديدة' } },
+  { label: 'الساحل', value: { en: 'North Coast', ar: 'الساحل' } },
+  { label: 'الجونة', value: { en: 'Gouna', ar: 'الجونة' } },
+];
+
+export const regionOptionsEn = [
+  { label: 'October', value: { en: 'October', ar: 'أكتوبر' } },
+  { label: 'Zayed', value: { en: 'Zayed', ar: 'زايد' } },
+  { label: 'The Fifth Settlement', value: { en: 'The Fifth Settlement', ar: 'التجمع' } },
+  { label: 'Mostakbal City', value: { en: 'Mostakbal City', ar: 'المستقبل سيتي' } },
+  { label: 'New Capital', value: { en: 'New Capital', ar: 'العاصمة الإدارية' } },
+  { label: 'Galala City', value: { en: 'Galala City', ar: 'مدينة الجلالة' } },
+  { label: 'Sokhna', value: { en: 'Sokhna', ar: 'السخنة' } },
+  { label: 'New Alamein', value: { en: 'New Alamein', ar: 'العلمين الجديدة' } },
+  { label: 'North Coast', value: { en: 'North Coast', ar: 'الساحل' } },
+  { label: 'Gouna', value: { en: 'Gouna', ar: 'الجونة' } },
+];

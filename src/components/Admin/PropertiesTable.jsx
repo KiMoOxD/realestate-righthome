@@ -1,29 +1,33 @@
 import { useEffect, useState } from "react";
 import { deleteFromCollection, getAllCollectionsData } from "../../utils/data";
 import { useAllContext } from "../../context/AllContext";
+import { FiEdit } from "react-icons/fi";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { AnimatePresence, motion } from "framer-motion";
 
-export default function PropertiesTable({setModal, setEditModal}) {
+export default function PropertiesTable({ setModal, setEditModal }) {
   let [propertiesData, setPropertiesData] = useState(null);
   let [data, setData] = useState(propertiesData);
-  let {selectedProp, setSelectedProp} = useAllContext()
-  console.log(selectedProp);
+  let { setSelectedProp } = useAllContext();
   useEffect(() => {
     async function getData() {
       let properties = await getAllCollectionsData();
       setPropertiesData(properties);
-      console.log(properties);
       setData(properties);
     }
     getData();
   }, []);
 
   function handleSearch(e) {
-    console.log("Content: ", e.target.value);
     let SearchResult = data.filter(
       (prop) =>
         prop.title.en.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        prop.description.en.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        prop.governate.en.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        prop.description.en
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()) ||
+        prop.region?.en
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()) ||
         prop.id.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setPropertiesData(SearchResult);
@@ -35,15 +39,13 @@ export default function PropertiesTable({setModal, setEditModal}) {
   }
 
   function deleteProperty(collectionName, id) {
-    setPropertiesData(prev => prev.filter(prop => prop.id !== id))
-    setData(prev => prev.filter(prop => prop.id !== id))
-    deleteFromCollection(collectionName, id)
+    setPropertiesData((prev) => prev.filter((prop) => prop.id !== id));
+    setData((prev) => prev.filter((prop) => prop.id !== id));
+    deleteFromCollection(collectionName, id);
   }
 
-  
-
   return (
-    <div className="relative w-full overflow-x-auto shadow-md sm:rounded-lg mx-auto pt-2 min-h-[600px]">
+    <div className="relative w-full shadow-md sm:rounded-lg mx-auto my-2 p-2 min-h-[580px]">
       <div className="pb-4 flex items-center justify-between flex-wrap px-2">
         <label htmlFor="table-search" className="sr-only">
           Search
@@ -74,8 +76,14 @@ export default function PropertiesTable({setModal, setEditModal}) {
             onChange={handleSearch}
           />
         </div>
-        <button onClick={OpenModal} className="mr-5 mt-2 lg:mt-0 bg-blue-500 text-center text-xs h-fit py-2 px-3 rounded text-white">Create New</button>
+        <button
+          onClick={OpenModal}
+          className="mr-5 mt-2 lg:mt-0 bg-blue-500 text-center text-xs h-fit py-2 px-3 rounded text-white"
+        >
+          Create New
+        </button>
       </div>
+
       {!propertiesData && (
         <div
           role="status"
@@ -119,74 +127,56 @@ export default function PropertiesTable({setModal, setEditModal}) {
           <span class="sr-only">Loading...</span>
         </div>
       )}
+      <AnimatePresence mode="wait">
       {propertiesData && (
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Title
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Governate
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Price
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {propertiesData.map((prop) => {
-              return (
-                <tr
-                  key={prop.id}
-                  className="bg-white border-b hover:bg-gray-50"
-                >
-                  <th className="px-6 py-4">{prop.id}</th>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                  >
-                    {prop.title.en}
-                  </th>
-                  <td className="px-6 py-4">{prop.governate.en}</td>
-                  <td className="px-6 py-4">{prop.category}</td>
-                  <td className="px-6 py-4">${prop.price}</td>
-                  <td className="flex gap-5 px-6 py-4 cursor-pointer">
-                    <div
-                      className="font-medium text-blue-500 hover:underline"
-                      onClick={() =>{
-                        console.log('clicked')
-                        setEditModal(true)
-                        setSelectedProp({id: prop.id, cName: prop.category})
-                      }}
-                    >
-                      Edit
-                    </div>
-                    <button
-                      href="#"
-                      className="font-medium text-red-500 hover:underline"
-                      onClick={() =>
-                        deleteProperty(`${prop.category}s`, prop.id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-2 w-full">
+          {propertiesData.map((prop) => {
+            return (
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                key={prop.id}
+                className="relative flex gap-2 items-center w-full bg-stone-100/80 p-2 md:p-4 rounded shadow"
+              >
+                <RiDeleteBin5Line
+                  className="absolute top-1.5 right-3 text-lg text-stone-500 cursor-pointer"
+                  onClick={() => deleteProperty(`${prop.category}s`, prop.id)}
+                />
+                <FiEdit
+                  className="absolute top-2 right-10 text-stone-500 cursor-pointer"
+                  onClick={() => {
+                    console.log("clicked");
+                    setEditModal(true);
+                    setSelectedProp({ id: prop.id, cName: prop.category });
+                  }}
+                />
+                <img
+                  src={prop.images[0]}
+                  alt=""
+                  className="size-16 object-cover rounded"
+                />
+                <div className="w-full pr-2">
+                  <p className="text-xs text-stone-500/90">{prop.id}</p>
+                  <p className="text-md font-medium flex items-center justify-between">
+                    <span className="truncate max-w-[160px] lg:max-w-[250px] xl:max-w-[190px] 2xl:max-w-[190px]">
+                      {prop.title?.en}
+                    </span>
+                    <span className="text-xs truncate max-w-[100px] sm:max-w-[400px]">
+                      {prop.region?.en}
+                    </span>
+                  </p>
+                  <p className="font-medium flex items-center justify-between">
+                    <span className="truncate">{prop.price} EGP</span>
+                    <span className="text-xs">{prop.category}</span>
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       )}
+      </AnimatePresence>
     </div>
   );
 }

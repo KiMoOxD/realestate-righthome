@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { getCollectionData } from "../utils/data";
 import Section from "../components/Browse/Section";
 import Select from "react-select";
-import governoratesEn from "../governate.json";
-import governoratesAr from "../governateAr.json";
-import governatesMap from "../governatesmap.json";
+import { regionOptionsEn, regionOptionsAr } from "../utils/data";
 import { useAllContext } from "../context/AllContext";
 import PropertyCard from "../components/PropertyCard.jsx";
 import { IoIosBed } from "react-icons/io";
@@ -13,8 +11,8 @@ import { BiMinus } from "react-icons/bi";
 import { PiBathtubLight } from "react-icons/pi";
 import { VscSettings } from "react-icons/vsc";
 
-const LocationOptions = governoratesEn;
-const ArLocationOptions = governoratesAr;
+const LocationOptions = regionOptionsEn;
+const ArLocationOptions = regionOptionsAr;
 
 export default function BrowsePage() {
   let [properties, setProperties] = useState({
@@ -28,7 +26,7 @@ export default function BrowsePage() {
   let { lang } = useAllContext();
   let [bedroomsCount, setBedroomsCount] = useState(1);
   let [bathroomsCount, setBathroomsCount] = useState(1);
-  let [selectedGovernate, setSelectedGovernate] = useState(null);
+  let [selectedRegion, setSelectedRegion] = useState(null);
   let [status, setStatus] = useState(1);
   let [selectedTypes, setSelectedTypes] = useState([]);
   let priceMinRef = useRef();
@@ -104,7 +102,8 @@ export default function BrowsePage() {
   }
 
   function handleSelectedGovernate(option) {
-    setSelectedGovernate(governatesMap[option.value].governate.en);
+    setSelectedRegion(option);
+    console.log(option)
   }
 
   const handleCheckboxChange = (event) => {
@@ -128,9 +127,9 @@ export default function BrowsePage() {
       );
     }
 
-    if (selectedGovernate && enabledFilters.governate) {
+    if (selectedRegion && enabledFilters.governate) {
       array = array.filter(
-        (property) => property.governate.en === selectedGovernate
+        (property) => property.region?.en === selectedRegion.value.en
       );
     }
     if (enabledFilters.priceRange) {

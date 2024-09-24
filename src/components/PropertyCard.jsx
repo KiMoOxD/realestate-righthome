@@ -10,22 +10,20 @@ import { Link } from "react-router-dom";
 import { TiCameraOutline } from "react-icons/ti";
 
 
-const tourismGovernates = [
-  "Alexandria",
-  "Red Sea",
-  "South Sinai",
-  "Matrouh",
-  "Port Said",
-  "Damietta",
-  "Kafr El Sheikh"
+const tourismRegions = [
+  "Galala City",
+  "Sokhna",
+  "New Alamein",
+  "North Coast",
+  "Gouna",
 ];
 
 
 export default function PropertyCard({ property }) {
   let { lang } = useAllContext();
-  let isTourism = tourismGovernates.some(gov => property.governate.en === gov)
+  let isTourism = tourismRegions.some(reg => property.region.en === reg)
   return (
-    <div className="rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer">
+    <div className="rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer hover:shadow-lg transition">
       <Link to={`/browse/${property.category}s/${property.id}`}>
         <div className="relative h-[220px] overflow-hidden">
           <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-10 text-xs">
@@ -40,12 +38,12 @@ export default function PropertyCard({ property }) {
           <span className={`absolute flex items-center gap-1 top-4 left-20 py-1 min-w-16 px-2 text-center ${isTourism ? 'bg-blue-500' : 'bg-cyan-900'} rounded-full z-10 text-xs text-white`}>
             {!isTourism && <FaCity/>}{" "}
             {isTourism && <FaDisease />}{" "}
-            {lang === "en" ? property.governate.en : property.governate.ar}
+            {lang === "en" ? property.region?.en : property.region?.ar}
           </span>
           <span className={`absolute flex items-center gap-1.5 bottom-2 left-3 py-1 bg-black/30 px-1.5 text-center rounded-lg z-10 text-xs text-white`}>
               <TiCameraOutline className="text-xl text-stone-300"/> {property.images.length}
           </span>
-          <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-10 transition opacity-0 group-hover:opacity-100"></div>
+          <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-[1] transition opacity-0 group-hover:opacity-75"></div>
           <img
             className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] min-w-[430px]"
             src={property.images[0]}

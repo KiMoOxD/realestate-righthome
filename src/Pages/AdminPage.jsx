@@ -36,7 +36,7 @@ export default function AdminPage() {
   return (
     <>
       {isAdmin ? (
-        <div className="min-h-[calc(100vh-114px)] flex justify-center items-center max-w-screen-xl mx-auto p-2">
+        <div className="min-h-[calc(100vh-114px)] flex flex-col justify-center items-center max-w-screen-2xl mx-auto p-2">
           <PropertiesTable setModal={setModal} setEditModal={setEditModal} />
           {modal && (
             <CreateForm

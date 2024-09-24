@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import { CgSpinner } from "react-icons/cg";
 
 
-export default function ImageSlider({imgs, modal, setModal, imgIdx}) {
+export default function ImageSlider({imgs, modal, setModal}) {
   let [isLoading, setIsLoading] = useState(true);
-  let [index, setIndex] = useState(imgIdx)
+  let [index, setIndex] = useState(0)
   let [ActiveImg, setActiveImg] = useState(imgs[index])
 
   useEffect(() => {

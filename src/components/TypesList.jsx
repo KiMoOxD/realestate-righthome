@@ -46,13 +46,13 @@ export default function TypesList({ setCollectionType }) {
       >
         {lang === "en" ? "House" : "منزل"}
       </button>
-      <button
+      {/* <button
         type="button"
         onClick={() => handleClick('offices')}
         className={`px-4 py-1 ${isSelected === 'offices' ? 'bg-blue-500 text-white' : "bg-stone-100"} rounded-full hover:bg-blue-400 hover:text-white`}
       >
         {lang === "en" ? "Office" : "مكتب"}
-      </button>
+      </button> */}
     </div>
   );
 }

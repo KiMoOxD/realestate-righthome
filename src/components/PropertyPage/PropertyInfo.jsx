@@ -48,6 +48,9 @@ export default function PropertyInfo({ property }) {
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.category.toUpperCase()}
         </p>
+        {property.category === 'villa' && <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
+          {property.villaType}
+        </p>}
       </div>
       <h1
         className={`text-2xl md:text-3xl mt-1.5 ${

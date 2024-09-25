@@ -5,6 +5,11 @@ import { useAllContext } from "../../context/AllContext";
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
+import { HiOutlineHome } from "react-icons/hi2";
+import { MdManageSearch } from "react-icons/md";
+import { RiAdminLine } from "react-icons/ri";
+
+
 
 export default function Header() {
   let { lang, toggleLang, isMenuOpen, toggleMenu } = useAllContext();
@@ -39,7 +44,7 @@ export default function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 80 }}
                   transition={{type: 'tween'}}
-                  className="absolute z-50 h-[100vh] w-full sm:w-3/4 md:w-[400px] top-0 right-0 bg-stone-50 flex flex-col gap-1 *:transition"
+                  className="absolute z-50 h-[100vh] sm:rounded-bl-full shadow-lg border w-full sm:w-1/2 md:w-[400px] top-0 right-0 bg-stone-50 flex flex-col gap-1 *:transition"
                 >
                   <p className="text-2xl text-center font-semibold py-3">
                     Right Home
@@ -47,21 +52,21 @@ export default function Header() {
                   <hr />
                   <Link
                     to={"/"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm text-center"
+                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm flex items-center justify-center gap-2"
                   >
-                    Home
+                   <HiOutlineHome className="text-lg" /> <span className="mt-1">Home</span>
                   </Link>
                   <Link
                     to={"/browse"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm text-center"
+                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm flex items-center justify-center gap-1"
                   >
-                    Browse
+                    <MdManageSearch className="text-lg" /> <span className="mt-1">Browse</span>
                   </Link>
                   <Link
                     to={"/admin"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm text-center"
+                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm flex items-center justify-center gap-2.5"
                   >
-                    Admin
+                    <RiAdminLine className="text-lg" /> <span className="mt-1">Admin</span>
                   </Link>
                   <IoMdClose
                     onClick={toggleMenu}

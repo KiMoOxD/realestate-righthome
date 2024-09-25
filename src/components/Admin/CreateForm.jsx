@@ -32,6 +32,7 @@ export default function CreateForm({
     [loading, setLoading] = useState(false),
     [paymentType, setPaymentType] = useState(PaymentOptions[0]),
     [insYears, setInsYears] = useState(0),
+    [villaType, setVillaType] = useState(null),
     downPaymentRef = useRef(),
     priceRef = useRef(),
     bedroomsRef = useRef(),
@@ -59,6 +60,7 @@ export default function CreateForm({
       !selectedStatus ||
       (paymentType.value === "installment" && !insYears) ||
       (paymentType.value === "installment" && !downPaymentRef.current.value) ||
+      (selectedCategory === "villa" && !villaType) ||
       !paymentType ||
       selectedImages.length === 0 ||
       !title.en ||
@@ -104,6 +106,7 @@ export default function CreateForm({
         },
         ...(paymentType.value === "installment" && { insYears: insYears }),
         ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
+        ...(selectedCategory === "villa" && { villaType: villaType })
       };
 
       console.log(PropertyData);
@@ -179,6 +182,10 @@ export default function CreateForm({
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
+
+  function handleVillaTypeChange(event) {
+    setVillaType(event.target.value)
+  }
 
   function handlePaymentChange(option) {
     setPaymentType(option);
@@ -321,7 +328,7 @@ export default function CreateForm({
 
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-1">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
               <div class="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
@@ -354,7 +361,7 @@ export default function CreateForm({
                   Villa
                 </label>
               </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
+              {/* <div class="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
                   id="office"
@@ -369,7 +376,7 @@ export default function CreateForm({
                 >
                   Office
                 </label>
-              </div>
+              </div> */}
               <div class="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
@@ -403,6 +410,59 @@ export default function CreateForm({
                 </label>
               </div>
             </div>
+            <AnimatePresence>
+              {selectedCategory === 'villa' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
+                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleVillaTypeChange}
+                    id="standalone"
+                    type="radio"
+                    value="Standalone"
+                    name="villaType"
+                    class="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="standalone"
+                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Standalone
+                  </label>
+                </div>
+                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleVillaTypeChange}
+                    id="townHouse"
+                    type="radio"
+                    value="Town house"
+                    name="villaType"
+                    class="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="townHouse"
+                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Town house
+                  </label>
+                </div>
+                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleVillaTypeChange}
+                    id="twinHouse"
+                    type="radio"
+                    value="Twin house"
+                    name="villaType"
+                    class="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="twinHouse"
+                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Twin house
+                  </label>
+                </div>
+              </motion.div>}
+            </AnimatePresence>
+
 
             <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
               <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />

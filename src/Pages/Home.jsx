@@ -121,7 +121,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 items-center">
+      {/* <div className="flex flex-col gap-2 items-center">
         <p className="text-md font-semibold text-blue-500 arabic-bold mt-10">
           {lang === "en" ? 'Our Team' : 'فريقنا'}
         </p>
@@ -178,7 +178,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

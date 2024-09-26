@@ -5,10 +5,13 @@ import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ImageSlider from "../ImageSlider";
 
 export default function PropertiesTable({ setModal, setEditModal }) {
   let [propertiesData, setPropertiesData] = useState(null);
   let [data, setData] = useState(propertiesData);
+  let [images, setImages] = useState([])
+  let [showImages, setShowImages] = useState(false)
   let { setSelectedProp } = useAllContext();
   useEffect(() => {
     async function getData() {
@@ -46,7 +49,8 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   }
 
   return (
-    <div className="relative w-full shadow-md sm:rounded-lg mx-auto my-2 p-2 min-h-[580px]">
+    <div className="w-full shadow-md sm:rounded-lg mx-auto my-2 p-2 min-h-[580px]">
+      {showImages && <ImageSlider imgs={images} modal={showImages} setModal={setShowImages} />}
       <div className="pb-4 flex items-center justify-between flex-wrap px-2">
         <label htmlFor="table-search" className="sr-only">
           Search
@@ -156,7 +160,8 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                 <img
                   src={prop.images[0]}
                   alt=""
-                  className="size-16 object-cover rounded"
+                  className="size-16 object-cover rounded cursor-pointer"
+                  onClick={() => {setImages(prop.images); setShowImages(true)}}
                 />
                 <div className="w-full pr-2">
                   <p className="text-xs text-stone-500/90">{prop.id}</p>

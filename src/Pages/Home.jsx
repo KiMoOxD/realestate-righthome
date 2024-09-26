@@ -8,7 +8,6 @@ import SkeletonCard from "../components/SkeletonCard.jsx";
 import TypesList from "../components/TypesList.jsx";
 import { Link } from "react-router-dom";
 import { IoArrowForward } from "react-icons/io5";
-import { IoIosCall } from "react-icons/io";
 
 
 export default function Home() {
@@ -120,65 +119,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* <div className="flex flex-col gap-2 items-center">
-        <p className="text-md font-semibold text-blue-500 arabic-bold mt-10">
-          {lang === "en" ? 'Our Team' : 'فريقنا'}
-        </p>
-        <p className="text-3xl font-semibold text-stone-800">
-          {lang === "en" ? "Meet Our Agents" : "تعرف على وكلائنا"}
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-6">
-          <div className="p-2 cursor-pointer">
-            <img src="https://campaignagent.com.au/UAT/wp-content/uploads/2021/12/Ca-Agent.jpg" alt="" className="rounded-2xl w-[300px]"/>
-            <div className="mt-5 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-lg font-medium">Kareem Mohammed</p>
-                <p className="text-xs text-stone-500">Adminstritive Staff</p>
-              </div>
-              <div>
-                <IoIosCall className="text-xl border text-stone-400 rounded-full size-9 p-2"/>
-              </div>
-            </div>
-          </div>
-          <div className="p-2 cursor-pointer">
-            <img src="https://campaignagent.com.au/UAT/wp-content/uploads/2021/12/Ca-Agent.jpg" alt="" className="rounded-2xl w-[300px]"/>
-            <div className="mt-5 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-lg font-medium">Kareem Mohammed</p>
-                <p className="text-xs text-stone-500">Adminstritive Staff</p>
-              </div>
-              <div>
-                <IoIosCall className="text-xl border text-stone-400 rounded-full size-9 p-2"/>
-              </div>
-            </div>
-          </div>
-          <div className="p-2 cursor-pointer">
-            <img src="https://campaignagent.com.au/UAT/wp-content/uploads/2021/12/Ca-Agent.jpg" alt="" className="rounded-2xl w-[300px]"/>
-            <div className="mt-5 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-lg font-medium">Kareem Mohammed</p>
-                <p className="text-xs text-stone-500">Adminstritive Staff</p>
-              </div>
-              <div>
-                <IoIosCall className="text-xl border text-stone-400 rounded-full size-9 p-2"/>
-              </div>
-            </div>
-          </div>
-          <div className="p-2 cursor-pointer">
-            <img src="https://campaignagent.com.au/UAT/wp-content/uploads/2021/12/Ca-Agent.jpg" alt="" className="rounded-2xl w-[300px]"/>
-            <div className="mt-5 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-lg font-medium">Kareem Mohammed</p>
-                <p className="text-xs text-stone-500">Adminstritive Staff</p>
-              </div>
-              <div>
-                <IoIosCall className="text-xl border text-stone-400 rounded-full size-9 p-2"/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }

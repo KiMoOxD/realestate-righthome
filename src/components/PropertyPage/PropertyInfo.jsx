@@ -30,7 +30,7 @@ export default function PropertyInfo({ property }) {
     Type: ${property.category}\n
     Price: ${property.price} EGP\n
     Location: ${property.region.en}\n
-    Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n\n
+    Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
   `;
 
   return (

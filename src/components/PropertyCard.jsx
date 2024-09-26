@@ -6,8 +6,11 @@ import { FaDisease } from "react-icons/fa";
 import { FaCity } from "react-icons/fa";
 import { useAllContext } from "../context/AllContext";
 import { IoIosCall } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { TiCameraOutline } from "react-icons/ti";
+import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import { AnimatePresence, motion } from "framer-motion";
 
 
 const tourismRegions = [
@@ -19,9 +22,21 @@ const tourismRegions = [
 ];
 
 
+
 export default function PropertyCard({ property }) {
   let { lang } = useAllContext();
   let isTourism = tourismRegions.some(reg => property.region.en === reg)
+  let [showNumber, setShowNumber] = useState(false);
+  let pathName = useLocation();
+  const phoneNumber = "+201145034531";
+  const message = `
+    Hello,\n
+    I would like to get more information about this property:\n\n
+    Type: ${property.category}\n
+    Price: ${property.price} EGP\n
+    Location: ${property.region.en}\n
+    Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
+  `;
   return (
     <div className="rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer hover:shadow-lg transition">
       <Link to={`/browse/${property.category}s/${property.id}`}>
@@ -91,11 +106,18 @@ export default function PropertyCard({ property }) {
       </Link>
       <hr />
       <div className="relative flex items-center justify-between py-3 px-5">
-        <div className="flex items-center gap-2">
-          <span className="bg-green-500 rounded-full p-1"><FaWhatsapp className="text-xl text-white peer/whatsapp" /></span>
-          <span className="bg-blue-500 rounded-full p-1"><IoIosCall className="text-xl text-white peer/call" /></span>
-        </div>
-        <p>${property.price}</p>
+        <AnimatePresence>
+        {!showNumber ? <motion.div initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="flex items-center gap-2">
+            <a href={`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
+              message
+            )}`}
+            target="_blank"
+            rel="noreferrer" className="bg-green-500 rounded-full p-1"><FaWhatsapp className="text-xl text-white peer/whatsapp" /></a>
+            <span className="bg-blue-500 rounded-full p-1"><IoIosCall onClick={() => setShowNumber(true)} className="text-xl text-white peer/call" /></span>
+        </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
+        </AnimatePresence>
+        
+        <p className="py-0.5">${property.price}</p>
       </div>
     </div>
   );

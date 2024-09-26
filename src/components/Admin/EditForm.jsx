@@ -212,7 +212,7 @@ export default function EditForm({
         className="absolute w-full h-full bg-black/80"
       ></div>
 
-      <div className="relative w-[600px] max-w-full p-5 bg-white rounded">
+      <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} className="relative w-[600px] max-w-full p-5 bg-white rounded">
         <AnimatePresence>
           {error.isErr && (
             <motion.p
@@ -404,7 +404,7 @@ export default function EditForm({
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

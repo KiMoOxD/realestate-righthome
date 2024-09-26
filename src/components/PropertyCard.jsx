@@ -8,9 +8,10 @@ import { useAllContext } from "../context/AllContext";
 import { IoIosCall } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
 import { TiCameraOutline } from "react-icons/ti";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
+import { CgSpinner } from "react-icons/cg";
 
 
 const tourismRegions = [
@@ -28,6 +29,7 @@ export default function PropertyCard({ property }) {
   let isTourism = tourismRegions.some(reg => property.region.en === reg)
   let [showNumber, setShowNumber] = useState(false);
   let pathName = useLocation();
+  let [isLoading, setIsLoading] = useState(false)
   const phoneNumber = "+201145034531";
   const message = `
     Hello,\n
@@ -37,10 +39,14 @@ export default function PropertyCard({ property }) {
     Location: ${property.region.en}\n
     Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
   `;
+  useEffect(() => {
+    setIsLoading(false)
+  }, [property.id])
   return (
     <div className="rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer hover:shadow-lg transition">
-      <Link to={`/browse/${property.category}s/${property.id}`}>
+      <Link to={`/browse/${property.category}s/${property.id}`} onClick={() => setIsLoading(true)}>
         <div className="relative h-[220px] overflow-hidden">
+          {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin text-5xl text-blue-700"/>}
           <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-10 text-xs">
             {property.status === "sale"
               ? lang === "en"
@@ -59,11 +65,11 @@ export default function PropertyCard({ property }) {
               <TiCameraOutline className="text-xl text-stone-300"/> {property.images.length}
           </span>
           <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-[1] transition opacity-0 group-hover:opacity-75"></div>
-          <img
+          {!isLoading && <img
             className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] min-w-[430px]"
             src={property.images[0]}
             alt=""
-          />
+          />}
         </div>
         <div className="py-4 px-5">
           <p

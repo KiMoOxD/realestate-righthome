@@ -8,6 +8,7 @@ import { BiArea } from "react-icons/bi";
 import { IoIosBed } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { formattedPriceEn, formattedPriceAR } from "../utils/functions.js";
 
 export default function Hero() {
   let { lang } = useAllContext();
@@ -45,7 +46,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative flex items-center justify-center min-h-[80vh]  bg-cover bg-center bg-no-repeat"
+      className="relative flex items-center justify-center min-h-[80vh] bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${img})` }}
     >
       <div className="absolute inset-0 z-2 bg-gray-900/30 sm:from-cyan-900/95 sm:to-gray-900/25"></div>
@@ -125,13 +126,13 @@ export default function Hero() {
                     />
                     <div className="text-left flex-grow text-xs lg:text-sm">
                       <p className="truncate max-w-[140px] md:max-w-full">
-                        {result.title.en}
+                      {lang === 'en' ? result.title.en : result.title.ar}
                       </p>
-                      <p>{result.price}</p>
+                      <p>{lang === 'en' ? formattedPriceEn.format(result.price).replace('$', '') + " EGP" : formattedPriceAR.format(result.price)}</p>
                     </div>
                     <div>
                       <p className="text-right text-xs lg:text-sm">
-                        {result.region?.en}
+                        {lang === 'en' ? result.region?.en : result.region?.ar}
                       </p>
                       <div className="flex items-center gap-2 justify-end *:text-xs *:flex *:items-center *:gap-1">
                         <p>

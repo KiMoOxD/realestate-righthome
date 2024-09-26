@@ -25,12 +25,16 @@ export default function Hero() {
     getData()
   }, [])
 
+  useEffect(() => {
+    setSearchResult([])
+  }, [status])
+
   async function handleSearch(e) {
     let final = SearchData
     let searchText = e.target.value;
     console.log('searchtext :', searchText)
     if (searchText) {
-     final =  final.filter((result) => {
+     final =  final.filter(res => status === 1 ? res.status === 'sale' : res.status === 'rent').filter((result) => {
         return (
           result.description.en.includes(searchText) ||
           result.description.ar.includes(searchText) ||

@@ -11,7 +11,7 @@ export default function AdminPage() {
   let [editModal, setEditModal] = useState(false);
   let [singleModal, setSingleModal] = useState(false);
   let [singleImage, setSingleImage] = useState(null);
-  let [isAdmin, setIsAdmin] = useState(false);
+  let [isAdmin, setIsAdmin] = useState(true);
   let [magicWord, setMagicWord] = useState(false);
 
   function CloseModal() {

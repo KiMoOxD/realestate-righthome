@@ -54,13 +54,15 @@ font-family: 'Roboto';
 
 
 
-@keyframes spin {
+@keyframes spinn {
+  from {
+    transform: translate(-50%, -50%);
+  }
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
-.animate-spin {
-  transform: translate(-50%, -50%);
-  animation: spin 1s linear infinite;
+.animate-spin2 {
+  animation: spinn 1s linear infinite;
 }

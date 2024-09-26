@@ -50,7 +50,7 @@ export default function ImageSlider({imgs, modal, setModal}) {
             transition={{type: 'tween'}}
             className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[80%] sm:max-h-[85%]"
           >
-            {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin text-5xl text-blue-700"/>}
+            {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin2 text-5xl text-blue-700"/>}
             <AnimatePresence mode="wait">
               <motion.img
                 src={ActiveImg}

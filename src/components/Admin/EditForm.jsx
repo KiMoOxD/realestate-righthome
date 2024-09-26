@@ -32,6 +32,8 @@ export default function EditForm({
     [loading, setLoading] = useState(false),
     [paymentType, setPaymentType] = useState(PaymentOptions[0]),
     [insYears, setInsYears] = useState(0),
+    [villaType, setVillaType] = useState(null),
+    [selectedCategory, setSelectedCategory] = useState(""),
     priceRef = useRef(),
     bedroomsRef = useRef(),
     bathroomsRef = useRef(),
@@ -61,6 +63,8 @@ export default function EditForm({
           ? { label: "Cash", value: "cash" }
           : { label: "Installment", value: "installment" }
       );
+      setSelectedCategory(property.category)
+      setVillaType(property.villaType)
       property.paymentType === "installment" && setInsYears(property.insYears);
       priceRef.current.value = property.price;
       bedroomsRef.current.value = property.beds;
@@ -96,6 +100,7 @@ export default function EditForm({
       !selectedStatus ||
       (paymentType.value === "installment" && !insYears) ||
       (paymentType.value === "installment" && !downPaymentRef.current.value) ||
+      (selectedCategory === "villa" && !villaType) ||
       !paymentType ||
       selectedImages.length === 0 ||
       !title.en ||
@@ -140,6 +145,7 @@ export default function EditForm({
         },
         ...(paymentType.value === "installment" && { insYears: insYears }),
         ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
+        ...(selectedCategory === "villa" && { villaType: villaType }),
       };
 
       updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
@@ -156,6 +162,11 @@ export default function EditForm({
       }, 3000);
     }
   }
+
+  function handleVillaTypeChange(event) {
+    setVillaType(event.target.value)
+  }
+
 
   async function handleImageAdd(e) {
     const files = Array.from(e.target.files);
@@ -292,6 +303,61 @@ export default function EditForm({
             <input ref={bathroomsRef} type="number" placeholder="Bathrooms" />
             <input ref={areaRef} type="number" placeholder="Area (Sq/M)" />
           </div>
+          <AnimatePresence>
+              {selectedCategory === 'villa' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
+                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleVillaTypeChange}
+                    id="standalone"
+                    type="radio"
+                    value="Standalone"
+                    name="villaType"
+                    class="text-blue-600 bg-gray-100 border-gray-300"
+                    checked={villaType === 'Standalone'}
+                  />
+                  <label
+                    htmlFor="standalone"
+                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Standalone
+                  </label>
+                </div>
+                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleVillaTypeChange}
+                    id="townHouse"
+                    type="radio"
+                    value="Town house"
+                    name="villaType"
+                    class="text-blue-600 bg-gray-100 border-gray-300"
+                    checked={villaType === 'Town house'}
+                  />
+                  <label
+                    htmlFor="townHouse"
+                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Town house
+                  </label>
+                </div>
+                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleVillaTypeChange}
+                    id="twinHouse"
+                    type="radio"
+                    value="Twin house"
+                    name="villaType"
+                    class="text-blue-600 bg-gray-100 border-gray-300"
+                    checked={villaType === 'Twin house'}
+                  />
+                  <label
+                    htmlFor="twinHouse"
+                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Twin house
+                  </label>
+                </div>
+              </motion.div>}
+            </AnimatePresence>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 ">
             <Select
               options={statusOptions}

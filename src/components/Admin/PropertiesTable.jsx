@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { deleteFromCollection, getAllCollectionsData } from "../../utils/data";
 import { useAllContext } from "../../context/AllContext";
 import { FiEdit } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ImageSlider from "../ImageSlider";
+import DeleteIcon from "./deleteIcon";
 
 export default function PropertiesTable({ setModal, setEditModal }) {
   let [propertiesData, setPropertiesData] = useState(null);
@@ -13,6 +13,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   let [images, setImages] = useState([])
   let [showImages, setShowImages] = useState(false)
   let { setSelectedProp } = useAllContext();
+
   useEffect(() => {
     async function getData() {
       let properties = await getAllCollectionsData();
@@ -47,6 +48,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
     setData((prev) => prev.filter((prop) => prop.id !== id));
     deleteFromCollection(collectionName, id);
   }
+
 
   return (
     <div className="w-full shadow-md sm:rounded-lg mx-auto my-2 p-2 min-h-[580px]">
@@ -145,10 +147,6 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                 key={prop.id}
                 className="relative flex gap-2 items-center w-full bg-stone-100/80 p-2 md:p-4 rounded shadow"
               >
-                <RiDeleteBin5Line
-                  className="absolute top-1.5 right-3 text-lg text-stone-500 cursor-pointer"
-                  onClick={() => deleteProperty(`${prop.category}s`, prop.id)}
-                />
                 <FiEdit
                   className="absolute top-2 right-10 text-stone-500 cursor-pointer"
                   onClick={() => {
@@ -158,6 +156,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                     document.body.style.overflow = "hidden";
                   }}
                 />
+                <DeleteIcon deleteProperty={deleteProperty} prop={prop} />
                 <img
                   src={prop.images[0]}
                   alt=""

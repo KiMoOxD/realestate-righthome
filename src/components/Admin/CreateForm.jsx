@@ -361,22 +361,6 @@ export default function CreateForm({
                   Villa
                 </label>
               </div>
-              {/* <div class="flex items-center ps-2 border border-gray-200 rounded">
-                <input
-                  onClick={handleCategoryChange}
-                  id="office"
-                  type="radio"
-                  value="office"
-                  name="category"
-                  class="text-blue-600 bg-gray-100 border-gray-300"
-                />
-                <label
-                  for="office"
-                  class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
-                >
-                  Office
-                </label>
-              </div> */}
               <div class="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
@@ -570,9 +554,9 @@ export default function CreateForm({
               </button>
               <button
                 type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded"
+                className="bg-blue-500 text-white py-2 px-4 rounded flex justify-center items-center"
               >
-                {" "}
+                
                 {loading ? (
                   <CgSpinner className="animate-spin text-lg" />
                 ) : (

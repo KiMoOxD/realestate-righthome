@@ -51,30 +51,27 @@ export default function BrowsePage() {
 
       setProperties({
         villas: {
-          rent: villasData.filter((villa) => villa.status === "rent"),
-          sale: villasData.filter((villa) => villa.status === "sale"),
+          rent: villasData.filter((villa) => villa.status === "rent").length === 0 ? 'empty' : villasData.filter((villa) => villa.status === "rent"),
+          sale: villasData.filter((villa) => villa.status === "sale").length === 0 ? 'empty' : villasData.filter((villa) => villa.status === "sale"),
         },
         apartments: {
-          rent: apartmentsData.filter(
-            (apartment) => apartment.status === "rent"
-          ),
-          sale: apartmentsData.filter(
-            (apartment) => apartment.status === "rent"
-          ),
+          rent: apartmentsData.filter((apartment) => apartment.status === "rent").length === 0 ? 'empty' : apartmentsData.filter((apartment) => apartment.status === "rent"),
+          sale: apartmentsData.filter((apartment) => apartment.status === "sale").length === 0 ? 'empty' : apartmentsData.filter((apartment) => apartment.status === "sale"),
         },
         offices: {
-          rent: officesData.filter((office) => office.status === "rent"),
-          sale: officesData.filter((office) => office.status === "sale"),
+          rent: officesData.filter((office) => office.status === "rent").length === 0 ? 'empty' : officesData.filter((office) => office.status === "rent"),
+          sale: officesData.filter((office) => office.status === "sale").length === 0 ? 'empty' : officesData.filter((office) => office.status === "sale"),
         },
         studios: {
-          rent: studiosData.filter((studio) => studio.status === "rent"),
-          sale: studiosData.filter((studio) => studio.status === "sale"),
+          rent: studiosData.filter((studio) => studio.status === "rent").length === 0 ? 'empty' : studiosData.filter((studio) => studio.status === "rent"),
+          sale: studiosData.filter((studio) => studio.status === "sale").length === 0 ? 'empty' : studiosData.filter((studio) => studio.status === "sale"),
         },
         houses: {
-          rent: housesData.filter((house) => house.status === "rent"),
-          sale: housesData.filter((house) => house.status === "sale"),
+          rent: housesData.filter((house) => house.status === "rent").length === 0 ? 'empty' : housesData.filter((house) => house.status === "rent"),
+          sale: housesData.filter((house) => house.status === "sale").length === 0 ? 'empty' : housesData.filter((house) => house.status === "sale"),
         },
       });
+      
       setSearchData([
         ...villasData,
         ...apartmentsData,

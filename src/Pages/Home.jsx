@@ -12,20 +12,20 @@ import { IoArrowForward } from "react-icons/io5";
 
 export default function Home() {
   let { lang } = useAllContext();
-  const [apartments, setApartments] = useState([]);
+  const [properties, setProperties] = useState([]);
   let [collectionType, setCollectionType] = useState('all')
 
   useEffect(() => {
-    const fetchApartments = async () => {
+    const fetchProps = async () => {
       try {
         let propertiesData = await getCollectionData(collectionType);
             propertiesData = propertiesData.slice(0, 6)
-        setApartments(propertiesData);
+            setProperties(propertiesData.length === 0 ? 'empty' : propertiesData);
       } catch (error) {
         console.error("Error fetching apartments: ", error);
       }
     };
-    fetchApartments();
+    fetchProps();
   }, [collectionType]);
 
   return (
@@ -39,10 +39,11 @@ export default function Home() {
           {lang === "en" ? "Recommended for you" : "مـوصـي بـه لـك"}
         </p>
         <TypesList setCollectionType={setCollectionType} />
-        <div className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-3">
-          {apartments.length > 0 ? (
-            apartments.map((apartment) => (
-              <PropertyCard key={apartment.id} property={apartment} />
+        
+          {properties === 'empty' ? <p className="min-h-[150px] flex items-center">{lang === 'en' ? 'No Properties here yet': 'لا يوجد عقارات منشورة هنا بعد'}</p> : <div className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-3">
+          {properties.length > 0 ? (
+            properties.map((property) => (
+              <PropertyCard key={property.id} property={property } />
             ))
           ) : (
             <>
@@ -51,7 +52,8 @@ export default function Home() {
               <SkeletonCard />
             </>
           )}
-        </div>
+        </div>}
+
         <Link
           to={"browse"}
           className="flex items-center gap-1 bg-blue-500 rounded-full text-white px-4 py-2 mt-6"

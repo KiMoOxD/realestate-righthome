@@ -121,7 +121,7 @@ export default function Hero() {
                     <img
                       src={result.images[0]}
                       alt=""
-                      className="w-10 lg:w-14 rounded"
+                      className="size-10 lg:size-14 object-cover rounded"
                     />
                     <div className="text-left flex-grow text-xs lg:text-sm">
                       <p className="truncate max-w-[140px] md:max-w-full">
@@ -131,7 +131,7 @@ export default function Hero() {
                     </div>
                     <div>
                       <p className="text-right text-xs lg:text-sm">
-                        {result.governate.en}
+                        {result.region?.en}
                       </p>
                       <div className="flex items-center gap-2 justify-end *:text-xs *:flex *:items-center *:gap-1">
                         <p>

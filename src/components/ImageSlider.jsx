@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { TiCameraOutline } from "react-icons/ti";
 import { CgSpinner } from "react-icons/cg";
 
@@ -51,12 +51,18 @@ export default function ImageSlider({imgs, modal, setModal}) {
             className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[80%] sm:max-h-[85%]"
           >
             {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin text-5xl text-blue-700"/>}
-            <img
-              src={ActiveImg}
-              alt=""
-              onLoad={() => setIsLoading(false)}
-              className="max-h-full max-w-full w-fit object-contain"
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                src={ActiveImg}
+                key={ActiveImg}
+                alt=""
+                onLoad={() => setIsLoading(false)}
+                className="max-h-full max-w-full w-fit object-contain"
+                initial={{opacity: 0, x: 300}}
+                animate={{opacity: 1, x: 0}}
+                exit={{opacity: 0, x: -300}}
+              />
+            </AnimatePresence>
           </motion.div>
           <span
             onClick={CloseModal}

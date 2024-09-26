@@ -158,7 +158,7 @@ export default function Hero() {
           <div className="flex-grow">
             <input
               type="text"
-              placeholder="Apartment...."
+              placeholder="Search..."
               className="outline-none p-4 bg-white/80 text-black placeholder-stone-700 border rounded-full w-full"
               ref={searchTextRef}
               onChange={handleSearch}

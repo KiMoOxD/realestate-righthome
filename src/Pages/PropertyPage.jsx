@@ -47,7 +47,7 @@ export default function PropertyPage() {
           </Link>
         </div>
       ) : (
-        <div className="min-h-[calc(100vh-114px)]">
+        <div className="min-h-[calc(100vh-114px)] px-2">
           {" "}
           <div className="flex flex-col max-w-screen-2xl mx-auto">
             <ImageSlider

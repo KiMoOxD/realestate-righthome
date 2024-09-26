@@ -34,7 +34,7 @@ export default function PropertyInfo({ property }) {
   `;
 
   return (
-    <div className="w-full  order-2  flex flex-col">
+    <motion.div key={property.id} initial={{opacity: 0, y: -30}} animate={{opacity: 1, y: 0}} className="w-full order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.status === "sale"
@@ -174,6 +174,6 @@ export default function PropertyInfo({ property }) {
           </AnimatePresence>
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }

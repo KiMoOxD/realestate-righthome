@@ -28,7 +28,7 @@ export default function AdminPage() {
   }
 
   function handleClick() {
-    if (magicWord.toLowerCase() === "right home") {
+    if (magicWord.toLowerCase() === "kimo123456") {
       setIsAdmin(true);
     }
   }

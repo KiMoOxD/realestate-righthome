@@ -58,9 +58,9 @@ export default function ImageSlider({imgs, modal, setModal}) {
                 alt=""
                 onLoad={() => setIsLoading(false)}
                 className="max-h-full max-w-full w-fit object-contain"
-                initial={{opacity: 0, x: 300}}
-                animate={{opacity: 1, x: 0}}
-                exit={{opacity: 0, x: -300}}
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                exit={{opacity: 0}}
               />
             </AnimatePresence>
           </motion.div>

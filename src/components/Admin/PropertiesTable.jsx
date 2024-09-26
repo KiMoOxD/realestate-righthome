@@ -155,6 +155,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                     console.log("clicked");
                     setEditModal(true);
                     setSelectedProp({ id: prop.id, cName: prop.category });
+                    document.body.style.overflow = "hidden";
                   }}
                 />
                 <img

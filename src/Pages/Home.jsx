@@ -74,24 +74,24 @@ export default function Home() {
           </div>
           <div className="p-5 md:p-10 flex flex-col justify-center">
             <p className="text-xs text-blue-600 font-semibold mb-2">
-              OUR BENEFIT
+              {lang === 'en' ? 'OUR BENEFIT' : 'مميزاتنا'}
             </p>
             <p className="text-2xl md:text-3xl font-semibold text-stone-800 mb-4">
-              Why to Choose Right Home
+              {lang === 'en' ? 'Why to Choose Right Home' : 'ليه تختار "رايت هوم"؟'}
             </p>
             <p className="text-sm max-w-[500px] text-stone-500">
-              Our Seasoned team excels in real estate with years of successful
-              market navigation, offering informed decisions and optimal results
+              {lang === 'en' ? `Our Seasoned team excels in real estate with years of successful
+              market navigation, offering informed decisions and optimal results` : `فريقنا المتمرس يتفوق في مجال العقارات بسنوات من الخبرة الناجحة في السوق، مما يتيح لنا تقديم قرارات مستنيرة وتحقيق نتائج مثالية.`}
             </p>
             <div className="flex flex-col gap-2 mt-5">
               <div className="flex items-center gap-2 bg-white rounded-xl p-3">
                 <img src={expIcon} alt="" className="w-12" />
                 <div className="text-xs">
-                  <p className="text-lg">Proven Expertise</p>
+                  <p className="text-lg">{lang === 'en' ? 'Proven Expertise' : ' خبرة مثبته'}</p>
                   <p>
-                    Our Seasoned team excels in real estate with years of
+                    {lang === 'en' ? `Our Seasoned team excels in real estate with years of
                     successful market navigation, offering informed decisions
-                    and optimal results
+                    and optimal results` : `فريقنا المتمرس يتميز بخبرة طويلة في سوق العقارات، مما يمنحنا القدرة على التنقل بمرونة ونجاح في السوق، وتقديم قرارات مستنيرة تحقق أفضل النتائج.`}
                   </p>
                 </div>
               </div>
@@ -99,9 +99,9 @@ export default function Home() {
               <div className="flex items-center gap-2 bg-white rounded-xl p-3">
                 <img src={decisionIcon} alt="" className="w-12" />
                 <div className="text-xs">
-                  <p className="text-lg">Informed Decision-Making</p>
+                  <p className="text-lg">{lang === 'en' ? 'Informed Decision-Making' : 'اتخاذ قرارات مدروسة'}</p>
                   <p>
-                    We guide you through every step, helping you make well-informed decisions based on current market trends and data.
+                    {lang === 'en' ? `We guide you through every step, helping you make well-informed decisions based on current market trends and data.` : `نحن نرشدك في كل خطوة، ونساعدك على اتخاذ قرارات مبنية على أحدث اتجاهات السوق والبيانات المتاحة.`}
                   </p>
                 </div>
               </div>
@@ -109,9 +109,9 @@ export default function Home() {
               <div className="flex items-center gap-2 bg-white rounded-xl p-3">
                 <img src={optimalIcon} alt="" className="w-12" />
                 <div className="text-xs">
-                  <p className="text-lg">Optimal Results</p>
+                  <p className="text-lg">{lang === 'en' ? 'Optimal Results' : 'نتائج مثالية'}</p>
                   <p>
-                    With our in-depth market knowledge and strategic approach, we consistently achieve the best outcomes for our clients, whether buying, selling, or investing.
+                    {lang === 'en' ? `With our in-depth market knowledge and strategic approach, we consistently achieve the best outcomes for our clients, whether buying, selling, or investing.` : `بفضل معرفتنا العميقة بالسوق ونهجنا الاستراتيجي، نحقق باستمرار أفضل النتائج لعملائنا سواء في الشراء، البيع، أو الاستثمار.`}
                   </p>
                 </div>
               </div>

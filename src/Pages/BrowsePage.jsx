@@ -459,7 +459,7 @@ export default function BrowsePage() {
         )}
 
         {searchResult.length === 0 && firstTime && (
-          <div className="w-full">
+          <div className="w-full bg-stone-50">
             <Section
               title={{ en: "Villas", ar: "فـيـلا" }}
               subtitle={{
@@ -480,7 +480,7 @@ export default function BrowsePage() {
               rentList={properties.apartments.rent}
             />
 
-            <Section
+            {/* <Section
               title={{ en: "Offices", ar: "مكاتب" }}
               subtitle={{
                 sale: { en: "Offices For Sale", ar: "مكاتب للبيع" },
@@ -488,7 +488,7 @@ export default function BrowsePage() {
               }}
               saleList={properties.offices.sale}
               rentList={properties.offices.rent}
-            />
+            /> */}
 
             <Section
               title={{ en: "Studios", ar: "استوديوهات" }}

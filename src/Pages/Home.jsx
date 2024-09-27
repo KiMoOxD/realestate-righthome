@@ -1,6 +1,8 @@
 import Hero from "../components/Hero";
 import { useAllContext } from "../context/AllContext";
 import expIcon from "../images/experience.svg";
+import decisionIcon from '../images/decision-making.svg'
+import optimalIcon from '../images/best-practice.svg'
 import PropertyCard from "../components/PropertyCard";
 import { useState, useEffect } from "react";
 import { getCollectionData } from "../utils/data.js";
@@ -95,25 +97,21 @@ export default function Home() {
               </div>
 
               <div className="flex items-center gap-2 bg-white rounded-xl p-3">
-                <img src={expIcon} alt="" className="w-12" />
+                <img src={decisionIcon} alt="" className="w-12" />
                 <div className="text-xs">
-                  <p className="text-lg">Proven Expertise</p>
+                  <p className="text-lg">Informed Decision-Making</p>
                   <p>
-                    Our Seasoned team excels in real estate with years of
-                    successful market navigation, offering informed decisions
-                    and optimal results
+                    We guide you through every step, helping you make well-informed decisions based on current market trends and data.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 bg-white rounded-xl p-3">
-                <img src={expIcon} alt="" className="w-12" />
+                <img src={optimalIcon} alt="" className="w-12" />
                 <div className="text-xs">
-                  <p className="text-lg">Proven Expertise</p>
+                  <p className="text-lg">Optimal Results</p>
                   <p>
-                    Our Seasoned team excels in real estate with years of
-                    successful market navigation, offering informed decisions
-                    and optimal results
+                    With our in-depth market knowledge and strategic approach, we consistently achieve the best outcomes for our clients, whether buying, selling, or investing.
                   </p>
                 </div>
               </div>

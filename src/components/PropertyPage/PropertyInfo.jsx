@@ -9,18 +9,11 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { GiProgression } from "react-icons/gi";
+import { formattedPriceEn, formattedPriceAR } from "../../utils/functions";
 
 
 export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
-  let formattedPriceEn = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-  let formattedPriceAR = new Intl.NumberFormat("ar-EG", {
-    style: "currency",
-    currency: "EGP",
-  });
   let [showNumber, setShowNumber] = useState(false);
   let pathName = useLocation();
   const phoneNumber = "+201145034531";
@@ -34,7 +27,7 @@ export default function PropertyInfo({ property }) {
   `;
 
   return (
-    <motion.div key={property.id} initial={{opacity: 0, y: -30}} animate={{opacity: 1, y: 0}} className="w-full order-2 flex flex-col">
+    <div className="w-full order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.status === "sale"
@@ -97,7 +90,7 @@ export default function PropertyInfo({ property }) {
           <p className="text-xs text-stone-500 arabic">
             {lang === "en" ? "Down Payment" : "مقدم"}
           </p>
-          <p className="text-sm">100000000</p>
+          <p className="text-sm">{lang === 'en' ? `${property.downPayment} EGP` : formattedPriceAR.format(property.downPayment)}</p>
         </div>
         <div className="flex flex-col items-center">
           <GiProgression className="text-xl text-stone-500" />
@@ -151,15 +144,16 @@ export default function PropertyInfo({ property }) {
         >
           <AnimatePresence mode="wait">
             {!showNumber ? (
-              <motion.span
+              <motion.a
                 key="phone-text"
                 initial={{ opacity: 0, scale: 0, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0, y: 50 }}
                 className="flex gap-2 items-center"
+                href={`tel:${phoneNumber}`}
               >
                 <IoIosCall className="text-2xl" /> Phone Number
-              </motion.span>
+              </motion.a>
             ) : (
               <motion.span
                 key="phone-number"
@@ -174,6 +168,6 @@ export default function PropertyInfo({ property }) {
           </AnimatePresence>
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

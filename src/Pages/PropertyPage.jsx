@@ -13,7 +13,7 @@ export default function PropertyPage() {
   let property = useLoaderData(),
     params = useParams(),
     { lang } = useAllContext(),
-    [imgCont, setImgCont] = useState(null),
+    [imgCont, setImgCont] = useState(property.images[0]),
     [modal, setModal] = useState(false),
     [properties, setProperties] = useState([]);
 
@@ -68,7 +68,7 @@ export default function PropertyPage() {
               />
               <PropertyInfo property={property} />
             </div>
-            <p className="text-md font-semibold text-blue-600 arabic-bold mx-auto mt-5">
+            <p className="text-md font-semibold text-blue-600 arabic-bold mx-auto mt-10">
               {lang === "en" ? "Discover" : "اسـتكـشف"}
             </p>
             <p className="text-3xl font-semibold text-stone-800 arabic-bold mx-auto mt-1">

@@ -46,7 +46,7 @@ export default function PropertyCard({ property }) {
     <div className="rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer hover:shadow-lg transition">
       <Link to={`/browse/${property.category}s/${property.id}`} onClick={() => setIsLoading(true)}>
         <div className="relative h-[220px] overflow-hidden">
-          {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin text-5xl text-blue-700"/>}
+          {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin2 text-5xl text-blue-700"/>}
           <span className="absolute top-4 left-3 py-1 w-16 text-center bg-stone-50 rounded-full z-10 text-xs">
             {property.status === "sale"
               ? lang === "en"
@@ -68,7 +68,7 @@ export default function PropertyCard({ property }) {
           {!isLoading && <img
             className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] min-w-[430px]"
             src={property.images[0]}
-            alt=""
+            alt={property.title.en}
           />}
         </div>
         <div className="py-4 px-5">
@@ -119,8 +119,8 @@ export default function PropertyCard({ property }) {
             )}`}
             target="_blank"
             rel="noreferrer" className="bg-green-500 rounded-full p-1"><FaWhatsapp className="text-xl text-white peer/whatsapp" /></a>
-            <span className="bg-blue-500 rounded-full p-1"><IoIosCall onClick={() => setShowNumber(true)} className="text-xl text-white peer/call" /></span>
-        </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
+            <a href={`tel:${phoneNumber}`} className="bg-blue-500 rounded-full p-1"><IoIosCall onClick={() => setShowNumber(true)} className="text-xl text-white peer/call" /></a>
+        </motion.div> : <motion.a href={`tel:${phoneNumber}`} initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.a>}
         </AnimatePresence>
         
         <p className="py-0.5">${property.price}</p>

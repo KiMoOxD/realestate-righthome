@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineHome } from "react-icons/hi2";
 import { MdManageSearch } from "react-icons/md";
 import { RiAdminLine } from "react-icons/ri";
+import logo from '../../images/RIGHT_HOME.png'
 
 
 
@@ -16,7 +17,7 @@ export default function Header() {
   return (
     <div className={`bg-white sticky w-full top-0 z-40 shadow-md ${lang === 'ar' && 'arabic'}`}>
       <div className="flex px-4 rounded-lg max-w-screen-2xl h-14 mx-auto justify-between items-center">
-        <h1 className="font-semibold">Right Home</h1>
+        <Link to={'/'}><img src={logo} alt="Logo" className="w-16 md:w-[70px]" /></Link>
         <NavLinks />
         <div className="flex items-center h-full gap-2">
           <button
@@ -44,27 +45,27 @@ export default function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 80 }}
                   transition={{type: 'tween'}}
-                  className="absolute z-50 h-[100vh] sm:rounded-bl-full shadow-lg border w-full sm:w-1/2 md:w-[400px] top-0 right-0 bg-stone-50 flex flex-col gap-1 *:transition"
+                  className="absolute z-50 h-[100vh] shadow-lg border w-full sm:w-1/2 md:w-[400px] top-0 right-0 bg-stone-50 flex flex-col gap-1 *:transition bg-[url('https://st2.depositphotos.com/4362315/7512/v/950/depositphotos_75121491-stock-illustration-real-estate-background.jpg')] before:bg-white before:absolute before:h-full before:w-full before:opacity-80"
                 >
-                  <p className="text-2xl text-center font-semibold py-3">
-                    Right Home
-                  </p>
+                  <div className="relative flex justify-center bg-white">
+                    <img src={logo} alt="Logo" className="w-16 md:w-[70px]"/>
+                  </div>
                   <hr />
                   <Link
                     to={"/"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm flex items-center justify-center gap-2"
+                    className="relative px-5 py-3 bg-blue-500 text-white hover:bg-blue-800 rounded text-sm flex items-center justify-center gap-2"
                   >
                    <HiOutlineHome className="text-lg" /> <span className="mt-1">Home</span>
                   </Link>
                   <Link
                     to={"/browse"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm flex items-center justify-center gap-1"
+                    className="relative px-5 py-3 bg-blue-500 text-white hover:bg-blue-800 rounded text-sm flex items-center justify-center gap-1"
                   >
                     <MdManageSearch className="text-lg" /> <span className="mt-1">Browse</span>
                   </Link>
                   <Link
                     to={"/admin"}
-                    className="px-5 py-3 bg-slate-100 hover:bg-slate-200 rounded text-sm flex items-center justify-center gap-2.5"
+                    className="relative px-5 py-3 bg-blue-500 text-white hover:bg-blue-800 rounded text-sm flex items-center justify-center gap-2.5"
                   >
                     <RiAdminLine className="text-lg" /> <span className="mt-1">Admin</span>
                   </Link>

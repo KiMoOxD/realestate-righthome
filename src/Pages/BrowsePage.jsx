@@ -35,7 +35,7 @@ export default function BrowsePage() {
   let [searchData, setSearchData] = useState([]);
   let [firstTime, setFirstTime] = useState(true);
   let [enabledFilters, setEnabledFilters] = useState({
-    governate: false,
+    region: false,
     bedrooms: false,
     bathrooms: false,
     priceRange: false,
@@ -100,7 +100,6 @@ export default function BrowsePage() {
 
   function handleSelectedGovernate(option) {
     setSelectedRegion(option);
-    console.log(option)
   }
 
   const handleCheckboxChange = (event) => {
@@ -125,7 +124,7 @@ export default function BrowsePage() {
       );
     }
 
-    if (selectedRegion && enabledFilters.governate) {
+    if (selectedRegion && enabledFilters.region) {
       array = array.filter(
         (property) => property.region?.en === selectedRegion.value.en
       );
@@ -311,11 +310,11 @@ export default function BrowsePage() {
           <div className={`my-5 ${!showFilters && "hidden md:block"}`}>
             <div className="flex justify-between items-center mb-2.5">
               <p className="text-sm font-semibold">
-                {lang === "en" ? "Governate" : "المحافظة"}
+                {lang === "en" ? "Region" : "المنطقة"}
               </p>
               <input
                 type="checkbox"
-                onChange={(e) => EnableFilters(e, "governate")}
+                onChange={(e) => EnableFilters(e, "region")}
                 className="cursor-pointer"
               />
             </div>
@@ -445,7 +444,7 @@ export default function BrowsePage() {
                 !showFilters && "hidden md:block"
               }`}
             >
-              Apply Filters
+              {lang === 'en' ? 'Apply Filters' : 'تطبيق الفلاتر'}
             </button>
           </div>
         </form>

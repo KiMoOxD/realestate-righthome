@@ -30,7 +30,7 @@ export default function PropertyCard({ property }) {
   let [showNumber, setShowNumber] = useState(false);
   let pathName = useLocation();
   let [isLoading, setIsLoading] = useState(false)
-  const phoneNumber = "+201145034531";
+  const phoneNumber = "+201019363939";
   const message = `
     Hello,\n
     I would like to get more information about this property:\n\n
@@ -120,7 +120,7 @@ export default function PropertyCard({ property }) {
             target="_blank"
             rel="noreferrer" className="bg-green-500 rounded-full p-1"><FaWhatsapp className="text-xl text-white peer/whatsapp" /></a>
             <a href={`tel:${phoneNumber}`} className="bg-blue-500 rounded-full p-1"><IoIosCall onClick={() => setShowNumber(true)} className="text-xl text-white peer/call" /></a>
-        </motion.div> : <motion.a href={`tel:${phoneNumber}`} initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.a>}
+        </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
         </AnimatePresence>
         
         <p className="py-0.5">${property.price}</p>

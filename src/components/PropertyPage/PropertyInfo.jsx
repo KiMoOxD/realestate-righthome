@@ -16,14 +16,14 @@ export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
   let [showNumber, setShowNumber] = useState(false);
   let pathName = useLocation();
-  const phoneNumber = "+201145034531";
+  const phoneNumber = "+201019363939";
   const message = `
-    Hello,\n
-    I would like to get more information about this property:\n\n
-    Type: ${property.category}\n
-    Price: ${property.price} EGP\n
-    Location: ${property.region.en}\n
-    Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
+Hello,\n
+I would like to get more information about this property:\n
+Type: ${property.category}\n
+Price: ${property.price} EGP\n
+Location: ${property.region.en}\n
+Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
   `;
 
   return (

@@ -90,7 +90,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
           <p className="text-xs text-stone-500 arabic">
             {lang === "en" ? "Down Payment" : "مقدم"}
           </p>
-          <p className="text-sm">{lang === 'en' ? `${property.downPayment} EGP` : formattedPriceAR.format(property.downPayment)}</p>
+          <p className="text-sm">{lang === 'en' ? `${formattedPriceEn.format(property.downPayment).replace("$", "")} EGP` : formattedPriceAR.format(property.downPayment)}</p>
         </div>
         <div className="flex flex-col items-center">
           <GiProgression className="text-xl text-stone-500" />

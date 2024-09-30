@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
 import { CgSpinner } from "react-icons/cg";
-
+import { formattedPriceEn, formattedPriceAR } from "../utils/functions";
 
 const tourismRegions = [
   "Galala City",
@@ -123,7 +123,7 @@ export default function PropertyCard({ property }) {
         </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
         </AnimatePresence>
         
-        <p className="py-0.5">${property.price}</p>
+        <p className="py-0.5">{lang === 'en' ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : formattedPriceAR.format(property.price)}</p>
       </div>
     </div>
   );

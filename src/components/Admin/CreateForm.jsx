@@ -5,6 +5,7 @@ import { addToCollection } from "../../utils/data";
 import { CgSpinner } from "react-icons/cg";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { regionOptionsEn } from "../../utils/data";
+import { handleUpload } from "../../utils/functions";
 
 const statusOptions = [
   { label: "For Sale", value: "sale" },
@@ -83,8 +84,7 @@ export default function CreateForm({
     setLoading(true);
 
     try {
-      // Wait for handleUpload to complete and return the uploaded image URLs
-      const uploadedImageUrls = await handleUpload();
+      const uploadedImageUrls = await handleUpload(selectedImages);
 
       let PropertyData = {
         area: areaRef.current.value,
@@ -109,7 +109,6 @@ export default function CreateForm({
         ...(selectedCategory === "villa" && { villaType: villaType })
       };
 
-      console.log(PropertyData);
       addToCollection(`${selectedCategory}s`, PropertyData);
       setLoading(false);
       CloseModal();
@@ -125,58 +124,21 @@ export default function CreateForm({
     }
   }
 
-  const handleUpload = async () => {
-    const cloudName = "dpheca8vj";
-    const uploadPreset = "realestateImages";
-
-    const imagePromises = selectedImages.map(async (image) => {
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", uploadPreset);
-
-      try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const data = await response.json();
-        console.log(data.secure_url);
-        return data.secure_url;
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        return null;
-      }
-    });
-
-    const imageUrls = await Promise.all(imagePromises);
-    const filteredUrls = imageUrls.filter((url) => url !== null);
-    // setUploadedImages(filteredUrls); // Update state
-    return filteredUrls; // Return the array of URLs
-  };
-
   function handleImageChange(e) {
     const files = Array.from(e.target.files);
     const imageArray = [];
 
-    // Loop through all selected files
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
 
       reader.onload = () => {
-        // Once file is read, add it to the array
         imageArray.push(reader.result);
         setSelectedImages((prevImages) => [...prevImages, reader.result]);
       };
 
-      reader.readAsDataURL(file); // Convert file to data URL
+      reader.readAsDataURL(file);
     }
-
-    //setSelectedImages(files);
   }
 
   const handleCategoryChange = (event) => {
@@ -329,66 +291,66 @@ export default function CreateForm({
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
+              <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
                   id="apartment"
                   type="radio"
                   value="apartment"
                   name="category"
-                  class="text-blue-600 bg-gray-100 border-gray-300"
+                  className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
                   for="apartment"
-                  class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Apartment
                 </label>
               </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
+              <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
                   id="villa"
                   type="radio"
                   value="villa"
                   name="category"
-                  class="text-blue-600 bg-gray-100 border-gray-300"
+                  className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
                   for="villa"
-                  class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Villa
                 </label>
               </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
+              <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
                   id="house"
                   type="radio"
                   value="house"
                   name="category"
-                  class="text-blue-600 bg-gray-100 border-gray-300"
+                  className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
                   for="house"
-                  class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   House
                 </label>
               </div>
-              <div class="flex items-center ps-2 border border-gray-200 rounded">
+              <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
                   id="studio"
                   type="radio"
                   value="studio"
                   name="category"
-                  class="text-blue-600 bg-gray-100 border-gray-300"
+                  className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
                   for="studio"
-                  class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Studio
                 </label>
@@ -396,57 +358,56 @@ export default function CreateForm({
             </div>
             <AnimatePresence>
               {selectedCategory === 'villa' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
-                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
                     onClick={handleVillaTypeChange}
                     id="standalone"
                     type="radio"
                     value="Standalone"
                     name="villaType"
-                    class="text-blue-600 bg-gray-100 border-gray-300"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
                   />
                   <label
                     htmlFor="standalone"
-                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                   >
                     Standalone
                   </label>
                 </div>
-                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
                     onClick={handleVillaTypeChange}
                     id="townHouse"
                     type="radio"
                     value="Town house"
                     name="villaType"
-                    class="text-blue-600 bg-gray-100 border-gray-300"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
                   />
                   <label
                     htmlFor="townHouse"
-                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                   >
                     Town house
                   </label>
                 </div>
-                <div class="flex items-center ps-2 border border-gray-200 rounded">
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
                     onClick={handleVillaTypeChange}
                     id="twinHouse"
                     type="radio"
                     value="Twin house"
                     name="villaType"
-                    class="text-blue-600 bg-gray-100 border-gray-300"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
                   />
                   <label
                     htmlFor="twinHouse"
-                    class="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                   >
                     Twin house
                   </label>
                 </div>
               </motion.div>}
             </AnimatePresence>
-
 
             <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
               <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />

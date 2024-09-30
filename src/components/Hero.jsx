@@ -3,12 +3,9 @@ import img from "../images/landing.jpg";
 import { useEffect, useRef, useState } from "react";
 import { TextEffect } from "../components/TextEffect/TextEffectBase.tsx";
 import { getAllCollectionsData } from "../utils/data.js";
-import { PiBathtubLight } from "react-icons/pi";
-import { BiArea } from "react-icons/bi";
-import { IoIosBed } from "react-icons/io";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { formattedPriceEn, formattedPriceAR } from "../utils/functions.js";
+import SearchItem from "./SearchItem.jsx";
+
 
 export default function Hero() {
   let { lang } = useAllContext();
@@ -43,7 +40,10 @@ export default function Hero() {
             result.description.en.includes(searchText) ||
             result.description.ar.includes(searchText) ||
             result.title.en.includes(searchText) ||
-            result.title.ar.includes(searchText)
+            result.title.ar.includes(searchText) ||
+            result.region.en.includes(searchText) ||
+            result.region.ar.includes(searchText) ||
+            result.id.includes(searchText)
           );
         });
       setSearchResult(final);
@@ -152,44 +152,7 @@ export default function Hero() {
             <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll shadow-lg overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded-md lg:rounded-3xl bg-white flex flex-col gap-1 p-1">
               {SearchResult?.map((result) => {
                 return (
-                  <Link
-                    to={`/browse/${result.category}s/${result.id}`}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-stone-50 cursor-pointer"
-                  >
-                    <img
-                      src={result.images[0]}
-                      alt=""
-                      className="size-10 lg:size-14 object-cover rounded"
-                    />
-                    <div className="text-left flex-grow text-xs lg:text-sm">
-                      <p className="truncate max-w-[140px] md:max-w-full">
-                        {lang === "en" ? result.title.en : result.title.ar}
-                      </p>
-                      <p>
-                        {lang === "en"
-                          ? formattedPriceEn
-                              .format(result.price)
-                              .replace("$", "") + " EGP"
-                          : formattedPriceAR.format(result.price)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-right text-xs lg:text-sm">
-                        {lang === "en" ? result.region?.en : result.region?.ar}
-                      </p>
-                      <div className="flex items-center gap-2 justify-end *:text-xs *:flex *:items-center *:gap-1">
-                        <p>
-                          <IoIosBed /> {result.beds}
-                        </p>
-                        <p>
-                          <PiBathtubLight /> {result.baths}
-                        </p>
-                        <p>
-                          <BiArea /> {result.area}m
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
+                  <SearchItem result={result} />
                 );
               })}
             </div>

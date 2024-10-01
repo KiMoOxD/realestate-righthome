@@ -26,9 +26,10 @@ export default function AdminPage() {
   function handleChange(e) {
     setMagicWord(e.target.value);
   }
-
+console.log(process.env.REACT_APP_ADMIN_WORD)
   function handleClick() {
-    if (magicWord.toLowerCase() === "kimo123456") {
+    console.log(magicWord === process.env.REACT_APP_ADMIN_WORD)
+    if (magicWord === process.env.REACT_APP_ADMIN_WORD) {
       setIsAdmin(true);
     }
   }

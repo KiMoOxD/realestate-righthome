@@ -143,7 +143,7 @@ export default function Hero() {
             <input
               type="text"
               placeholder="Search..."
-              className="outline-none p-4 bg-white/80 text-black placeholder-stone-700 border rounded-full w-full"
+              className="outline-none p-4 bg-white/90 text-black placeholder-stone-700 border rounded-full w-full"
               ref={searchTextRef}
               onChange={handleSearch}
             />

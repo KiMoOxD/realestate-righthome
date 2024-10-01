@@ -58,10 +58,6 @@ export default function BrowsePage() {
           rent: apartmentsData.filter((apartment) => apartment.status === "rent").length === 0 ? 'empty' : apartmentsData.filter((apartment) => apartment.status === "rent"),
           sale: apartmentsData.filter((apartment) => apartment.status === "sale").length === 0 ? 'empty' : apartmentsData.filter((apartment) => apartment.status === "sale"),
         },
-        offices: {
-          rent: officesData.filter((office) => office.status === "rent").length === 0 ? 'empty' : officesData.filter((office) => office.status === "rent"),
-          sale: officesData.filter((office) => office.status === "sale").length === 0 ? 'empty' : officesData.filter((office) => office.status === "sale"),
-        },
         studios: {
           rent: studiosData.filter((studio) => studio.status === "rent").length === 0 ? 'empty' : studiosData.filter((studio) => studio.status === "rent"),
           sale: studiosData.filter((studio) => studio.status === "sale").length === 0 ? 'empty' : studiosData.filter((studio) => studio.status === "sale"),
@@ -271,22 +267,6 @@ export default function BrowsePage() {
                 className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
               >
                 {lang === "en" ? "House" : "منزل"}
-              </label>
-            </div>
-            <div className="flex items-center my-0.5">
-              <input
-                id="office"
-                type="checkbox"
-                value="office"
-                checked={selectedTypes.includes("office")}
-                onChange={handleCheckboxChange}
-                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
-              />
-              <label
-                htmlFor="office"
-                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
-              >
-                {lang === "en" ? "Office" : "مكتب"}
               </label>
             </div>
             <div className="flex items-center my-0.5">

@@ -6,7 +6,6 @@ import { getAllCollectionsData } from "../utils/data.js";
 import { motion } from "framer-motion";
 import SearchItem from "./SearchItem.jsx";
 
-
 export default function Hero() {
   let { lang } = useAllContext();
   let [status, setStatus] = useState(1);
@@ -29,7 +28,6 @@ export default function Hero() {
   async function handleSearch(e) {
     let final = SearchData;
     let searchText = e.target.value;
-    console.log("searchtext :", searchText);
     if (searchText) {
       final = final
         .filter((res) =>
@@ -37,16 +35,20 @@ export default function Hero() {
         )
         .filter((result) => {
           return (
-            result.description.en.includes(searchText) ||
-            result.description.ar.includes(searchText) ||
-            result.title.en.includes(searchText) ||
-            result.title.ar.includes(searchText) ||
-            result.region.en.includes(searchText) ||
-            result.region.ar.includes(searchText) ||
+            result.description.en
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            result.description.ar
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            result.title.en.toLowerCase().includes(searchText.toLowerCase()) ||
+            result.title.ar.toLowerCase().includes(searchText.toLowerCase()) ||
+            result.region.en.toLowerCase().includes(searchText.toLowerCase()) ||
+            result.region.ar.toLowerCase().includes(searchText.toLowerCase()) ||
             result.id.includes(searchText)
           );
         });
-      setSearchResult(final);
+      setSearchResult(final.length > 0 ? final : "empty");
     } else {
       setSearchResult([]);
     }
@@ -85,39 +87,15 @@ export default function Hero() {
             بيت أحلامك
           </p>
         )}
-        {/* <div className="relative flex justify-center gap-2 mt-12">
-          <motion.button
-            type="button"
-            className="bg-blue-500 px-6 py-2 rounded-full relative"
-            onClick={() => setStatus(0)}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-          >
-            {lang === "en" ? "For Rent" : "للايجار"}
-            {!status && (
-              <div className="absolute top-full left-1/2 translate-x-[-50%] size-4 border-8 border-blue-500 border-l-transparent border-r-transparent border-b-transparent"></div>
-            )}
-          </motion.button>
-          <motion.button
-            type="button"
-            className="bg-blue-500 px-6 py-2 rounded-full relative"
-            onClick={() => setStatus(1)}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-          >
-            {lang === "en" ? "For Sale" : "للـبيع"}
-            {status === 1 && (
-              <div className="absolute top-full left-1/2 translate-x-[-50%] size-4 border-8 border-blue-500 border-l-transparent border-r-transparent border-b-transparent"></div>
-            )}
-          </motion.button>
-        </div> */}
         <div className="relative flex justify-center gap-2 mt-10 bg-white w-fit mx-auto p-3 px-5 rounded-full ">
-          <p className="absolute text-xs -top-6 px-2 py-1 rounded-t-2xl bg-blue-500">{lang === 'en' ? 'Choose Availability' : 'اختر نوع الملكية'}</p>
+          <p className="absolute text-xs -top-6 px-2 py-1 rounded-t-2xl bg-blue-500">
+            {lang === "en" ? "Choose Availability" : "اختر نوع الملكية"}
+          </p>
           <motion.button
             type="button"
-            className={`px-6 py-2 rounded-full relative border ${!status ? 'border-blue-600 bg-white text-black' : 'bg-blue-500'}`}
+            className={`px-6 py-2 rounded-full relative border ${
+              !status ? "border-blue-600 bg-white text-black" : "bg-blue-500"
+            }`}
             onClick={() => setStatus(0)}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -130,7 +108,9 @@ export default function Hero() {
           </motion.button>
           <motion.button
             type="button"
-            className={`px-6 py-2 rounded-full relative border ${status ? 'border-blue-600 bg-white text-black' : 'bg-blue-500'}`}
+            className={`px-6 py-2 rounded-full relative border ${
+              status ? "border-blue-600 bg-white text-black" : "bg-blue-500"
+            }`}
             onClick={() => setStatus(1)}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -148,12 +128,14 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {SearchResult.length > 0 && (
+          {SearchResult === "empty" ? (
+            <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll shadow-lg overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded-md lg:rounded-3xl bg-white flex flex-col gap-1 p-1">
+              No Results
+            </div>
+          ) : SearchResult.length > 0 && (
             <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll shadow-lg overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded-md lg:rounded-3xl bg-white flex flex-col gap-1 p-1">
               {SearchResult?.map((result) => {
-                return (
-                  <SearchItem result={result} />
-                );
+                return <SearchItem result={result} />;
               })}
             </div>
           )}

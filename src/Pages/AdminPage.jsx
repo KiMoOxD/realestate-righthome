@@ -5,6 +5,10 @@ import EditForm from "../components/Admin/EditForm";
 import SingleImageModal from "../components/Admin/SingleImageModal";
 import { TextEffect } from "../components/TextEffect/TextEffectBase.tsx";
 import { motion } from "framer-motion";
+import { HiOutlineCheckCircle } from "react-icons/hi";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+
+
 
 export default function AdminPage() {
   let [modal, setModal] = useState(false);
@@ -13,6 +17,7 @@ export default function AdminPage() {
   let [singleImage, setSingleImage] = useState(null);
   let [isAdmin, setIsAdmin] = useState(true);
   let [magicWord, setMagicWord] = useState(false);
+  let [confirmMsg, setConfirmMsg] = useState({show: false, status: true, content: ''})
 
   function CloseModal() {
     setModal(false);
@@ -44,6 +49,7 @@ console.log(process.env.REACT_APP_ADMIN_WORD)
               CloseModal={CloseModal}
               setSingleImage={setSingleImage}
               setSingleModal={setSingleModal}
+              setConfirmMsg={setConfirmMsg}
             />
           )}
           {editModal && (
@@ -51,6 +57,7 @@ console.log(process.env.REACT_APP_ADMIN_WORD)
               CloseEditModal={CloseEditModal}
               setSingleImage={setSingleImage}
               setSingleModal={setSingleModal}
+              setConfirmMsg={setConfirmMsg}
             />
           )}
           {singleModal && (
@@ -60,6 +67,15 @@ console.log(process.env.REACT_APP_ADMIN_WORD)
               setSingleModal={setSingleModal}
             />
           )}
+          {confirmMsg.show && <div className="absolute left-1/2 translate-x-[-50%] translate-y-[-50%] shadow border text-md text-stone-800 bg-white w-[300px] max-w-full" style={{top: `${window.innerHeight / 2}px`}}>
+            <motion.div initial={{width: 0}} animate={{width: '100%'}} transition={{duration: 2}} className="h-1 bg-blue-600 w-full"></motion.div>
+            <p className="py-3 px-4 flex flex-col gap-1 items-center">
+              {!confirmMsg.status && <IoIosCloseCircleOutline className="text-2xl text-red-600"/>}
+              {confirmMsg.status && <HiOutlineCheckCircle className="text-2xl text-green-600"/>}
+              {confirmMsg.content}
+              <button type="button" className="text-xs px-2 py-1 bg-blue-500 text-white" onClick={() => setConfirmMsg({show: false, status: true, content: ''})}>Ok</button>
+              </p>
+          </div>}
         </div>
       ) : (
         <div className="min-h-[calc(100vh-114px)] flex flex-col justify-center items-center">

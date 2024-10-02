@@ -21,6 +21,7 @@ export default function EditForm({
   CloseEditModal,
   setSingleImage,
   setSingleModal,
+  setConfirmMsg
 }) {
   let [language, setLanguage] = useState("en"),
     [formData, setFormData] = useState({
@@ -87,7 +88,6 @@ export default function EditForm({
     }));
   };
 
-  console.log(formData);
   useEffect(() => {
     return () => (document.body.style.overflow = "auto");
   }, []);
@@ -98,7 +98,7 @@ export default function EditForm({
       !formData.selectedStatus ||
       (formData.paymentType.value === "installment" && !formData.insYears) ||
       (formData.paymentType.value === "installment" &&
-        !downPaymentRef.current.value) ||
+      !downPaymentRef.current.value) ||
       (formData.selectedCategory === "villa" && !formData.villaType) ||
       !formData.paymentType ||
       formData.selectedImages.length === 0 ||
@@ -151,8 +151,21 @@ export default function EditForm({
         }),
       };
 
-      updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
+      let res = await updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
+      console.log(res)
       setLoading(false);
+      if (res === 0) {
+        setConfirmMsg({show: true, status: false, content: 'Failed to Update.'})
+        setTimeout(() => {
+          setConfirmMsg({show: false, status: true, content: ''})
+        }, 2000)
+        CloseEditModal();
+        return
+      }
+      setConfirmMsg({show: true, status: true, content: 'Property Updated Successfully.'})
+      setTimeout(() => {
+        setConfirmMsg({show: false, status: true, content: ''})
+      }, 2000)
       CloseEditModal();
     } catch (error) {
       console.error("Error during submission:", error);

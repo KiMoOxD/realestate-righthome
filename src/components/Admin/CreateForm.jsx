@@ -21,6 +21,7 @@ export default function CreateForm({
   CloseModal,
   setSingleImage,
   setSingleModal,
+  setConfirmMsg
 }) {
   let [language, setLanguage] = useState("en"),
     [region, setRegion] = useState(null),
@@ -111,6 +112,10 @@ export default function CreateForm({
 
       addToCollection(`${selectedCategory}s`, PropertyData);
       setLoading(false);
+      setConfirmMsg({show: true, status: true, content: 'Property Added Successfully.'})
+      setTimeout(() => {
+        setConfirmMsg({show: false, status: true, content: ''})
+      }, 2000)
       CloseModal();
     } catch (error) {
       console.error("Error during submission:", error);

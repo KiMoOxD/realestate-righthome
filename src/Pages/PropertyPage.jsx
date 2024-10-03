@@ -13,7 +13,7 @@ export default function PropertyPage() {
   let property = useLoaderData(),
     params = useParams(),
     { lang } = useAllContext(),
-    [imgCont, setImgCont] = useState(property.images[0]),
+    [imgCont, setImgCont] = useState(property ? property.images[0] : []),
     [modal, setModal] = useState(false),
     [properties, setProperties] = useState([]);
 

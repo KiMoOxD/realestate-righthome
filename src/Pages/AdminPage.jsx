@@ -19,7 +19,7 @@ export default function AdminPage() {
   let [singleImage, setSingleImage] = useState(null);
   let [isAdmin, setIsAdmin] = useState(false);
   let [confirmMsg, setConfirmMsg] = useState({show: false, status: true, content: ''})
-  let [err, setErr] = useState({show: true, content: ''})
+  let [err, setErr] = useState({show: false, content: ''})
   let emailRef = useRef(),
       passRef = useRef();
 

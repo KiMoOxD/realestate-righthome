@@ -21,7 +21,11 @@ export default function PropertyPage() {
     async function getData() {
       if (property) {
         let propertiesData = await getCollectionData(params.collection);
-        setProperties(propertiesData.filter((item) => item.id !== params.id));
+        setProperties(
+          propertiesData.filter((item) => item.id !== params.id).length === 0
+            ? "empty"
+            : propertiesData.filter((item) => item.id !== params.id)
+        );
         setImgCont(property.images[0]);
       }
     }
@@ -75,20 +79,25 @@ export default function PropertyPage() {
               {lang === "en" ? "Simillar Properties" : "عقارات مشابهة"}
             </p>
           </div>
-          <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mx-auto my-7">
-            {properties.length > 0 ? (
-              properties.map((apartment) => (
-                <PropertyCard key={apartment.id} property={apartment} />
-              ))
-            ) : (
-              <>
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-              </>
-            )}
-          </div>{" "}
+          {properties === "empty" ? (
+            <p className="w-full text-center mt-10">No Simillar Properties</p>
+          ) : (
+            <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mx-auto my-7">
+              {" "}
+              {properties.length > 0 ? (
+                properties.map((apartment) => (
+                  <PropertyCard key={apartment.id} property={apartment} />
+                ))
+              ) : (
+                <>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </>
+              )}
+            </div>
+          )}
         </div>
       )}
     </>

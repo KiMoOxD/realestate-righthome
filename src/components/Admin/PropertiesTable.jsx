@@ -12,7 +12,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   let [data, setData] = useState(propertiesData);
   let [images, setImages] = useState([])
   let [showImages, setShowImages] = useState(false)
-  let { setSelectedProp } = useAllContext();
+  let { setSelectedProp, logout } = useAllContext();
 
   useEffect(() => {
     async function getData() {
@@ -27,6 +27,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
     let SearchResult = data.filter(
       (prop) =>
         prop.title.en.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        prop.category.toLowerCase().includes(e.target.value.toLowerCase()) ||
         prop.description.en
           .toLowerCase()
           .includes(e.target.value.toLowerCase()) ||
@@ -79,17 +80,25 @@ export default function PropertiesTable({ setModal, setEditModal }) {
             type="text"
             id="table-search"
             className="block py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 outline-none max-w-full"
-            placeholder="Search by Title/Governate/Description/id"
+            placeholder="Search..."
             onChange={handleSearch}
             disabled={propertiesData === null}
           />
         </div>
-        <button
-          onClick={OpenModal}
-          className="mr-5 mt-2 lg:mt-0 bg-blue-500 text-center text-xs h-fit py-2 px-3 rounded text-white"
-        >
-          Create New
-        </button>
+        <div className="flex gap-1 items-center">
+          <button
+            onClick={OpenModal}
+            className="mt-2 lg:mt-0 bg-blue-500 text-center text-xs h-fit py-2 px-3 rounded text-white"
+          >
+            Create New
+          </button>
+          <button
+            onClick={logout}
+            className="mt-2 lg:mt-0 bg-red-500 text-center text-xs h-fit py-2 px-3 rounded text-white"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       {!propertiesData && (

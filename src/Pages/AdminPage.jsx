@@ -1,23 +1,34 @@
 import PropertiesTable from "../components/Admin/PropertiesTable";
 import CreateForm from "../components/Admin/CreateForm";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditForm from "../components/Admin/EditForm";
 import SingleImageModal from "../components/Admin/SingleImageModal";
-import { TextEffect } from "../components/TextEffect/TextEffectBase.tsx";
 import { motion } from "framer-motion";
 import { HiOutlineCheckCircle } from "react-icons/hi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import logo from '../images/RIGHT_HOME.png'
+import { useAllContext } from "../context/AllContext";
 
 
 
 export default function AdminPage() {
+  let {login, currentUser, resetPassword} = useAllContext();
   let [modal, setModal] = useState(false);
   let [editModal, setEditModal] = useState(false);
   let [singleModal, setSingleModal] = useState(false);
   let [singleImage, setSingleImage] = useState(null);
-  let [isAdmin, setIsAdmin] = useState(true);
-  let [magicWord, setMagicWord] = useState(false);
+  let [isAdmin, setIsAdmin] = useState(false);
   let [confirmMsg, setConfirmMsg] = useState({show: false, status: true, content: ''})
+  let [err, setErr] = useState({show: true, content: ''})
+  let emailRef = useRef(),
+      passRef = useRef();
+
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsAdmin(true)
+    }
+  }, [currentUser])
 
   function CloseModal() {
     setModal(false);
@@ -28,15 +39,31 @@ export default function AdminPage() {
     document.body.style.overflow = "auto";
   }
 
-  function handleChange(e) {
-    setMagicWord(e.target.value);
-  }
-console.log(process.env.REACT_APP_ADMIN_WORD)
-  function handleClick() {
-    console.log(magicWord === process.env.REACT_APP_ADMIN_WORD)
-    if (magicWord === process.env.REACT_APP_ADMIN_WORD) {
-      setIsAdmin(true);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (emailRef.current.value === '' || passRef.current.value === '') {
+      setErr({show: true, content: 'Please Fill in all Fields'})
+      return;
     }
+    await login(emailRef.current.value, passRef.current.value)
+    if (currentUser) {
+      setIsAdmin(true)
+    } else {
+      setErr({show: true, content: 'Email or Password is incorrect!'})
+      return;
+    }
+  }
+
+  async function handleResetPass() {
+    if (emailRef.current.value === '') {
+      setErr({show: true, content: 'Type in the email you want to reset'})
+      return;
+    } else if (emailRef.current.value !== 'msokoko6@gmail.com') {
+      setErr({show: true, content: 'The email must be the admin email...'});
+      return;
+    }
+    resetPassword(emailRef.current.value)
+    setErr({show: true, content: 'Reset Link was sent to yor email...'})
   }
 
   return (
@@ -79,56 +106,16 @@ console.log(process.env.REACT_APP_ADMIN_WORD)
         </div>
       ) : (
         <div className="min-h-[calc(100vh-114px)] flex flex-col justify-center items-center">
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 2 }}
-          >
-            <TextEffect
-              per="char"
-              preset="fade"
-              className="max-w-7xl text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-mono"
-            >
-              Hello, Captain of Right Home!
-            </TextEffect>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 1.9 }}
-            className="mt-5 lg:mt-10"
-          >
-            <TextEffect
-              per="char"
-              preset="fade"
-              className="max-w-4xl text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center font-mono"
-              delay={2}
-            >
-              What's the magic word ?
-            </TextEffect>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 2.2 }}
-            className="mt-5"
-          >
-            <input
-              type="text"
-              className="w-[200px] h-[40px] px-2 border-2 rounded outline-none"
-              placeholder="Magic word goes here..."
-              onChange={handleChange}
-            />
-          </motion.div>
-          <motion.button
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 2.2 }}
-            className="mt-5 bg-blue-500 px-4 py-1 rounded shadow-md transition hover:bg-blue-600 text-white"
-            onClick={handleClick}
-          >
-            Lets go ?
-          </motion.button>
+          <form onSubmit={handleSubmit} className="pt-2 pb-10 px-10 shadow-md border w-[500px] max-w-full flex flex-col rounded-md">
+            {err.show && <p className="w-full bg-blue-600 text-white py-1 px-2 text-xs rounded">{err.content}</p>}
+            <img src={logo} alt="Right Home Logo" className="w-28 self-center"/>
+            <label htmlFor="email" className="mb-1">Email</label>
+            <input id="email" ref={emailRef} placeholder="example@example.com" className="p-2 outline-none self-center border w-full rounded" type="email" />
+            <label htmlFor="password" className="my-1">Password</label>
+            <input id="password" ref={passRef} placeholder="6$3hg2#$5dfh" className="p-2 outline-none self-center border w-full rounded" type="password" />
+            <button className="w-fit mx-auto bg-blue-600 text-white mt-4 px-10 py-2">Login</button>
+            <p onClick={handleResetPass} className="mx-auto text-sm mt-2 text-blue-700 hover:underline cursor-pointer">Forgot Password ?</p>
+          </form>
         </div>
       )}
     </>

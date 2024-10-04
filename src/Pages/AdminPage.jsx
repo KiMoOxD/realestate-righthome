@@ -58,7 +58,7 @@ export default function AdminPage() {
     if (emailRef.current.value === '') {
       setErr({show: true, content: 'Type in the email you want to reset'})
       return;
-    } else if (emailRef.current.value !== 'msokoko6@gmail.com') {
+    } else if (emailRef.current.value !== 'righthome202@gmail.com') {
       setErr({show: true, content: 'The email must be the admin email...'});
       return;
     }

@@ -34,6 +34,10 @@ export default function EditForm({
       insYears: 0,
       villaType: null,
       selectedCategory: "",
+      floor: 0,
+      isChalet: false,
+      rentType: null,
+      downPayment: null,
     }),
     { selectedProp } = useAllContext(),
     [error, setError] = useState({ isErr: false, content: "" }),
@@ -41,7 +45,6 @@ export default function EditForm({
     priceRef = useRef(),
     bedroomsRef = useRef(),
     bathroomsRef = useRef(),
-    downPaymentRef = useRef(),
     areaRef = useRef();
 
   useEffect(() => {
@@ -57,10 +60,12 @@ export default function EditForm({
           en: property.description.en,
           ar: property.description.ar,
         },
-        selectedStatus:
+        selectedStatus: property.paymentType === 'cash' ?
           property.status === "sale"
             ? { label: "For Sale", value: "sale" }
-            : { label: "For Rent", value: "rent" },
+            : { label: "For Rent", value: "rent" }
+          :
+            { label: "For Sale", value: "sale" },
         selectedImages: property.images,
         paymentType:
           property.paymentType === "cash"
@@ -70,12 +75,15 @@ export default function EditForm({
         villaType: property.villaType,
         insYears:
           property.paymentType === "installment" ? property.insYears : 0,
+        floor: property.floor ? property.floor : null,
+        rentType: property.status === 'rent' ? property.rentType : null,
+        isChalet: (property.category === 'apartment' || property.category === 'studio') ? property.isChalet : false,
+        downPayment: property.paymentType === 'installment' ? property.downPayment : null
       });
       priceRef.current.value = property.price;
       bedroomsRef.current.value = property.beds;
       bathroomsRef.current.value = property.baths;
       areaRef.current.value = property.area;
-      downPaymentRef.current.value = property.downPayment;
     }
     getDocData();
     // eslint-disable-next-line
@@ -94,11 +102,9 @@ export default function EditForm({
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (
-      !formData.selectedStatus ||
+    if (!formData.selectedStatus ||
       (formData.paymentType.value === "installment" && !formData.insYears) ||
-      (formData.paymentType.value === "installment" &&
-      !downPaymentRef.current.value) ||
+      (formData.paymentType.value === "installment" && !formData.downPayment) ||
       (formData.selectedCategory === "villa" && !formData.villaType) ||
       !formData.paymentType ||
       formData.selectedImages.length === 0 ||
@@ -144,7 +150,7 @@ export default function EditForm({
           insYears: formData.insYears,
         }),
         ...(formData.paymentType.value === "installment" && {
-          downPayment: downPaymentRef.current.value,
+          downPayment: formData.downPayment,
         }),
         ...(formData.selectedCategory === "villa" && {
           villaType: formData.villaType,
@@ -187,6 +193,8 @@ export default function EditForm({
       ...uploadedImageUrls,
     ]);
   }
+
+  console.log(formData)
 
   return (
     <div
@@ -355,15 +363,17 @@ export default function EditForm({
               placeholder={"Status..."}
               onChange={(option) => updateFormData("selectedStatus", option)}
               value={formData.selectedStatus}
+              isDisabled={formData.paymentType.value === 'installment'}
             />
-            <input
-              ref={downPaymentRef}
+            {formData.paymentType.value === 'installment' && <input
+              onChange={(e) => updateFormData("downPayment", e.target.value)}
               className="p-2 border text-sm rounded outline-none"
               type="number"
               disabled={formData.paymentType.value === "cash"}
+              value={formData.downPayment}
               placeholder="Down Payment..."
-            />
-            <input
+            />}
+            {formData.paymentType.value === 'installment' && <input
               type="number"
               min={0}
               value={formData.insYears}
@@ -371,7 +381,7 @@ export default function EditForm({
               onChange={(e) => updateFormData("insYears", e.target.value)}
               className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
               placeholder="Installment Years..."
-            />
+            />}
           </div>
           <div className="flex gap-1 items-center">
             <button

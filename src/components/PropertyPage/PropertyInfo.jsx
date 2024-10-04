@@ -10,6 +10,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { GiProgression } from "react-icons/gi";
 import { formattedPriceEn, formattedPriceAR } from "../../utils/functions";
+import { PiBuildingsLight } from "react-icons/pi";
+
 
 
 export default function PropertyInfo({ property }) {
@@ -30,6 +32,12 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
     <div className="w-full order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
+          {property.category.toUpperCase()}
+        </p>
+        {property.category === 'villa' && <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
+          {property.villaType}
+        </p>}
+        <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.status === "sale"
             ? lang === "en"
               ? "FOR SALE"
@@ -38,11 +46,10 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             ? "FOR RENT"
             : "للايجار"}
         </p>
-        <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
-          {property.category.toUpperCase()}
-        </p>
-        {property.category === 'villa' && <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
-          {property.villaType}
+        {(property.category === 'apartment' || property.category === 'studio') && <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
+           {property.isChalet && lang === "en"
+            ? "CHALET"
+            : "شالية"}
         </p>}
       </div>
       <h1
@@ -101,20 +108,20 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
         </div>
       </div>}
       {property.paymentType === 'installment' && <hr className="my-2" />}
-      <div className="flex justify-evenly items-center mt-4">
+      <div className={`grid ${(property.category === 'studio' || property.category === 'apartment') ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'} mt-4`}>
         <div className="flex flex-col items-center">
           <PiBathtubLight className="text-xl text-stone-500" />
           <p className="text-xs text-stone-500 arabic">
             {lang === "en" ? "Bathrooms" : "دورة المياة"}
           </p>
-          <p className="text-sm">{property.baths}</p>
+          <p className="text-sm">{property.baths ? property.baths : '-'}</p>
         </div>
         <div className="flex flex-col items-center">
           <IoIosBed className="text-xl text-stone-500" />
           <p className="text-xs text-stone-500 arabic">
             {lang === "en" ? "Bedrooms" : "غرف النوم"}
           </p>
-          <p className="text-sm">{property.beds}</p>
+          <p className="text-sm">{property.beds ? property.beds : '-'}</p>
         </div>
         <div className="flex flex-col items-center">
           <BiArea className="text-xl text-stone-500" />
@@ -122,9 +129,18 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             {lang === "en" ? "Area" : "مساحة"}
           </p>
           <p className="text-sm">
-            {property.area} <span className="text-xs">m²</span>
+            {property.area ? property.area : '-'} {property.area > 1 && <span className="text-xs">m²</span>}
           </p>
         </div>
+        {(property.category === 'studio' || property.category === 'apartment') && <div className="flex flex-col items-center">
+          <PiBuildingsLight className="text-xl text-stone-500" />
+          <p className="text-xs text-stone-500 arabic">
+            {lang === "en" ? "Floor" : "الدور"}
+          </p>
+          <p className="text-sm">
+            {property.floor ? property.floor : '-'}
+          </p>
+        </div>}
       </div>
       <hr className="my-2" />
       <div className="flex items-center gap-1 mt-2 *:w-1/2 *:text-sm md:*:text-base *:flex-grow text-white">

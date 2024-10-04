@@ -17,6 +17,11 @@ const PaymentOptions = [
   { label: "Installment", value: "installment" },
 ];
 
+const rentOptions = [
+  { label: "Daily", value: "daily" },
+  { label: "Monthly", value: "monthly" },
+];
+
 export default function CreateForm({
   CloseModal,
   setSingleImage,
@@ -35,6 +40,9 @@ export default function CreateForm({
     [paymentType, setPaymentType] = useState(PaymentOptions[0]),
     [insYears, setInsYears] = useState(0),
     [villaType, setVillaType] = useState(null),
+    [floor, setFloor] = useState(0),
+    [isChalet, setIsChalet] = useState(false),
+    [rentType, setRentType] = useState(),
     downPaymentRef = useRef(),
     priceRef = useRef(),
     bedroomsRef = useRef(),
@@ -51,6 +59,11 @@ export default function CreateForm({
     console.log("Selected option:", option);
   }
 
+  function handleRentTypeChange(option) {
+    setRentType(option);
+    console.log("Selected option:", option);
+  }
+
   useEffect(() => {
     return () => (document.body.style.overflow = "auto");
   }, []);
@@ -59,7 +72,7 @@ export default function CreateForm({
     e.preventDefault();
     if (
       !selectedCategory ||
-      !selectedStatus ||
+      (paymentType.value === 'cash' && !selectedStatus) ||
       (paymentType.value === "installment" && !insYears) ||
       (paymentType.value === "installment" && !downPaymentRef.current.value) ||
       (selectedCategory === "villa" && !villaType) ||
@@ -69,11 +82,9 @@ export default function CreateForm({
       !title.ar ||
       !description.en ||
       !description.ar ||
-      !priceRef.current.value ||
-      !bedroomsRef.current.value ||
-      !bathroomsRef.current.value ||
-      !areaRef.current.value
+      !priceRef.current.value
     ) {
+      console.log(selectedStatus)
       setError({ isErr: true, content: "All fields must be filled out." });
       setTimeout(() => {
         setError({ isErr: false, content: "" });
@@ -88,12 +99,12 @@ export default function CreateForm({
       const uploadedImageUrls = await handleUpload(selectedImages);
 
       let PropertyData = {
-        area: areaRef.current.value,
-        baths: bathroomsRef.current.value,
-        beds: bedroomsRef.current.value,
+        area: areaRef.current.value ? areaRef.current.value : 0,
+        baths: bathroomsRef.current.value ? bathroomsRef.current.value : 0,
+        beds: bedroomsRef.current.value ? bedroomsRef.current.value : 0,
         price: priceRef.current.value,
         category: selectedCategory,
-        status: selectedStatus.value,
+        status: paymentType.value === 'cash' ? selectedStatus.value : 'sale',
         paymentType: paymentType.value,
         description: {
           ar: description.ar,
@@ -107,7 +118,9 @@ export default function CreateForm({
         },
         ...(paymentType.value === "installment" && { insYears: insYears }),
         ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
-        ...(selectedCategory === "villa" && { villaType: villaType })
+        ...(selectedCategory === "villa" && { villaType: villaType }),
+        ...(selectedStatus.value === "rent" && { rentType: rentType.value }),
+        ...((selectedCategory === "apartment" || selectedCategory === "studio" ) && { floor: floor, isChalet: isChalet })
       };
 
       addToCollection(`${selectedCategory}s`, PropertyData);
@@ -160,6 +173,14 @@ export default function CreateForm({
 
   function handleInsYears(e) {
     setInsYears(e.target.value);
+  }
+
+  function handleIsChaletChange(e) {
+    setIsChalet(e.target.checked)
+  }
+
+  function handleFloorChange(e) {
+    setFloor(e.target.value)
   }
 
   return (
@@ -414,34 +435,58 @@ export default function CreateForm({
               </motion.div>}
             </AnimatePresence>
 
+            <AnimatePresence>
+              {(selectedCategory === 'apartment' || selectedCategory === 'studio') && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 gap-1">
+                <div className="flex items-center px-2 border border-gray-200 rounded">
+                  <input
+                    onChange={handleIsChaletChange}
+                    id="chalet"
+                    type="checkbox"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="chalet"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Chalet ?
+                  </label>
+                </div>
+                <input type="number" onChange={handleFloorChange} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
+              </motion.div>}
+            </AnimatePresence>
+
             <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
               <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />
               <input ref={bathroomsRef} type="number" placeholder="Bathrooms" />
               <input ref={areaRef} type="number" placeholder="Area (Sq/M)" />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 ">
-              <Select
+            <div className={`grid grid-cols-2 gap-1 `}>
+              {paymentType.value === 'cash' && <Select
                 options={statusOptions}
                 placeholder={"Status..."}
                 onChange={handleStatusChange}
-              />
-              <input
+              />}
+              {paymentType.value === "installment" && <input
                 ref={downPaymentRef}
                 className="p-2 border text-sm rounded outline-none"
                 type="number"
                 min={0}
-                disabled={paymentType.value === "cash"}
                 placeholder="Down Payment"
-              />
-              <input
+              />}
+              {paymentType.value === "installment" && <input
                 type="number"
                 min={1}
-                disabled={paymentType.value === "cash"}
                 onChange={handleInsYears}
                 className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
                 placeholder="Installment Years..."
-              />
+              />}
+              {paymentType.value === 'cash' && <Select
+                options={rentOptions}
+                placeholder={"Rent Type..."}
+                onChange={handleRentTypeChange}
+                isDisabled={selectedStatus.value === 'sale'}
+              />}
             </div>
             <div className="flex gap-1 items-center">
               <button

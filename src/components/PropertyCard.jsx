@@ -89,7 +89,7 @@ export default function PropertyCard({ property }) {
                 lang === "ar" && "flex-row-reverse"
               } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
             >
-              <IoIosBed /> {lang === "en" ? `Beds:` : "سرير :"} {property.beds}
+              <IoIosBed /> {lang === "en" ? `Beds:` : "سرير :"} {property.beds ? property.beds : '-'}
             </span>
             <span
               className={`flex ${
@@ -97,15 +97,15 @@ export default function PropertyCard({ property }) {
               } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
             >
               <PiBathtubLight /> {lang === "en" ? `Baths:` : "دورة مياة :"}{" "}
-              {property.baths}
+              {property.baths ? property.baths : '-'}
             </span>
             <span
               className={`flex ${
                 lang === "ar" && "flex-row-reverse"
               } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
             >
-              <BiArea /> {lang === "en" ? `Area:` : "مساحة :"} {property.area}
-              {lang === "en" ? `m` : "م"}
+              <BiArea /> {lang === "en" ? `Area:` : "مساحة :"} {property.area ? property.area : '-'}
+              {property.area > 1 && <span>{(lang === "en") ? `m` : "م"}</span>}
             </span>
           </div>
         </div>

@@ -17,6 +17,11 @@ const PaymentOptions = [
   { label: "Installment", value: "installment" },
 ];
 
+const rentOptions = [
+  { label: "Daily", value: "daily" },
+  { label: "Monthly", value: "monthly" },
+];
+
 export default function EditForm({
   CloseEditModal,
   setSingleImage,
@@ -76,7 +81,9 @@ export default function EditForm({
         insYears:
           property.paymentType === "installment" ? property.insYears : 0,
         floor: property.floor ? property.floor : null,
-        rentType: property.status === 'rent' ? property.rentType : null,
+        rentType: property.status === 'rent' ? property.rentType === "daily"
+        ? { label: "Daily", value: "daily" }
+        : { label: "Monthly", value: "monthly" } : null,
         isChalet: (property.category === 'apartment' || property.category === 'studio') ? property.isChalet : false,
         downPayment: property.paymentType === 'installment' ? property.downPayment : null
       });
@@ -155,10 +162,15 @@ export default function EditForm({
         ...(formData.selectedCategory === "villa" && {
           villaType: formData.villaType,
         }),
+        ...(formData.selectedStatus.value === "rent" && {
+          rentType: formData.rentType.value,
+        }),
+        ...((formData.selectedCategory === "apartment" || formData.selectedCategory === "studio") && {
+          isChalet: formData.isChalet,
+        }),
       };
 
       let res = await updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
-      console.log(res)
       setLoading(false);
       if (res === 0) {
         setConfirmMsg({show: true, status: false, content: 'Failed to Update.'})
@@ -365,6 +377,29 @@ export default function EditForm({
               value={formData.selectedStatus}
               isDisabled={formData.paymentType.value === 'installment'}
             />
+            {formData.paymentType.value === 'cash' && <Select
+                options={rentOptions}
+                placeholder={"Rent Type..."}
+                onChange={(option) => updateFormData("rentType", option)}
+                value={formData.rentType}
+                isDisabled={formData.selectedStatus.value === 'sale'}
+              />}
+            {formData.paymentType.value === 'cash' && <div className="flex items-center px-2 border border-gray-200 rounded">
+                  <input
+                    onChange={(e) => updateFormData("isChalet", e.target.checked)}
+                    id="chalet"
+                    type="checkbox"
+                    disabled={formData.selectedCategory !== 'apartment' && formData.selectedCategory !== 'studio'}
+                    checked={formData.isChalet}
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="chalet"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Chalet ?
+                  </label>
+            </div>}
             {formData.paymentType.value === 'installment' && <input
               onChange={(e) => updateFormData("downPayment", e.target.value)}
               className="p-2 border text-sm rounded outline-none"

@@ -46,8 +46,8 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             ? "FOR RENT"
             : "للايجار"}
         </p>
-        {(property.category === 'apartment' || property.category === 'studio') && <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
-           {property.isChalet && lang === "en"
+        {(property.category === 'apartment' || property.category === 'studio') && property.isChalet && <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
+           {lang === "en"
             ? "CHALET"
             : "شالية"}
         </p>}

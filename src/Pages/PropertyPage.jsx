@@ -80,7 +80,7 @@ export default function PropertyPage() {
             </p>
           </div>
           {properties === "empty" ? (
-            <p className="w-full text-center mt-10">No Simillar Properties</p>
+            <p className="w-full text-center my-10">No Simillar Properties</p>
           ) : (
             <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mx-auto my-7">
               {" "}

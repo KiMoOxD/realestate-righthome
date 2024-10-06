@@ -6,6 +6,8 @@ import { CgSpinner } from "react-icons/cg";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { regionOptionsEn } from "../../utils/data";
 import { handleUpload } from "../../utils/functions";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 
 const statusOptions = [
   { label: "For Sale", value: "sale" },
@@ -48,6 +50,8 @@ export default function CreateForm({
     bedroomsRef = useRef(),
     bathroomsRef = useRef(),
     areaRef = useRef();
+    let queryClient = useQueryClient();
+
 
   function handleRegionChange(option) {
     setRegion(option);
@@ -67,6 +71,13 @@ export default function CreateForm({
   useEffect(() => {
     return () => (document.body.style.overflow = "auto");
   }, []);
+
+  const addPropertyMutation = useMutation({
+    mutationFn: ({ collectionName, PropertyData }) => addToCollection(collectionName, PropertyData),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['propertiesTable']);
+    },
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -122,8 +133,8 @@ export default function CreateForm({
         ...(selectedStatus.value === "rent" && { rentType: rentType.value }),
         ...((selectedCategory === "apartment" || selectedCategory === "studio" ) && { floor: floor, isChalet: isChalet })
       };
-
-      addToCollection(`${selectedCategory}s`, PropertyData);
+      console.log(PropertyData)
+      addPropertyMutation.mutate({ collectionName: `${selectedCategory}s`, PropertyData });
       setLoading(false);
       setConfirmMsg({show: true, status: true, content: 'Property Added Successfully.'})
       setTimeout(() => {

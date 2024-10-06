@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ImageSlider from "../ImageSlider";
 import DeleteIcon from "./deleteIcon";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function PropertiesTable({ setModal, setEditModal }) {
   let [propertiesData, setPropertiesData] = useState(null);
@@ -13,15 +14,17 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   let [images, setImages] = useState([])
   let [showImages, setShowImages] = useState(false)
   let { setSelectedProp, logout } = useAllContext();
+  let queryClient = useQueryClient();
+
+  const { data: properties, error, isLoading } = useQuery({
+    queryKey: ['propertiesTable'],
+    queryFn: getAllCollectionsData, // Function to fetch data
+  });
 
   useEffect(() => {
-    async function getData() {
-      let properties = await getAllCollectionsData();
-      setPropertiesData(properties);
-      setData(properties);
-    }
-    getData();
-  }, []);
+    setPropertiesData(properties);
+    setData(properties);
+  }, [properties])
 
   function handleSearch(e) {
     let SearchResult = data.filter(
@@ -44,10 +47,15 @@ export default function PropertiesTable({ setModal, setEditModal }) {
     document.body.style.overflow = "hidden";
   }
 
+  const deletePropertyMutation = useMutation({
+    mutationFn: ({ collectionName, id }) => deleteFromCollection(collectionName, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['propertiesTable']);
+    },
+  });
+
   function deleteProperty(collectionName, id) {
-    setPropertiesData((prev) => prev.filter((prop) => prop.id !== id));
-    setData((prev) => prev.filter((prop) => prop.id !== id));
-    deleteFromCollection(collectionName, id);
+    deletePropertyMutation.mutate({ collectionName, id })
   }
 
 

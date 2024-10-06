@@ -7,11 +7,13 @@ import BrowsePage from "./Pages/BrowsePage";
 import PropertyPage from "./Pages/PropertyPage";
 import { loader } from "./Pages/PropertyPage";
 import AdminPage from './Pages/AdminPage'
+import ErrorPage from "./components/ErrorPage";
 const router = createBrowserRouter([
   {
     path: "/",
     id: "root",
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
       { path: "browse", element: <BrowsePage />},

@@ -130,3 +130,17 @@ export const regionOptionsEn = [
   { label: 'North Coast', value: { en: 'North Coast', ar: 'الساحل' } },
   { label: 'Gouna', value: { en: 'Gouna', ar: 'الجونة' } },
 ];
+
+export const statusOptions = [
+  { label: "For Sale", value: "sale" },
+  { label: "For Rent", value: "rent" },
+];
+export const PaymentOptions = [
+  { label: "Cash", value: "cash" },
+  { label: "Installment", value: "installment" },
+];
+
+export const rentOptions = [
+  { label: "Daily", value: "daily" },
+  { label: "Monthly", value: "monthly" },
+];

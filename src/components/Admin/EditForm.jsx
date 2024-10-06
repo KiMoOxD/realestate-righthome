@@ -1,100 +1,73 @@
 import { useState, useEffect, useRef } from "react";
 import Select from "react-select";
-import { regionOptionsEn } from "../../utils/data";
+import {
+  regionOptionsEn,
+  statusOptions,
+  PaymentOptions,
+  rentOptions,
+} from "../../utils/data";
 import { AnimatePresence, motion } from "framer-motion";
-import { getDocumentData, updateDocument } from "../../utils/data";
 import { CgSpinner } from "react-icons/cg";
 import { useAllContext } from "../../context/AllContext";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import { handleUpload } from "../../utils/functions";
+import {
+  handleUpload,
+  fetchAndSetPropertyData,
+  validateForm,
+  buildPropertyData,
+  setErrorMessage,
+  updatePropertyData,
+} from "../../utils/functions";
 
-const statusOptions = [
-  { label: "For Sale", value: "sale" },
-  { label: "For Rent", value: "rent" },
-];
-const PaymentOptions = [
-  { label: "Cash", value: "cash" },
-  { label: "Installment", value: "installment" },
-];
+const initialFormData = {
+  region: null,
+  selectedImages: [],
+  title: { en: "", ar: "" },
+  description: { en: "", ar: "" },
+  selectedStatus: "",
+  paymentType: PaymentOptions[0],
+  insYears: 0,
+  villaType: null,
+  selectedCategory: "",
+  floor: 0,
+  isChalet: false,
+  rentType: null,
+  downPayment: null,
+};
 
-const rentOptions = [
-  { label: "Daily", value: "daily" },
-  { label: "Monthly", value: "monthly" },
-];
+const initialErrorState = {
+  isErr: false,
+  content: "",
+};
 
 export default function EditForm({
   CloseEditModal,
   setSingleImage,
   setSingleModal,
-  setConfirmMsg
+  setConfirmMsg,
 }) {
-  let [language, setLanguage] = useState("en"),
-    [formData, setFormData] = useState({
-      region: null,
-      selectedImages: [],
-      title: { en: "", ar: "" },
-      description: { en: "", ar: "" },
-      selectedStatus: "",
-      paymentType: PaymentOptions[0],
-      insYears: 0,
-      villaType: null,
-      selectedCategory: "",
-      floor: 0,
-      isChalet: false,
-      rentType: null,
-      downPayment: null,
-    }),
-    { selectedProp } = useAllContext(),
-    [error, setError] = useState({ isErr: false, content: "" }),
-    [loading, setLoading] = useState(false),
-    priceRef = useRef(),
-    bedroomsRef = useRef(),
-    bathroomsRef = useRef(),
-    areaRef = useRef();
+  
+  const [language, setLanguage] = useState("en"),
+        [formData, setFormData] = useState(initialFormData),
+        [error, setError] = useState(initialErrorState),
+        [loading, setLoading] = useState(false);
+  const { selectedProp } = useAllContext();
+  const priceRef = useRef(),
+        bedroomsRef = useRef(),
+        bathroomsRef = useRef(),
+        areaRef = useRef();
 
   useEffect(() => {
-    async function getDocData() {
-      let property = await getDocumentData(
-        `${selectedProp.cName}s`,
-        selectedProp.id
-      );
-      setFormData({
-        region: { label: property.region?.en, value: property.region },
-        title: { en: property.title.en, ar: property.title.ar },
-        description: {
-          en: property.description.en,
-          ar: property.description.ar,
-        },
-        selectedStatus: property.paymentType === 'cash' ?
-          property.status === "sale"
-            ? { label: "For Sale", value: "sale" }
-            : { label: "For Rent", value: "rent" }
-          :
-            { label: "For Sale", value: "sale" },
-        selectedImages: property.images,
-        paymentType:
-          property.paymentType === "cash"
-            ? { label: "Cash", value: "cash" }
-            : { label: "Installment", value: "installment" },
-        selectedCategory: property.category,
-        villaType: property.villaType,
-        insYears:
-          property.paymentType === "installment" ? property.insYears : 0,
-        floor: property.floor ? property.floor : null,
-        rentType: property.status === 'rent' ? property.rentType === "daily"
-        ? { label: "Daily", value: "daily" }
-        : { label: "Monthly", value: "monthly" } : null,
-        isChalet: (property.category === 'apartment' || property.category === 'studio') ? property.isChalet : false,
-        downPayment: property.paymentType === 'installment' ? property.downPayment : null
-      });
-      priceRef.current.value = property.price;
-      bedroomsRef.current.value = property.beds;
-      bathroomsRef.current.value = property.baths;
-      areaRef.current.value = property.area;
-    }
-    getDocData();
-    // eslint-disable-next-line
-  }, [selectedProp]);
+    fetchAndSetPropertyData(
+      selectedProp,
+      setFormData,
+      priceRef,
+      bedroomsRef,
+      bathroomsRef,
+      areaRef
+    );
+    return () => (document.body.style.overflow = "auto");
+  }, [selectedProp, setFormData, priceRef, bedroomsRef, bathroomsRef, areaRef]);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -103,31 +76,11 @@ export default function EditForm({
     }));
   };
 
-  useEffect(() => {
-    return () => (document.body.style.overflow = "auto");
-  }, []);
-
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!formData.selectedStatus ||
-      (formData.paymentType.value === "installment" && !formData.insYears) ||
-      (formData.paymentType.value === "installment" && !formData.downPayment) ||
-      (formData.selectedCategory === "villa" && !formData.villaType) ||
-      !formData.paymentType ||
-      formData.selectedImages.length === 0 ||
-      !formData.title.en ||
-      !formData.title.ar ||
-      !formData.description.en ||
-      !formData.description.ar ||
-      !priceRef.current.value ||
-      !bedroomsRef.current.value ||
-      !bathroomsRef.current.value ||
-      !areaRef.current.value
-    ) {
-      setError({ isErr: true, content: "All fields must be filled out." });
-      setTimeout(() => {
-        setError({ isErr: false, content: "" });
-      }, 3000);
+
+    if (!validateForm(formData, priceRef, bedroomsRef, bathroomsRef, areaRef)) {
+      setErrorMessage(setError, "All fields must be filled out.");
       console.error("All fields must be filled out.");
       return;
     }
@@ -135,65 +88,22 @@ export default function EditForm({
     setLoading(true);
 
     try {
-      let PropertyData = {
-        area: areaRef.current.value,
-        baths: bathroomsRef.current.value,
-        beds: bedroomsRef.current.value,
-        price: priceRef.current.value,
-        category: formData.selectedCategory,
-        status: formData.selectedStatus.value,
-        paymentType: formData.paymentType.value,
-        description: {
-          ar: formData.description.ar,
-          en: formData.description.en,
-        },
-        region: formData.region.value,
-        images: formData.selectedImages,
-        title: {
-          ar: formData.title.ar,
-          en: formData.title.en,
-        },
-        ...(formData.paymentType.value === "installment" && {
-          insYears: formData.insYears,
-        }),
-        ...(formData.paymentType.value === "installment" && {
-          downPayment: formData.downPayment,
-        }),
-        ...(formData.selectedCategory === "villa" && {
-          villaType: formData.villaType,
-        }),
-        ...(formData.selectedStatus.value === "rent" && {
-          rentType: formData.rentType.value,
-        }),
-        ...((formData.selectedCategory === "apartment" || formData.selectedCategory === "studio") && {
-          isChalet: formData.isChalet,
-        }),
-      };
-
-      let res = await updateDocument(`${selectedProp.cName}s`, selectedProp.id, PropertyData);
-      setLoading(false);
-      if (res === 0) {
-        setConfirmMsg({show: true, status: false, content: 'Failed to Update.'})
-        setTimeout(() => {
-          setConfirmMsg({show: false, status: true, content: ''})
-        }, 2000)
-        CloseEditModal();
-        return
-      }
-      setConfirmMsg({show: true, status: true, content: 'Property Updated Successfully.'})
-      setTimeout(() => {
-        setConfirmMsg({show: false, status: true, content: ''})
-      }, 2000)
-      CloseEditModal();
+      const propertyData = buildPropertyData(
+        formData,
+        priceRef,
+        bedroomsRef,
+        bathroomsRef,
+        areaRef
+      );
+      await updatePropertyData(
+        selectedProp,
+        propertyData,
+        setConfirmMsg,
+        CloseEditModal,
+        setLoading
+      );
     } catch (error) {
-      console.error("Error during submission:", error);
-      setError({
-        isErr: true,
-        content: "An error occurred during submission.",
-      });
-      setTimeout(() => {
-        setError({ isErr: false, content: "" });
-      }, 3000);
+      setErrorMessage(setError, "An error occurred during submission.");
     }
   }
 
@@ -205,8 +115,6 @@ export default function EditForm({
       ...uploadedImageUrls,
     ]);
   }
-
-  console.log(formData)
 
   return (
     <div
@@ -239,7 +147,10 @@ export default function EditForm({
           <div className="flex flex-wrap gap-2">
             {formData.selectedImages.map((img) => {
               return (
-                <div className="relative cursor-pointer border rounded hover:border-blue-600 transition">
+                <div
+                  key={img}
+                  className="relative cursor-pointer border rounded hover:border-blue-600 transition"
+                >
                   <img
                     src={img}
                     alt=""
@@ -375,48 +286,59 @@ export default function EditForm({
               placeholder={"Status..."}
               onChange={(option) => updateFormData("selectedStatus", option)}
               value={formData.selectedStatus}
-              isDisabled={formData.paymentType.value === 'installment'}
+              isDisabled={formData.paymentType.value === "installment"}
             />
-            {formData.paymentType.value === 'cash' && <Select
+            {formData.paymentType.value === "cash" && (
+              <Select
                 options={rentOptions}
                 placeholder={"Rent Type..."}
                 onChange={(option) => updateFormData("rentType", option)}
                 value={formData.rentType}
-                isDisabled={formData.selectedStatus.value === 'sale'}
-              />}
-            {formData.paymentType.value === 'cash' && <div className="flex items-center px-2 border border-gray-200 rounded">
-                  <input
-                    onChange={(e) => updateFormData("isChalet", e.target.checked)}
-                    id="chalet"
-                    type="checkbox"
-                    disabled={formData.selectedCategory !== 'apartment' && formData.selectedCategory !== 'studio'}
-                    checked={formData.isChalet}
-                    className="text-blue-600 bg-gray-100 border-gray-300"
-                  />
-                  <label
-                    htmlFor="chalet"
-                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
-                  >
-                    Chalet ?
-                  </label>
-            </div>}
-            {formData.paymentType.value === 'installment' && <input
-              onChange={(e) => updateFormData("downPayment", e.target.value)}
-              className="p-2 border text-sm rounded outline-none"
-              type="number"
-              disabled={formData.paymentType.value === "cash"}
-              value={formData.downPayment}
-              placeholder="Down Payment..."
-            />}
-            {formData.paymentType.value === 'installment' && <input
-              type="number"
-              min={0}
-              value={formData.insYears}
-              disabled={formData.paymentType.value === "cash"}
-              onChange={(e) => updateFormData("insYears", e.target.value)}
-              className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
-              placeholder="Installment Years..."
-            />}
+                isDisabled={formData.selectedStatus.value === "sale"}
+              />
+            )}
+            {formData.paymentType.value === "cash" && (
+              <div className="flex items-center px-2 border border-gray-200 rounded">
+                <input
+                  onChange={(e) => updateFormData("isChalet", e.target.checked)}
+                  id="chalet"
+                  type="checkbox"
+                  disabled={
+                    formData.selectedCategory !== "apartment" &&
+                    formData.selectedCategory !== "studio"
+                  }
+                  checked={formData.isChalet}
+                  className="text-blue-600 bg-gray-100 border-gray-300"
+                />
+                <label
+                  htmlFor="chalet"
+                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                >
+                  Chalet ?
+                </label>
+              </div>
+            )}
+            {formData.paymentType.value === "installment" && (
+              <input
+                onChange={(e) => updateFormData("downPayment", e.target.value)}
+                className="p-2 border text-sm rounded outline-none"
+                type="number"
+                disabled={formData.paymentType.value === "cash"}
+                value={formData.downPayment}
+                placeholder="Down Payment..."
+              />
+            )}
+            {formData.paymentType.value === "installment" && (
+              <input
+                type="number"
+                min={0}
+                value={formData.insYears}
+                disabled={formData.paymentType.value === "cash"}
+                onChange={(e) => updateFormData("insYears", e.target.value)}
+                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
+                placeholder="Installment Years..."
+              />
+            )}
           </div>
           <div className="flex gap-1 items-center">
             <button

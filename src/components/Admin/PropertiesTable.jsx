@@ -16,7 +16,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   let { setSelectedProp, logout } = useAllContext();
   let queryClient = useQueryClient();
 
-  const { data: properties, error, isLoading } = useQuery({
+  const { data: properties, isLoading } = useQuery({
     queryKey: ['propertiesTable'],
     queryFn: getAllCollectionsData, // Function to fetch data
   });
@@ -109,7 +109,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
         </div>
       </div>
 
-      {!propertiesData && (
+      {isLoading && (
         <div
           role="status"
           className="w-full p-4 space-y-4  border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse  md:p-6 "
@@ -153,53 +153,53 @@ export default function PropertiesTable({ setModal, setEditModal }) {
         </div>
       )}
       <AnimatePresence mode="wait">
-      {propertiesData && (
-        <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-2 w-full">
-          {propertiesData.map((prop) => {
-            return (
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                key={prop.id}
-                className="relative flex gap-2 items-center w-full bg-stone-100/80 p-2 md:p-4 rounded shadow"
-              >
-                <FiEdit
-                  className="absolute top-2 right-10 text-stone-500 cursor-pointer"
-                  onClick={() => {
-                    console.log("clicked");
-                    setEditModal(true);
-                    setSelectedProp({ id: prop.id, cName: prop.category });
-                    document.body.style.overflow = "hidden";
-                  }}
-                />
-                <DeleteIcon deleteProperty={deleteProperty} prop={prop} />
-                <img
-                  src={prop.images[0]}
-                  alt=""
-                  className="size-16 min-w-16 object-cover rounded cursor-pointer"
-                  onClick={() => {setImages(prop.images); setShowImages(true)}}
-                />
-                <div className="w-full pr-2">
-                  <p className="text-xs text-stone-500/90">{prop.id}</p>
-                  <Link to={`/browse/${prop.category}s/${prop.id}`} className="text-md font-medium flex items-center justify-between hover:underline">
-                    <span className="truncate max-w-[160px] lg:max-w-[250px] xl:max-w-[190px] 2xl:max-w-[190px]">
-                      {prop.title?.en}
-                    </span>
-                    <span className="text-xs truncate max-w-[100px] sm:max-w-[400px]">
-                      {prop.region?.en}
-                    </span>
-                  </Link>
-                  <p className="font-medium flex items-center justify-between">
-                    <span className="truncate">{prop.price} EGP</span>
-                    <span className="text-xs">{prop.category}</span>
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+        {propertiesData && (
+          <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-2 w-full">
+            {propertiesData.map((prop) => {
+              return (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  key={prop.id}
+                  className="relative flex gap-2 items-center w-full bg-stone-100/80 p-2 md:p-4 rounded shadow"
+                >
+                  <FiEdit
+                    className="absolute top-2 right-10 text-stone-500 cursor-pointer"
+                    onClick={() => {
+                      console.log("clicked");
+                      setEditModal(true);
+                      setSelectedProp({ id: prop.id, cName: prop.category });
+                      document.body.style.overflow = "hidden";
+                    }}
+                  />
+                  <DeleteIcon deleteProperty={deleteProperty} prop={prop} />
+                  <img
+                    src={prop.images[0]}
+                    alt=""
+                    className="size-16 min-w-16 object-cover rounded cursor-pointer"
+                    onClick={() => {setImages(prop.images); setShowImages(true)}}
+                  />
+                  <div className="w-full pr-2">
+                    <p className="text-xs text-stone-500/90">{prop.id}</p>
+                    <Link to={`/browse/${prop.category}s/${prop.id}`} className="text-md font-medium flex items-center justify-between hover:underline">
+                      <span className="truncate max-w-[160px] lg:max-w-[250px] xl:max-w-[190px] 2xl:max-w-[190px]">
+                        {prop.title?.en}
+                      </span>
+                      <span className="text-xs truncate max-w-[100px] sm:max-w-[400px]">
+                        {prop.region?.en}
+                      </span>
+                    </Link>
+                    <p className="font-medium flex items-center justify-between">
+                      <span className="truncate">{prop.price} EGP</span>
+                      <span className="text-xs">{prop.category}</span>
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </AnimatePresence>
     </div>
   );

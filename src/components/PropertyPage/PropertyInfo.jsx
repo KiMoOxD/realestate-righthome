@@ -161,14 +161,14 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
           <p className="text-xs text-stone-500 arabic">
             {lang === "en" ? "Bathrooms" : "دورة المياة"}
           </p>
-          <p className="text-sm">{property.baths ? property.baths : "-"}</p>
+          <p className="text-sm">{+property.baths ? property.baths : "-"}</p>
         </div>
         <div className="flex flex-col items-center">
           <IoIosBed className="text-xl text-stone-500" />
           <p className="text-xs text-stone-500 arabic">
             {lang === "en" ? "Bedrooms" : "غرف النوم"}
           </p>
-          <p className="text-sm">{property.beds ? property.beds : "-"}</p>
+          <p className="text-sm">{+property.beds ? property.beds : "-"}</p>
         </div>
         <div className="flex flex-col items-center">
           <BiArea className="text-xl text-stone-500" />
@@ -176,8 +176,8 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             {lang === "en" ? "Area" : "مساحة"}
           </p>
           <p className="text-sm">
-            {property.area ? property.area : "-"}{" "}
-            {property.area > 1 && <span className="text-xs">m²</span>}
+            {+property.area ? property.area : "-"}{" "}
+            {+property.area > 1 && <span className="text-xs">m²</span>}
           </p>
         </div>
         {(property.category === "studio" ||

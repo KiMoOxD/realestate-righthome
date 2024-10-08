@@ -69,6 +69,7 @@ export default function PropertyPage() {
                 imgCont={imgCont}
                 title={property.title}
                 OpenModal={OpenModal}
+                youtubeLinks={property.youtubeLinks}
               />
               <PropertyInfo property={property} />
             </div>

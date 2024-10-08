@@ -6,23 +6,9 @@ import { CgSpinner } from "react-icons/cg";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { regionOptionsEn } from "../../utils/data";
 import { handleUpload } from "../../utils/functions";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { statusOptions, PaymentOptions, rentOptions } from "../../utils/data";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-
-const statusOptions = [
-  { label: "For Sale", value: "sale" },
-  { label: "For Rent", value: "rent" },
-];
-
-const PaymentOptions = [
-  { label: "Cash", value: "cash" },
-  { label: "Installment", value: "installment" },
-];
-
-const rentOptions = [
-  { label: "Daily", value: "daily" },
-  { label: "Monthly", value: "monthly" },
-];
 
 export default function CreateForm({
   CloseModal,
@@ -45,6 +31,7 @@ export default function CreateForm({
     [floor, setFloor] = useState(0),
     [isChalet, setIsChalet] = useState(false),
     [rentType, setRentType] = useState(),
+    [youtubeLinks, setYoutubeLinks] = useState([]),
     downPaymentRef = useRef(),
     priceRef = useRef(),
     bedroomsRef = useRef(),
@@ -127,6 +114,7 @@ export default function CreateForm({
           ar: title.ar,
           en: title.en,
         },
+        youtubeLinks: youtubeLinks,
         ...(paymentType.value === "installment" && { insYears: insYears }),
         ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
         ...(selectedCategory === "villa" && { villaType: villaType }),
@@ -192,6 +180,12 @@ export default function CreateForm({
 
   function handleFloorChange(e) {
     setFloor(e.target.value)
+  }
+
+  function handleYoutubeLinks(e) {
+    let CSLINKS = e.target.value
+    CSLINKS = CSLINKS.replace(' ', '').split(',')
+    setYoutubeLinks(CSLINKS)
   }
 
   return (
@@ -499,18 +493,21 @@ export default function CreateForm({
                 isDisabled={selectedStatus.value === 'sale'}
               />}
             </div>
+            <div>
+              <input type="text" value={youtubeLinks} onChange={handleYoutubeLinks} placeholder="YoutubeLink1,YoutubeLink1,..." className="outline-none w-full p-2 rounded border text-sm"/>
+            </div>
             <div className="flex gap-1 items-center">
               <button
                 type="button"
                 onClick={() => setLanguage("en")}
-                className="bg-stone-200 p-1 text-xs rounded hover:bg-stone-300"
+                className={`bg-stone-200 p-1 text-xs rounded hover:bg-stone-300 ${language === 'en' && 'bg-stone-300'}`}
               >
                 EN
               </button>
               <button
                 type="button"
                 onClick={() => setLanguage("ar")}
-                className="bg-stone-200 p-1 text-xs rounded hover:bg-stone-300"
+                className={`bg-stone-200 p-1 text-xs rounded hover:bg-stone-300 ${language === 'ar' && 'bg-stone-300'}`}
               >
                 AR
               </button>

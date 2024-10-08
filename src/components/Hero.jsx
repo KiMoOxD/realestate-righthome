@@ -1,10 +1,11 @@
 import { useAllContext } from "../context/AllContext";
-import img from "../images/landing.jpg";
+import React, { lazy } from 'react';
+import img from "../images/landing.webp";
 import { useEffect, useRef, useState } from "react";
-import { TextEffect } from "../components/TextEffect/TextEffectBase.tsx";
 import { getAllCollectionsData } from "../utils/data.js";
 import { motion } from "framer-motion";
-import SearchItem from "./SearchItem.jsx";
+// import SearchItem from "./SearchItem.jsx";
+const SearchItem = lazy(() => import('./SearchItem.jsx'));
 
 export default function Hero() {
   let { lang } = useAllContext();
@@ -15,8 +16,10 @@ export default function Hero() {
 
   useEffect(() => {
     async function getData() {
-      let data = await getAllCollectionsData();
-      setSearchData(data);
+      setTimeout(async () => {
+        let data = await getAllCollectionsData();
+        setSearchData(data);
+      }, 2000); 
     }
     getData();
   }, []);
@@ -59,26 +62,24 @@ export default function Hero() {
       className="relative flex items-center justify-center min-h-[80vh] bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${img})` }}
     >
-      <div className="absolute inset-0 z-2 bg-gray-900/30 sm:from-cyan-900/95 sm:to-gray-900/25"></div>
+      <div className="absolute inset-0 z-2 bg-gray-900/50 sm:from-cyan-900/95 sm:to-gray-900/25"></div>
       <div className="relative p-2 text-center text-white w-[780px]">
         <motion.p
           className="mt-3 sm:mt-0 text-4xl sm:text-6xl md:text-7xl font-semibold mb-5"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.5 }}
         >
           {lang === "en" ? "Find Your Dream Home" : "دور علي بيت احلامك"}
         </motion.p>
         {lang === "en" && (
-          <TextEffect
-            per="word"
-            preset="fade"
+          <p
             className="max-w-lg text-sm mx-auto text-stone-200"
           >
             Explore a world of amazing real estate opportunities and find the
             perfect home that meets all your needs and aspirations, where
             comfort and elegance are found in every corner of your dream house.
-          </TextEffect>
+          </p>
         )}
         {lang === "ar" && (
           <p className="max-w-xl text-sm mx-auto text-stone-200">

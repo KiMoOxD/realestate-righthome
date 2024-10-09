@@ -181,8 +181,8 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                     onClick={() => {setImages(prop.images); setShowImages(true)}}
                   />
                   <div className="w-full pr-2">
-                    <p className="text-xs text-stone-500/90">{prop.id}</p>
-                    <Link to={`/browse/${prop.category}s/${prop.id}`} className="text-md font-medium flex items-center justify-between hover:underline">
+                    {/* <p className="text-xs text-stone-500/90">{prop.id}</p> */}
+                    <Link to={`/browse/${prop.category}s/${prop.id}`} className="text-md font-medium flex items-center justify-between hover:underline mt-2">
                       <span className="truncate max-w-[160px] lg:max-w-[250px] xl:max-w-[190px] 2xl:max-w-[190px]">
                         {prop.title?.en}
                       </span>

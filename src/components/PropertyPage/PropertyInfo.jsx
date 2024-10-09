@@ -108,13 +108,13 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
       <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
         {lang === "en" ? "Description" : "الوصف"}
       </p>
-      <div
+      <pre
         className={`bg-stone-100 text-sm p-3 max-h-[174px] overflow-y-auto text-stone-700 mt-2 ${
           lang === "ar" && "text-right arabic"
         }`}
       >
         {lang === "en" ? property.description.en : property.description.ar}
-      </div>
+      </pre>
       {property.paymentType === "installment" && (
         <p
           className={`text-xs text-stone-400 mt-2 ${

@@ -316,7 +316,7 @@ export default function CreateForm({
                 ref={priceRef}
                 className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
                 type="text"
-                placeholder="Price"
+                placeholder="Price*"
               />
 
             </div>
@@ -461,9 +461,9 @@ export default function CreateForm({
             </AnimatePresence>
 
             <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
-              <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />
-              <input ref={bathroomsRef} type="number" placeholder="Bathrooms" />
-              <input ref={areaRef} type="number" placeholder="Area (Sq/M)" />
+              <input ref={bedroomsRef} type="number" min={0} placeholder="Bedrooms" />
+              <input ref={bathroomsRef} type="number" min={0} placeholder="Bathrooms" />
+              <input ref={areaRef} type="number" min={0} placeholder="Area (Sq/M)" />
             </div>
 
             <div className={`grid grid-cols-2 gap-1 `}>
@@ -523,7 +523,7 @@ export default function CreateForm({
                   }
                   className="p-2 border text-sm rounded outline-none w-full mb-1"
                   type="text"
-                  placeholder="العنوان"
+                  placeholder="*العنوان"
                 />
               )}
               {language === "en" && (
@@ -536,7 +536,7 @@ export default function CreateForm({
                   }
                   className="p-2 border text-sm rounded outline-none w-full mb-1"
                   type="text"
-                  placeholder="Title"
+                  placeholder="Title*"
                 />
               )}
               {language === "en" && (
@@ -547,7 +547,7 @@ export default function CreateForm({
                       return { ...prev, en: e.target.value };
                     })
                   }
-                  placeholder="Description"
+                  placeholder="Description*"
                   className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}
@@ -559,7 +559,7 @@ export default function CreateForm({
                       return { ...prev, ar: e.target.value };
                     })
                   }
-                  placeholder="الـوصـف"
+                  placeholder="*الـوصـف"
                   className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}

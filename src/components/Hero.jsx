@@ -4,8 +4,10 @@ import img from "../images/landing.webp";
 import { useEffect, useRef, useState } from "react";
 import { getAllCollectionsData } from "../utils/data.js";
 import { motion } from "framer-motion";
+import debounce from 'lodash.debounce'; // Use lodash debounce to control the search frequency
 // import SearchItem from "./SearchItem.jsx";
 const SearchItem = lazy(() => import('./SearchItem.jsx'));
+
 
 export default function Hero() {
   let { lang } = useAllContext();
@@ -28,34 +30,59 @@ export default function Hero() {
     setSearchResult([]);
   }, [status]);
 
-  async function handleSearch(e) {
-    let final = SearchData;
-    let searchText = e.target.value;
+
+  // Optimized handleSearch function
+  const handleSearch = debounce(async (e) => {
+    let searchText = e.target.value.trim().toLowerCase();
+    
     if (searchText) {
-      final = final
-        .filter((res) =>
-          status === 1 ? res.status === "sale" : res.status === "rent"
-        )
-        .filter((result) => {
-          return (
-            result.description.en
-              .toLowerCase()
-              .includes(searchText.toLowerCase()) ||
-            result.description.ar
-              .toLowerCase()
-              .includes(searchText.toLowerCase()) ||
-            result.title.en.toLowerCase().includes(searchText.toLowerCase()) ||
-            result.title.ar.toLowerCase().includes(searchText.toLowerCase()) ||
-            result.region.en.toLowerCase().includes(searchText.toLowerCase()) ||
-            result.region.ar.toLowerCase().includes(searchText.toLowerCase()) ||
-            result.id.includes(searchText)
-          );
-        });
-      setSearchResult(final.length > 0 ? final : "empty");
+      let final = SearchData.filter((res) =>
+        status === 1 ? res.status === "sale" : res.status === "rent"
+      );
+  
+      const results = final.filter((result) => {
+        const descriptionEn = result.description.en.toLowerCase();
+        const descriptionAr = result.description.ar.toLowerCase();
+        const titleEn = result.title.en.toLowerCase();
+        const titleAr = result.title.ar.toLowerCase();
+        const regionEn = result.region.en.toLowerCase();
+        const regionAr = result.region.ar.toLowerCase();
+        
+        // Prioritize title and region matches first for better relevance
+        return (
+          titleEn.includes(searchText) || 
+          titleAr.includes(searchText) || 
+          regionEn.includes(searchText) || 
+          regionAr.includes(searchText) || 
+          descriptionEn.includes(searchText) || 
+          descriptionAr.includes(searchText) || 
+          result.id.includes(searchText)
+        );
+      });
+  
+      // Sort by relevance: matches in title and region should appear before description matches
+      const sortedResults = results.sort((a, b) => {
+        const aTitleMatch = a.title.en.toLowerCase().includes(searchText) || a.title.ar.toLowerCase().includes(searchText);
+        const bTitleMatch = b.title.en.toLowerCase().includes(searchText) || b.title.ar.toLowerCase().includes(searchText);
+        const aRegionMatch = a.region.en.toLowerCase().includes(searchText) || a.region.ar.toLowerCase().includes(searchText);
+        const bRegionMatch = b.region.en.toLowerCase().includes(searchText) || b.region.ar.toLowerCase().includes(searchText);
+        
+        // Sort by title match first, then region match
+        if (aTitleMatch && !bTitleMatch) return -1;
+        if (!aTitleMatch && bTitleMatch) return 1;
+        if (aRegionMatch && !bRegionMatch) return -1;
+        if (!aRegionMatch && bRegionMatch) return 1;
+        
+        return 0;
+      });
+  
+      // Update state based on whether results were found
+      setSearchResult(sortedResults.length > 0 ? sortedResults : "empty");
     } else {
       setSearchResult([]);
     }
-  }
+  }, 300); // The debounce delay in milliseconds
+  
 
   return (
     <section
@@ -82,10 +109,8 @@ export default function Hero() {
           </p>
         )}
         {lang === "ar" && (
-          <p className="max-w-xl text-sm mx-auto text-stone-200">
-            استكشف عالماً من الفرص العقارية المذهلة وابحث عن المنزل المثالي الذي
-            يلبي جميع احتياجاتك وتطلعاتك، حيث تجد الراحة والأناقة في كل زاوية من
-            بيت أحلامك
+          <p className="max-w-xl text-sm mx-auto mt-6 text-stone-200">
+            استكشف فرص عقارية رائعة تجمع بين الفخامة والأسعار المناسبة للشباب والعائلات. هنا، تجد الراحة والأناقة في كل زاوية. انطلق في البحث عن بيت يناسب أسلوب حياتك وتطلعاتك!
           </p>
         )}
         <div className="relative flex justify-center gap-2 mt-10 bg-white w-fit mx-auto p-3 px-5 rounded-full ">

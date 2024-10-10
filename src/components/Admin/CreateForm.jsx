@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { AnimatePresence, motion } from "framer-motion";
 import { addToCollection } from "../../utils/data";
@@ -9,6 +9,20 @@ import { handleUpload } from "../../utils/functions";
 import { statusOptions, PaymentOptions, rentOptions, apartmentTypes } from "../../utils/data";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+const initialFormData = {
+  region: null,
+  selectedImages: [],
+  title: { en: "", ar: "" },
+  description: { en: "", ar: "" },
+  selectedStatus: "",
+  selectedCategory: "",
+  paymentType: PaymentOptions[0],
+  youtubeLinks: [],
+  price: 0,
+  bedrooms: 0,
+  bathrooms: 0,
+  area: 0,
+}
 
 export default function CreateForm({
   CloseModal,
@@ -17,45 +31,11 @@ export default function CreateForm({
   setConfirmMsg
 }) {
   let [language, setLanguage] = useState("en"),
-    [region, setRegion] = useState(null),
-    [selectedImages, setSelectedImages] = useState([]),
-    [title, setTitle] = useState({ en: "", ar: "" }),
-    [description, setDescription] = useState({ en: "", ar: "" }),
-    [selectedStatus, setSelectedStatus] = useState(""),
-    [selectedCategory, setSelectedCategory] = useState(""),
-    [error, setError] = useState({ isErr: false, content: "" }),
-    [loading, setLoading] = useState(false),
-    [paymentType, setPaymentType] = useState(PaymentOptions[0]),
-    [insYears, setInsYears] = useState(0),
-    [villaType, setVillaType] = useState(null),
-    [floor, setFloor] = useState(0),
-    [isChalet, setIsChalet] = useState(false),
-    [rentType, setRentType] = useState(),
-    [youtubeLinks, setYoutubeLinks] = useState([]),
-    [apartmentType, setApartmentType] = useState(),
-    [retailType, setRetailType] = useState(),
-    downPaymentRef = useRef(),
-    priceRef = useRef(),
-    bedroomsRef = useRef(),
-    bathroomsRef = useRef(),
-    areaRef = useRef();
-    let queryClient = useQueryClient();
+      [formData, setFormData] = useState(initialFormData),
+      [error, setError] = useState({ isErr: false, content: "" }),
+      [loading, setLoading] = useState(false);
+      let queryClient = useQueryClient();
 
-
-  function handleRegionChange(option) {
-    setRegion(option);
-    console.log("Selected Region:", option);
-  }
-
-  function handleStatusChange(option) {
-    setSelectedStatus(option);
-    console.log("Selected option:", option);
-  }
-
-  function handleRentTypeChange(option) {
-    setRentType(option);
-    console.log("Selected option:", option);
-  }
 
   useEffect(() => {
     return () => (document.body.style.overflow = "auto");
@@ -68,25 +48,34 @@ export default function CreateForm({
     },
   });
 
+  const updateFormData = (field, value) => {
+    setFormData(prevState => {
+      return {
+        ...prevState,
+        [field]: value,
+      };
+    });
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (
-      !selectedCategory ||
-      (paymentType.value === 'cash' && !selectedStatus) ||
-      (paymentType.value === "installment" && !insYears) ||
-      (paymentType.value === "installment" && !downPaymentRef.current.value) ||
-      (selectedCategory === "villa" && !villaType) ||
-      (selectedCategory === "apartment" && !apartmentType) ||
-      (selectedCategory === "retail" && !retailType) ||
-      !paymentType ||
-      selectedImages.length === 0 ||
-      !title.en ||
-      !title.ar ||
-      !description.en ||
-      !description.ar ||
-      !priceRef.current.value
+      !formData.selectedCategory ||
+      (formData.paymentType.value === 'cash' && !formData.selectedStatus) ||
+      (formData.paymentType.value === "installment" && !formData.insYears) ||
+      (formData.paymentType.value === "installment" && !formData.downPayment) ||
+      (formData.selectedCategory === "villa" && !formData.villaType) ||
+      (formData.selectedCategory === "apartment" && !formData.apartmentType) ||
+      (formData.selectedCategory === "retail" && !formData.retailType) ||
+      !formData.paymentType ||
+      formData.selectedImages.length === 0 ||
+      !formData.title.en ||
+      !formData.title.ar ||
+      !formData.description.en ||
+      !formData.description.ar ||
+      !formData.price
     ) {
-      console.log(selectedStatus)
+      console.log(formData.selectedStatus);
       setError({ isErr: true, content: "All fields must be filled out." });
       setTimeout(() => {
         setError({ isErr: false, content: "" });
@@ -98,35 +87,40 @@ export default function CreateForm({
     setLoading(true);
 
     try {
-      const uploadedImageUrls = await handleUpload(selectedImages);
+      const uploadedImageUrls = await handleUpload(formData.selectedImages);
 
       let PropertyData = {
-        area: areaRef.current.value ? areaRef.current.value : 0,
-        baths: bathroomsRef.current.value ? bathroomsRef.current.value : 0,
-        beds: bedroomsRef.current.value ? bedroomsRef.current.value : 0,
-        price: priceRef.current.value,
-        category: selectedCategory,
-        status: paymentType.value === 'cash' ? selectedStatus.value : 'sale',
-        paymentType: paymentType.value,
+        area: formData.area ? formData.area : 0,
+        baths: formData.bathrooms ? formData.bathrooms : 0,
+        beds: formData.bedrooms ? formData.bedrooms : 0,
+        price: formData.price,
+        category: formData.selectedCategory,
+        status: formData.paymentType.value === 'cash' ? formData.selectedStatus.value : 'sale',
+        paymentType: formData.paymentType.value,
         description: {
-          ar: description.ar,
-          en: description.en,
+          ar: formData.description.ar,
+          en: formData.description.en,
         },
-        region: region.value,
+        region: formData.region.value,
         images: uploadedImageUrls, // Use the returned URLs directly
         title: {
-          ar: title.ar,
-          en: title.en,
+          ar: formData.title.ar,
+          en: formData.title.en,
         },
-        youtubeLinks: youtubeLinks,
-        ...(paymentType.value === "installment" && { insYears: insYears, downPayment: downPaymentRef.current.value }),
-        ...(selectedCategory === "villa" && { villaType: villaType }),
-        ...(selectedCategory === "retail" && { retailType: retailType }),
-        ...(selectedStatus.value === "rent" && { rentType: rentType.value }),
-        ...(selectedCategory === "apartment" && { floor: floor, isChalet: isChalet, apartmentType: apartmentType.value })
+        youtubeLinks: formData.youtubeLinks,
+        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears, downPayment: formData.downPayment }),
+        ...(formData.selectedCategory === "villa" && { villaType: formData.villaType }),
+        ...(formData.selectedCategory === "retail" && { retailType: formData.retailType }),
+        ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType.value }),
+        ...(formData.selectedCategory === "apartment" && {
+          floor: formData.floor,
+          isChalet: formData.isChalet,
+          apartmentType: formData.apartmentType.value
+        })
       };
+      
       console.log(PropertyData)
-      addPropertyMutation.mutate({ collectionName: `${selectedCategory}s`, PropertyData });
+      addPropertyMutation.mutate({ collectionName: `${formData.selectedCategory}s`, PropertyData });
       setLoading(false);
       setConfirmMsg({show: true, status: true, content: 'Property Added Successfully.'})
       setTimeout(() => {
@@ -145,60 +139,25 @@ export default function CreateForm({
     }
   }
 
-  function handleImageChange(e) {
+  async function handleImageChange(e) {
     const files = Array.from(e.target.files);
-    const imageArray = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+  
+    files.forEach((file) => {
       const reader = new FileReader();
-
+  
       reader.onload = () => {
-        imageArray.push(reader.result);
-        setSelectedImages((prevImages) => [...prevImages, reader.result]);
+        setFormData(prevState => {
+          return {
+            ...prevState,
+            selectedImages: [...prevState.selectedImages, reader.result],
+          };
+        });
       };
-
+  
       reader.readAsDataURL(file);
-    }
-  }
+    });
+  }  
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
-  function handleVillaTypeChange(event) {
-    setVillaType(event.target.value)
-  }
-
-  function handleRetailTypeChange(event) {
-    setRetailType(event.target.value)
-  }
-
-  function handlePaymentChange(option) {
-    setPaymentType(option);
-  }
-
-  function handleApartmentType(option) {
-    setApartmentType(option);
-  }
-
-  function handleInsYears(e) {
-    setInsYears(e.target.value);
-  }
-
-  function handleIsChaletChange(e) {
-    setIsChalet(e.target.checked)
-  }
-
-  function handleFloorChange(e) {
-    setFloor(e.target.value)
-  }
-
-  function handleYoutubeLinks(e) {
-    let CSLINKS = e.target.value
-    CSLINKS = CSLINKS.replace(' ', '').split(',')
-    setYoutubeLinks(CSLINKS)
-  }
 
   return (
       <div
@@ -230,9 +189,9 @@ export default function CreateForm({
           </AnimatePresence>
           <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <div className="flex gap-2 flex-wrap">
-              {selectedImages.map((img) => {
+              {formData.selectedImages.map((img) => {
                 return (
-                  <div className="relative cursor-pointer border h-fit rounded hover:border-blue-600 transition">
+                  <div key={img} className="relative cursor-pointer border h-fit rounded hover:border-blue-600 transition">
                     <img
                       src={img}
                       alt=""
@@ -245,15 +204,13 @@ export default function CreateForm({
                     <IoMdCloseCircleOutline
                       className="absolute top-0 left-full translate-x-[-50%] translate-y-[-50%] text-blue-700 text-base bg-white rounded-full z-10"
                       onClick={() =>
-                        setSelectedImages((prev) =>
-                          prev.filter((item) => item !== img)
-                        )
+                        updateFormData('selectedImages', formData.selectedImages.filter((item) => item !== img))
                       }
                     />
                   </div>
                 );
               })}
-              {selectedImages.length > 0 && (
+              {formData.selectedImages.length > 0 && (
                 <div className="size-8 md:size-10 bg-stone-100 flex items-center justify-center border rounded hover:shadow cursor-pointer">
                   <label
                     htmlFor="dropzone-file"
@@ -272,10 +229,10 @@ export default function CreateForm({
               )}
             </div>
 
-            {selectedImages.length === 0 && (
+            {formData.selectedImages.length === 0 && (
               <div className="flex items-center justify-center w-full">
                 <label
-                  for="dropzone-file"
+                  htmlFor="dropzone-file"
                   className="flex flex-col items-center justify-center w-full h-12 lg:h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -288,9 +245,9 @@ export default function CreateForm({
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                       />
                     </svg>
@@ -317,27 +274,28 @@ export default function CreateForm({
               <Select
                 options={regionOptionsEn}
                 placeholder={"Region..."}
-                onChange={handleRegionChange}
+                onChange={(option) => updateFormData('region', option)}
               />
               <Select
                 options={PaymentOptions}
                 placeholder={"Payment..."}
-                onChange={handlePaymentChange}
+                onChange={(option) => updateFormData('paymentType', option)}
               />
               <input
-                ref={priceRef}
+                value={formData.price}
+                onChange={(e) => updateFormData('price', e.target.value)}
                 className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
                 type="number"
                 min={0}
+                step={1000}
                 placeholder="Price*"
               />
-
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
               <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
-                  onClick={handleCategoryChange}
+                  onClick={(e) => updateFormData('selectedCategory', e.target.value)}
                   id="apartment"
                   type="radio"
                   value="apartment"
@@ -345,7 +303,7 @@ export default function CreateForm({
                   className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
-                  for="apartment"
+                  htmlFor="apartment"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Apartment
@@ -353,7 +311,7 @@ export default function CreateForm({
               </div>
               <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
-                  onClick={handleCategoryChange}
+                  onClick={(e) => updateFormData('selectedCategory', e.target.value)}
                   id="villa"
                   type="radio"
                   value="villa"
@@ -361,7 +319,7 @@ export default function CreateForm({
                   className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
-                  for="villa"
+                  htmlFor="villa"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Villa
@@ -369,7 +327,7 @@ export default function CreateForm({
               </div>
               <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
-                  onClick={handleCategoryChange}
+                  onClick={(e) => updateFormData('selectedCategory', e.target.value)}
                   id="house"
                   type="radio"
                   value="house"
@@ -377,7 +335,7 @@ export default function CreateForm({
                   className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
-                  for="house"
+                  htmlFor="house"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   House
@@ -385,7 +343,7 @@ export default function CreateForm({
               </div>
               <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
-                  onClick={handleCategoryChange}
+                  onClick={(e) => updateFormData('selectedCategory', e.target.value)}
                   id="retail"
                   type="radio"
                   value="retail"
@@ -393,18 +351,19 @@ export default function CreateForm({
                   className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
-                  for="retail"
+                  htmlFor="retail"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Retail
                 </label>
               </div>
             </div>
+
             <AnimatePresence>
-              {selectedCategory === 'villa' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
+              {formData.selectedCategory === 'villa' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={handleVillaTypeChange}
+                    onClick={(e) => updateFormData('villaType', e.target.value)}
                     id="standalone"
                     type="radio"
                     value="Standalone"
@@ -420,7 +379,7 @@ export default function CreateForm({
                 </div>
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={handleVillaTypeChange}
+                    onClick={(e) => updateFormData('villaType', e.target.value)}
                     id="townHouse"
                     type="radio"
                     value="Town house"
@@ -436,7 +395,7 @@ export default function CreateForm({
                 </div>
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={handleVillaTypeChange}
+                    onClick={(e) => updateFormData('villaType', e.target.value)}
                     id="twinHouse"
                     type="radio"
                     value="Twin house"
@@ -454,15 +413,15 @@ export default function CreateForm({
             </AnimatePresence>
 
             <AnimatePresence>
-              {selectedCategory === 'apartment' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-3 gap-1">
+              {formData.selectedCategory === 'apartment' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-3 gap-1">
                 <Select
                   options={apartmentTypes}
                   placeholder={"Type..."}
-                  onChange={handleApartmentType}
+                  onChange={(option) => updateFormData('apartmentType', option)}
                 />
                 <div className="flex items-center px-2 border border-gray-200 rounded">
                   <input
-                    onChange={handleIsChaletChange}
+                    onChange={(e) => updateFormData('isChalet', e.target.checked)}
                     id="chalet"
                     type="checkbox"
                     className="text-blue-600 bg-gray-100 border-gray-300"
@@ -474,15 +433,15 @@ export default function CreateForm({
                     Chalet ?
                   </label>
                 </div>
-                <input type="number" onChange={handleFloorChange} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
+                <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
               </motion.div>}
             </AnimatePresence>
 
             <AnimatePresence>
-              {selectedCategory === 'retail' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
+              {formData.selectedCategory === 'retail' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={handleRetailTypeChange}
+                    onClick={(e) => updateFormData('retailType', e.target.value)}
                     id="office"
                     type="radio"
                     value="Office"
@@ -498,7 +457,7 @@ export default function CreateForm({
                 </div>
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={handleRetailTypeChange}
+                    onClick={(e) => updateFormData('retailType', e.target.value)}
                     id="clinic"
                     type="radio"
                     value="Clinic"
@@ -514,7 +473,7 @@ export default function CreateForm({
                 </div>
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={handleRetailTypeChange}
+                    onClick={(e) => updateFormData('retailType', e.target.value)}
                     id="shop"
                     type="radio"
                     value="Shop"
@@ -532,41 +491,43 @@ export default function CreateForm({
             </AnimatePresence>
 
             <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
-              <input ref={bedroomsRef} type="number" min={0} placeholder="Bedrooms" />
-              <input ref={bathroomsRef} type="number" min={0} placeholder="Bathrooms" />
-              <input ref={areaRef} type="number" min={0} placeholder="Area (Sq/M)" />
+              <input value={formData.bedrooms} onChange={(e) => updateFormData('bedrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bedrooms" />
+              <input value={formData.bathrooms} onChange={(e) => updateFormData('bathrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bathrooms" />
+              <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" min={0} placeholder="Area (Sq/M)" />
             </div>
 
             <div className={`grid grid-cols-2 gap-1 `}>
-              {paymentType.value === 'cash' && <Select
+              {formData.paymentType.value === 'cash' && <Select
                 options={statusOptions}
                 placeholder={"Status..."}
-                onChange={handleStatusChange}
+                onChange={(option) => updateFormData('selectedStatus', option)}
               />}
-              {paymentType.value === "installment" && <input
-                ref={downPaymentRef}
+              {formData.paymentType.value === "installment" && <input
+                onChange={(e) => updateFormData('downPayment', e.target.value)}
                 className="p-2 border text-sm rounded outline-none"
                 type="number"
                 min={0}
                 placeholder="Down Payment"
               />}
-              {paymentType.value === "installment" && <input
+              {formData.paymentType.value === "installment" && <input
                 type="number"
                 min={1}
-                onChange={handleInsYears}
+                onChange={(e) => updateFormData('insYears', e.target.value)}
                 className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
                 placeholder="Installment Years..."
               />}
-              {paymentType.value === 'cash' && <Select
+              {formData.paymentType.value === 'cash' && <Select
                 options={rentOptions}
                 placeholder={"Rent Type..."}
-                onChange={handleRentTypeChange}
-                isDisabled={selectedStatus.value === 'sale'}
+                onChange={(option) => updateFormData('rentType', option)}
+                isDisabled={formData.selectedStatus.value === 'sale'}
               />}
             </div>
+
             <div>
-              <input type="text" value={youtubeLinks} onChange={handleYoutubeLinks} placeholder="YoutubeLink1,YoutubeLink1,..." className="outline-none w-full p-2 rounded border text-sm"/>
+              <input type="text" value={formData.youtubeLinks} onChange={(e) => updateFormData('youtubeLinks', e.target.value.replace(' ', '').split(','))} placeholder="YoutubeLink1,YoutubeLink1,..." className="outline-none w-full p-2 rounded border text-sm"/>
             </div>
+
             <div className="flex gap-1 items-center">
               <button
                 type="button"
@@ -586,12 +547,8 @@ export default function CreateForm({
             <div>
               {language === "ar" && (
                 <input
-                  value={title.ar}
-                  onChange={(e) =>
-                    setTitle((prev) => {
-                      return { ...prev, ar: e.target.value };
-                    })
-                  }
+                  value={formData.title.ar}
+                  onChange={(e) => updateFormData('title', {...formData.title, ar: e.target.value})}
                   className="p-2 border text-sm rounded outline-none w-full mb-1"
                   type="text"
                   placeholder="*العنوان"
@@ -599,12 +556,8 @@ export default function CreateForm({
               )}
               {language === "en" && (
                 <input
-                  value={title.en}
-                  onChange={(e) =>
-                    setTitle((prev) => {
-                      return { ...prev, en: e.target.value };
-                    })
-                  }
+                value={formData.title.en}
+                onChange={(e) => updateFormData('title', {...formData.title, en: e.target.value})}
                   className="p-2 border text-sm rounded outline-none w-full mb-1"
                   type="text"
                   placeholder="Title*"
@@ -612,24 +565,16 @@ export default function CreateForm({
               )}
               {language === "en" && (
                 <textarea
-                  value={description.en}
-                  onChange={(e) =>
-                    setDescription((prev) => {
-                      return { ...prev, en: e.target.value };
-                    })
-                  }
+                  value={formData.description.en}
+                  onChange={(e) => updateFormData('description', {...formData.title, en: e.target.value})}
                   placeholder="Description*"
                   className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}
               {language === "ar" && (
                 <textarea
-                  value={description.ar}
-                  onChange={(e) =>
-                    setDescription((prev) => {
-                      return { ...prev, ar: e.target.value };
-                    })
-                  }
+                value={formData.description.ar}
+                onChange={(e) => updateFormData('description', {...formData.title, ar: e.target.value})}
                   placeholder="*الـوصـف"
                   className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>

@@ -30,7 +30,9 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
     <div className="w-full order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
-          {property.category.toUpperCase()}
+          {property.category.toUpperCase()}{' '}
+          {property.category === 'apartment' && '('+ property.apartmentType.toUpperCase() +')'}
+          {property.category === 'retail' && '('+ property.retailType.toUpperCase() +')'}
         </p>
         {property.category === "villa" && (
           <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>

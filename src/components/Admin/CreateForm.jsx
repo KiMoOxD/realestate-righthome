@@ -6,7 +6,7 @@ import { CgSpinner } from "react-icons/cg";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { regionOptionsEn } from "../../utils/data";
 import { handleUpload } from "../../utils/functions";
-import { statusOptions, PaymentOptions, rentOptions } from "../../utils/data";
+import { statusOptions, PaymentOptions, rentOptions, apartmentTypes } from "../../utils/data";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
@@ -32,6 +32,8 @@ export default function CreateForm({
     [isChalet, setIsChalet] = useState(false),
     [rentType, setRentType] = useState(),
     [youtubeLinks, setYoutubeLinks] = useState([]),
+    [apartmentType, setApartmentType] = useState(),
+    [retailType, setRetailType] = useState(),
     downPaymentRef = useRef(),
     priceRef = useRef(),
     bedroomsRef = useRef(),
@@ -74,6 +76,8 @@ export default function CreateForm({
       (paymentType.value === "installment" && !insYears) ||
       (paymentType.value === "installment" && !downPaymentRef.current.value) ||
       (selectedCategory === "villa" && !villaType) ||
+      (selectedCategory === "apartment" && !apartmentType) ||
+      (selectedCategory === "retail" && !retailType) ||
       !paymentType ||
       selectedImages.length === 0 ||
       !title.en ||
@@ -115,11 +119,11 @@ export default function CreateForm({
           en: title.en,
         },
         youtubeLinks: youtubeLinks,
-        ...(paymentType.value === "installment" && { insYears: insYears }),
-        ...(paymentType.value === "installment" && { downPayment: downPaymentRef.current.value }),
+        ...(paymentType.value === "installment" && { insYears: insYears, downPayment: downPaymentRef.current.value }),
         ...(selectedCategory === "villa" && { villaType: villaType }),
+        ...(selectedCategory === "retail" && { retailType: retailType }),
         ...(selectedStatus.value === "rent" && { rentType: rentType.value }),
-        ...((selectedCategory === "apartment" || selectedCategory === "studio" ) && { floor: floor, isChalet: isChalet })
+        ...(selectedCategory === "apartment" && { floor: floor, isChalet: isChalet, apartmentType: apartmentType.value })
       };
       console.log(PropertyData)
       addPropertyMutation.mutate({ collectionName: `${selectedCategory}s`, PropertyData });
@@ -166,8 +170,16 @@ export default function CreateForm({
     setVillaType(event.target.value)
   }
 
+  function handleRetailTypeChange(event) {
+    setRetailType(event.target.value)
+  }
+
   function handlePaymentChange(option) {
     setPaymentType(option);
+  }
+
+  function handleApartmentType(option) {
+    setApartmentType(option);
   }
 
   function handleInsYears(e) {
@@ -315,7 +327,8 @@ export default function CreateForm({
               <input
                 ref={priceRef}
                 className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
-                type="text"
+                type="number"
+                min={0}
                 placeholder="Price*"
               />
 
@@ -373,17 +386,17 @@ export default function CreateForm({
               <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={handleCategoryChange}
-                  id="studio"
+                  id="retail"
                   type="radio"
-                  value="studio"
+                  value="retail"
                   name="category"
                   className="text-blue-600 bg-gray-100 border-gray-300"
                 />
                 <label
-                  for="studio"
+                  for="retail"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
-                  Studio
+                  Retail
                 </label>
               </div>
             </div>
@@ -441,7 +454,12 @@ export default function CreateForm({
             </AnimatePresence>
 
             <AnimatePresence>
-              {(selectedCategory === 'apartment' || selectedCategory === 'studio') && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 gap-1">
+              {selectedCategory === 'apartment' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-3 gap-1">
+                <Select
+                  options={apartmentTypes}
+                  placeholder={"Type..."}
+                  onChange={handleApartmentType}
+                />
                 <div className="flex items-center px-2 border border-gray-200 rounded">
                   <input
                     onChange={handleIsChaletChange}
@@ -457,6 +475,59 @@ export default function CreateForm({
                   </label>
                 </div>
                 <input type="number" onChange={handleFloorChange} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
+              </motion.div>}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {selectedCategory === 'retail' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 md:grid-cols-3 gap-1">
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleRetailTypeChange}
+                    id="office"
+                    type="radio"
+                    value="Office"
+                    name="retailType"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="office"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Office
+                  </label>
+                </div>
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleRetailTypeChange}
+                    id="clinic"
+                    type="radio"
+                    value="Clinic"
+                    name="retailType"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="clinic"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Clinic
+                  </label>
+                </div>
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={handleRetailTypeChange}
+                    id="shop"
+                    type="radio"
+                    value="Shop"
+                    name="retailType"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="shop"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Shop
+                  </label>
+                </div>
               </motion.div>}
             </AnimatePresence>
 

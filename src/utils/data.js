@@ -21,10 +21,9 @@ export async function getCollectionData(collectionName) {
 export async function getAllCollectionsData() {
   let apartments = await getCollectionData('apartments');
   let villas = await getCollectionData('villas');
-  let offices = await getCollectionData('offices');
-  let studios = await getCollectionData('studios');
+  let retails = await getCollectionData('retails');
   let houses = await getCollectionData('houses');
-  let final = [...apartments, ...villas, ...offices, ...studios, ...houses];
+  let final = [...apartments, ...villas, ...retails, ...houses];
   final = shuffleArray(final)
   return final;
 }
@@ -143,4 +142,11 @@ export const PaymentOptions = [
 export const rentOptions = [
   { label: "Daily", value: "daily" },
   { label: "Monthly", value: "monthly" },
+];
+
+export const apartmentTypes = [
+  { label: "Standard", value: "Standard" },
+  { label: "Duplex", value: "Duplex" },
+  { label: "Penthouse", value: "Penthouse" },
+  { label: "Studio", value: "Studio" },
 ];

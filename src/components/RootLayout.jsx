@@ -10,7 +10,7 @@ export default function RootLayout() {
   let {lang} = useAllContext()
   return (
     <>
-      <InitialLoader />
+      {/* <InitialLoader /> */}
       <Header />
       <ScrollToTop />
       <div className={`relative mx-auto ${lang === 'ar' && 'arabic'}`}>

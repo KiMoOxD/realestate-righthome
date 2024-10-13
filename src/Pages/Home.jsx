@@ -120,12 +120,18 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="max-w-screen-2xl flex gap-2 flex-col items-center lg:flex-row mx-auto md:px-8 2xl:px-0 mb-10">
-        <img src={reviewImg} alt="Reviews"  className="md:rounded-lg w-full lg:w-1/2"/>
-        <div className="w-full flex gap-5 flex-col items-center justify-center mt-5 lg:mt-0">
-          <p className="text-2xl sm:text-3xl text-stone-800">Nice People Says About Us!</p>
-          <p className="text-sm sm:text-md text-stone-800">Please visit our FB page to see full reviews</p>
-          <a href="https://www.facebook.com/profile.php?id=100064228025102&sk=reviews" rel="noreferrer" target="_blank" className="bg-blue-600 text-white px-6 py-2 rounded text-sm sm:text-lg">See Full Reviews</a>
+      <div className="max-w-screen-2xl flex gap-2 flex-col items-center mx-auto md:px-8 2xl:px-0 mb-10">
+        <img src={reviewImg} alt="Reviews"  className="md:rounded-lg w-full lg:w-3/4"/>
+        <div className="w-full flex gap-5 flex-col items-center justify-center mt-10">
+          <p className="text-2xl sm:text-3xl text-stone-800">
+            {lang === 'en' ? 'Nice People Says About Us!' : '!آراء عملائنا عنا'}
+          </p>
+          <p className="text-sm sm:text-md text-stone-800">
+            {lang === 'en' ? 'Please visit our FB page to see full reviews' : 'تفضل بزيارة صفحتنا على فيسبوك للاطلاع على جميع التقييمات'}
+          </p>
+          <a href="https://www.facebook.com/profile.php?id=100064228025102&sk=reviews" rel="noreferrer" target="_blank" className="bg-blue-600 text-white px-6 py-2 rounded text-sm sm:text-lg">
+            {lang === 'en' ? 'See Full Reviews' : 'شاهد جميع التقييمات'}
+          </a>
         </div>
       </div>
     </div>

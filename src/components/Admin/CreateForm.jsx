@@ -114,7 +114,6 @@ export default function CreateForm({
         ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType.value }),
         ...(formData.selectedCategory === "apartment" && {
           floor: formData.floor,
-          isChalet: formData.isChalet,
           apartmentType: formData.apartmentType.value
         })
       };
@@ -413,13 +412,13 @@ export default function CreateForm({
             </AnimatePresence>
 
             <AnimatePresence>
-              {formData.selectedCategory === 'apartment' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-3 gap-1">
+              {formData.selectedCategory === 'apartment' && <motion.div initial={{height: 0}} animate={{height: 'auto'}} exit={{height: 0}} className="grid grid-cols-2 gap-1">
                 <Select
                   options={apartmentTypes}
                   placeholder={"Type..."}
                   onChange={(option) => updateFormData('apartmentType', option)}
                 />
-                <div className="flex items-center px-2 border border-gray-200 rounded">
+                {/* <div className="flex items-center px-2 border border-gray-200 rounded">
                   <input
                     onChange={(e) => updateFormData('isChalet', e.target.checked)}
                     id="chalet"
@@ -432,7 +431,7 @@ export default function CreateForm({
                   >
                     Chalet ?
                   </label>
-                </div>
+                </div> */}
                 <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
               </motion.div>}
             </AnimatePresence>

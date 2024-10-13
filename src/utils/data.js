@@ -149,4 +149,6 @@ export const apartmentTypes = [
   { label: "Duplex", value: "Duplex" },
   { label: "Penthouse", value: "Penthouse" },
   { label: "Studio", value: "Studio" },
+  { label: "Chalet", value: "Chalet" },
+  { label: "Cabin", value: "Cabin" },
 ];

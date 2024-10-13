@@ -26,13 +26,14 @@ Location: ${property.region.en}\n
 Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
   `;
 
+  console.log(property)
   return (
     <div className="w-full order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
-          {property.category.toUpperCase()}{' '}
-          {property.category === 'apartment' && '('+ property.apartmentType.toUpperCase() +')'}
-          {property.category === 'retail' && '('+ property.retailType.toUpperCase() +')'}
+          {property.category?.toUpperCase()}{' '}
+          {property.category === 'apartment' && '('+ property.apartmentType?.toUpperCase() +')'}
+          {property.category === 'retail' && '('+ property.retailType?.toUpperCase() +')'}
         </p>
         {property.category === "villa" && (
           <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
@@ -48,15 +49,6 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             ? "FOR RENT"
             : "للايجار"}
         </p>
-        {(property.category === "apartment" ||
-          property.category === "studio") &&
-          property.isChalet && (
-            <p
-              className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}
-            >
-              {lang === "en" ? "CHALET" : "شالية"}
-            </p>
-          )}
       </div>
       <h1
         className={`text-2xl md:text-3xl mt-1.5 ${

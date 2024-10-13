@@ -43,7 +43,7 @@ export default function PropertyCard({ property }) {
     setIsLoading(false)
   }, [property.id])
   return (
-    <div className="rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer hover:shadow-lg transition">
+    <div className="rounded-md overflow-hidden bg-white shadow-md h-full group cursor-pointer hover:shadow-lg transition">
       <Link to={`/browse/${property.category}s/${property.id}`} onClick={() => setIsLoading(true)}>
         <div className="relative h-[220px] overflow-hidden">
           {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin2 text-5xl text-blue-700"/>}
@@ -124,7 +124,7 @@ export default function PropertyCard({ property }) {
         </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
         </AnimatePresence>
         
-        <p className="py-0.5">{lang === 'en' ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : formattedPriceAR.format(property.price)}</p>
+        <p className="py-0.5">{lang === 'en' ? property.price ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : 'Contact for Price' : property.price ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}</p>
       </div>
     </div>
   );

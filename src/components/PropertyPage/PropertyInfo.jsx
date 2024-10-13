@@ -181,7 +181,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             <p className="text-xs text-stone-500 arabic">
               {lang === "en" ? "Floor" : "الدور"}
             </p>
-            <p className="text-sm">{property.floor ? property.floor : "-"}</p>
+            <p className="text-sm">{property.floor !== 'N/A' ? property.floor : "-"}</p>
           </div>
         )}
       </div>

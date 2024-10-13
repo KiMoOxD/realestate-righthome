@@ -72,8 +72,7 @@ export default function CreateForm({
       !formData.title.en ||
       !formData.title.ar ||
       !formData.description.en ||
-      !formData.description.ar ||
-      !formData.price
+      !formData.description.ar 
     ) {
       console.log(formData.selectedStatus);
       setError({ isErr: true, content: "All fields must be filled out." });
@@ -113,7 +112,7 @@ export default function CreateForm({
         ...(formData.selectedCategory === "retail" && { retailType: formData.retailType }),
         ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType.value }),
         ...(formData.selectedCategory === "apartment" && {
-          floor: formData.floor,
+          floor: formData.floor ? formData.floor : 'N/A',
           apartmentType: formData.apartmentType.value
         })
       };

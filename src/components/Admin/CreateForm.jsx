@@ -18,10 +18,10 @@ const initialFormData = {
   selectedCategory: "",
   paymentType: PaymentOptions[0],
   youtubeLinks: [],
-  price: 0,
-  bedrooms: 0,
-  bathrooms: 0,
-  area: 0,
+  price: 'Price*',
+  bedrooms: 'bedrooms',
+  bathrooms: 'bathrooms',
+  area: 'area Sq/m',
 }
 
 export default function CreateForm({

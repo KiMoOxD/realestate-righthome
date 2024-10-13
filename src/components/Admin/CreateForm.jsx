@@ -18,10 +18,10 @@ const initialFormData = {
   selectedCategory: "",
   paymentType: PaymentOptions[0],
   youtubeLinks: [],
-  price: 'Price*',
-  bedrooms: 'bedrooms',
-  bathrooms: 'bathrooms',
-  area: 'area Sq/m',
+  price: 0,
+  bedrooms: 0,
+  bathrooms: 0,
+  area: 0,
 }
 
 export default function CreateForm({
@@ -281,7 +281,7 @@ export default function CreateForm({
                 onChange={(option) => updateFormData('paymentType', option)}
               />
               <input
-                value={formData.price}
+                // value={formData.price}
                 onChange={(e) => updateFormData('price', e.target.value)}
                 className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
                 type="number"
@@ -489,9 +489,9 @@ export default function CreateForm({
             </AnimatePresence>
 
             <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
-              <input value={formData.bedrooms} onChange={(e) => updateFormData('bedrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bedrooms" />
-              <input value={formData.bathrooms} onChange={(e) => updateFormData('bathrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bathrooms" />
-              <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" min={0} placeholder="Area (Sq/M)" />
+              <input onChange={(e) => updateFormData('bedrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bedrooms" />
+              <input onChange={(e) => updateFormData('bathrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bathrooms" />
+              <input onChange={(e) => updateFormData('area', e.target.value)} type="number" min={0} placeholder="Area (Sq/M)" />
             </div>
 
             <div className={`grid grid-cols-2 gap-1 `}>

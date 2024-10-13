@@ -286,7 +286,6 @@ export default function CreateForm({
                 className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
                 type="number"
                 min={0}
-                step={1000}
                 placeholder="Price*"
               />
             </div>

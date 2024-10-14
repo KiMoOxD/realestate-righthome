@@ -321,7 +321,7 @@ export default function CreateForm({
                   htmlFor="apartment"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
-                  Apartment
+                  Apartment*
                 </label>
               </div>
               <div className="flex items-center ps-2 border border-gray-200 rounded">
@@ -337,7 +337,7 @@ export default function CreateForm({
                   htmlFor="villa"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
-                  Villa
+                  Villa*
                 </label>
               </div>
               <div className="flex items-center ps-2 border border-gray-200 rounded">
@@ -353,7 +353,7 @@ export default function CreateForm({
                   htmlFor="retail"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
-                  Retail
+                  Retail*
                 </label>
               </div>
               <div className="flex items-center ps-2 border border-gray-200 rounded">
@@ -369,7 +369,7 @@ export default function CreateForm({
                   htmlFor="house"
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
-                  House
+                  House*
                 </label>
               </div>
             </div>

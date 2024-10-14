@@ -11,6 +11,8 @@ import TypesList from "../components/TypesList.jsx";
 import { Link } from "react-router-dom";
 import { IoArrowForward } from "react-icons/io5";
 import reviewImg from '../images/review.jpeg'
+import sideImg from '../images/realestate.png'
+import pattern from '../images/magicpattern.png'
 
 
 export default function Home() {
@@ -64,12 +66,27 @@ export default function Home() {
           {lang === 'en' ? 'View All Properties' : 'عرض جميع العقارات'} <IoArrowForward />
         </Link>
       </div>
+      <div className="relative flex gap-2 flex-col items-center mx-auto md:px-8 2xl:px-0 mb-10">
+        <img src={pattern} alt=""  className="absolute w-full h-full opacity-70"/>
+        <img src={reviewImg} alt="Reviews"  className="relative md:rounded-lg w-full lg:w-[65%] mt-10 shadow-md"/>
+        <div className="relative w-full flex gap-5 flex-col items-center justify-center my-10">
+          <p className="text-2xl sm:text-3xl text-stone-800">
+            {lang === 'en' ? 'Nice People Says About Us!' : '!آراء عملائنا عنا'}
+          </p>
+          <p className="text-sm sm:text-md text-stone-800">
+            {lang === 'en' ? 'Please visit our FB page to see full reviews' : 'تفضل بزيارة صفحتنا على فيسبوك للاطلاع على جميع التقييمات'}
+          </p>
+          <a href="https://www.facebook.com/profile.php?id=100064228025102&sk=reviews" rel="noreferrer" target="_blank" className="bg-blue-600 text-white px-6 py-2 rounded text-sm sm:text-lg">
+            {lang === 'en' ? 'See Full Reviews' : 'شاهد جميع التقييمات'}
+          </a>
+        </div>
+      </div>
       <div className="lg:px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:rounded-2xl lg:mx-4 2xl:mx-auto overflow-hidden bg-blue-50 max-w-screen-2xl mb-10">
-          <div className="overflow-hidden max-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:rounded-2xl lg:mx-4 2xl:mx-auto overflow-hidden max-w-screen-2xl mb-10">
+          <div className="overflow-hidden max-h-[600px] flex justify-center items-center">
             <img
-              className="min-w-[768px] h-full"
-              src="https://images.unsplash.com/photo-1481026469463-66327c86e544?q=80&w=2108&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              className="w-[700px]"
+              src={sideImg}
               alt=""
             />
           </div>
@@ -118,20 +135,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="max-w-screen-2xl flex gap-2 flex-col items-center mx-auto md:px-8 2xl:px-0 mb-10">
-        <img src={reviewImg} alt="Reviews"  className="md:rounded-lg w-full lg:w-3/4"/>
-        <div className="w-full flex gap-5 flex-col items-center justify-center mt-10">
-          <p className="text-2xl sm:text-3xl text-stone-800">
-            {lang === 'en' ? 'Nice People Says About Us!' : '!آراء عملائنا عنا'}
-          </p>
-          <p className="text-sm sm:text-md text-stone-800">
-            {lang === 'en' ? 'Please visit our FB page to see full reviews' : 'تفضل بزيارة صفحتنا على فيسبوك للاطلاع على جميع التقييمات'}
-          </p>
-          <a href="https://www.facebook.com/profile.php?id=100064228025102&sk=reviews" rel="noreferrer" target="_blank" className="bg-blue-600 text-white px-6 py-2 rounded text-sm sm:text-lg">
-            {lang === 'en' ? 'See Full Reviews' : 'شاهد جميع التقييمات'}
-          </a>
         </div>
       </div>
     </div>

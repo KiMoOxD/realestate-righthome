@@ -10,7 +10,7 @@ import SkeletonCard from "../components/SkeletonCard.jsx";
 import TypesList from "../components/TypesList.jsx";
 import { Link } from "react-router-dom";
 import { IoArrowForward } from "react-icons/io5";
-import reviewImg from '../images/review.jpeg'
+import reviewImg from '../images/reviews.png'
 import sideImg from '../images/realestate.png'
 import pattern from '../images/magicpattern.png'
 
@@ -68,7 +68,7 @@ export default function Home() {
       </div>
       <div className="relative flex gap-2 flex-col items-center mx-auto md:px-8 2xl:px-0 mb-10">
         <img src={pattern} alt=""  className="absolute w-full h-full opacity-70"/>
-        <img src={reviewImg} alt="Reviews"  className="relative md:rounded-lg w-full lg:w-[65%] mt-10 shadow-md"/>
+        <img src={reviewImg} alt="Reviews"  className="relative md:rounded-lg w-full lg:w-[65%] mt-10 drop-shadow-md"/>
         <div className="relative w-full flex gap-5 flex-col items-center justify-center my-10">
           <p className="text-2xl sm:text-3xl text-stone-800">
             {lang === 'en' ? 'Nice People Says About Us!' : '!آراء عملائنا عنا'}

@@ -261,12 +261,12 @@ export default function CreateForm({
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               <Select
                 options={regionOptionsEn}
-                placeholder={"Region..."}
+                placeholder={"Region*"}
                 onChange={(option) => updateFormData('region', option)}
               />
               <Select
                 options={PaymentOptions}
-                placeholder={"Payment..."}
+                placeholder={"Payment*"}
                 onChange={(option) => updateFormData('paymentType', option)}
               />
               <input
@@ -277,6 +277,34 @@ export default function CreateForm({
                 min={0}
                 placeholder="Price..."
               />
+            </div>
+
+            <div className={`grid grid-cols-2 gap-1 `}>
+              {formData.paymentType.value === 'cash' && <Select
+                options={statusOptions}
+                placeholder={"Status*"}
+                onChange={(option) => updateFormData('selectedStatus', option)}
+              />}
+              {formData.paymentType.value === "installment" && <input
+                onChange={(e) => updateFormData('downPayment', e.target.value)}
+                className="p-2 border text-sm rounded outline-none"
+                type="number"
+                min={0}
+                placeholder="Down Payment"
+              />}
+              {formData.paymentType.value === "installment" && <input
+                type="number"
+                min={1}
+                onChange={(e) => updateFormData('insYears', e.target.value)}
+                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
+                placeholder="Installment Years..."
+              />}
+              {formData.paymentType.value === 'cash' && <Select
+                options={rentOptions}
+                placeholder={"Rent Type..."}
+                onChange={(option) => updateFormData('rentType', option)}
+                isDisabled={formData.selectedStatus.value === 'sale'}
+              />}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
@@ -315,22 +343,6 @@ export default function CreateForm({
               <div className="flex items-center ps-2 border border-gray-200 rounded">
                 <input
                   onClick={(e) => updateFormData('selectedCategory', e.target.value)}
-                  id="house"
-                  type="radio"
-                  value="house"
-                  name="category"
-                  className="text-blue-600 bg-gray-100 border-gray-300"
-                />
-                <label
-                  htmlFor="house"
-                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
-                >
-                  House
-                </label>
-              </div>
-              <div className="flex items-center ps-2 border border-gray-200 rounded">
-                <input
-                  onClick={(e) => updateFormData('selectedCategory', e.target.value)}
                   id="retail"
                   type="radio"
                   value="retail"
@@ -342,6 +354,22 @@ export default function CreateForm({
                   className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   Retail
+                </label>
+              </div>
+              <div className="flex items-center ps-2 border border-gray-200 rounded">
+                <input
+                  onClick={(e) => updateFormData('selectedCategory', e.target.value)}
+                  id="house"
+                  type="radio"
+                  value="house"
+                  name="category"
+                  className="text-blue-600 bg-gray-100 border-gray-300"
+                />
+                <label
+                  htmlFor="house"
+                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                >
+                  House
                 </label>
               </div>
             </div>
@@ -467,34 +495,6 @@ export default function CreateForm({
               <input onChange={(e) => updateFormData('bedrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bedrooms" />
               <input onChange={(e) => updateFormData('bathrooms', e.target.value)} type="number" min={0} max={10} placeholder="Bathrooms" />
               <input onChange={(e) => updateFormData('area', e.target.value)} type="number" min={0} placeholder="Area (Sq/M)" />
-            </div>
-
-            <div className={`grid grid-cols-2 gap-1 `}>
-              {formData.paymentType.value === 'cash' && <Select
-                options={statusOptions}
-                placeholder={"Status..."}
-                onChange={(option) => updateFormData('selectedStatus', option)}
-              />}
-              {formData.paymentType.value === "installment" && <input
-                onChange={(e) => updateFormData('downPayment', e.target.value)}
-                className="p-2 border text-sm rounded outline-none"
-                type="number"
-                min={0}
-                placeholder="Down Payment"
-              />}
-              {formData.paymentType.value === "installment" && <input
-                type="number"
-                min={1}
-                onChange={(e) => updateFormData('insYears', e.target.value)}
-                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
-                placeholder="Installment Years..."
-              />}
-              {formData.paymentType.value === 'cash' && <Select
-                options={rentOptions}
-                placeholder={"Rent Type..."}
-                onChange={(option) => updateFormData('rentType', option)}
-                isDisabled={formData.selectedStatus.value === 'sale'}
-              />}
             </div>
 
             <div>

@@ -62,19 +62,9 @@ export default function CreateForm({
     if (
       !formData.selectedCategory ||
       (formData.paymentType.value === 'cash' && !formData.selectedStatus) ||
-      (formData.paymentType.value === "installment" && !formData.insYears) ||
-      (formData.paymentType.value === "installment" && !formData.downPayment) ||
-      (formData.selectedCategory === "villa" && !formData.villaType) ||
-      (formData.selectedCategory === "apartment" && !formData.apartmentType) ||
-      (formData.selectedCategory === "retail" && !formData.retailType) ||
       !formData.paymentType ||
-      formData.selectedImages.length === 0 ||
-      !formData.title.en ||
-      !formData.title.ar ||
-      !formData.description.en ||
-      !formData.description.ar 
+      !formData.region
     ) {
-      console.log(formData.selectedStatus);
       setError({ isErr: true, content: "All fields must be filled out." });
       setTimeout(() => {
         setError({ isErr: false, content: "" });
@@ -92,28 +82,28 @@ export default function CreateForm({
         area: formData.area ? formData.area : 0,
         baths: formData.bathrooms ? formData.bathrooms : 0,
         beds: formData.bedrooms ? formData.bedrooms : 0,
-        price: formData.price,
+        price: formData.price ? formData.price : 0,
         category: formData.selectedCategory,
         status: formData.paymentType.value === 'cash' ? formData.selectedStatus.value : 'sale',
         paymentType: formData.paymentType.value,
         description: {
-          ar: formData.description.ar,
-          en: formData.description.en,
+          ar: formData.description.ar ? formData.description.ar : 'لا يوجد وصف',
+          en: formData.description.en ? formData.description.en : 'There is no description',
         },
         region: formData.region.value,
-        images: uploadedImageUrls, // Use the returned URLs directly
+        images: uploadedImageUrls.length ? uploadedImageUrls : ['https://media.discordapp.net/attachments/291591227466317824/1295283929951240236/image_fx__5.jpg?ex=670e16aa&is=670cc52a&hm=9b8a79c8879c01f7750231dc0184eb44a03ce7921c5f4cbb4f24d6033a3d4814&=&format=webp&width=648&height=648'], // Use the returned URLs directly
         title: {
-          ar: formData.title.ar,
-          en: formData.title.en,
+          ar: formData.title.ar ? formData.title.ar : `لا يوجد عنوان`,
+          en: formData.title.en ? formData.title.en : 'There is no Title',
         },
         youtubeLinks: formData.youtubeLinks,
-        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears, downPayment: formData.downPayment }),
-        ...(formData.selectedCategory === "villa" && { villaType: formData.villaType }),
-        ...(formData.selectedCategory === "retail" && { retailType: formData.retailType }),
-        ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType.value }),
+        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0 }),
+        ...(formData.selectedCategory === "villa" && { villaType: formData.villaType ? formData.villaType : 'N/A' }),
+        ...(formData.selectedCategory === "retail" && { retailType: formData.retailType ? formData.retailType : 'N/A' }),
+        ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType ? formData.rentType.value : 'N/A' }),
         ...(formData.selectedCategory === "apartment" && {
           floor: formData.floor ? formData.floor : 'N/A',
-          apartmentType: formData.apartmentType.value
+          apartmentType: formData.apartmentType ? formData.apartmentType.value : 'N/A'
         })
       };
       
@@ -285,7 +275,7 @@ export default function CreateForm({
                 className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
                 type="number"
                 min={0}
-                placeholder="Price*"
+                placeholder="Price..."
               />
             </div>
 
@@ -416,20 +406,6 @@ export default function CreateForm({
                   placeholder={"Type..."}
                   onChange={(option) => updateFormData('apartmentType', option)}
                 />
-                {/* <div className="flex items-center px-2 border border-gray-200 rounded">
-                  <input
-                    onChange={(e) => updateFormData('isChalet', e.target.checked)}
-                    id="chalet"
-                    type="checkbox"
-                    className="text-blue-600 bg-gray-100 border-gray-300"
-                  />
-                  <label
-                    htmlFor="chalet"
-                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
-                  >
-                    Chalet ?
-                  </label>
-                </div> */}
                 <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
               </motion.div>}
             </AnimatePresence>
@@ -548,7 +524,7 @@ export default function CreateForm({
                   onChange={(e) => updateFormData('title', {...formData.title, ar: e.target.value})}
                   className="p-2 border text-sm rounded outline-none w-full mb-1"
                   type="text"
-                  placeholder="*العنوان"
+                  placeholder="العنوان"
                 />
               )}
               {language === "en" && (
@@ -557,14 +533,14 @@ export default function CreateForm({
                 onChange={(e) => updateFormData('title', {...formData.title, en: e.target.value})}
                   className="p-2 border text-sm rounded outline-none w-full mb-1"
                   type="text"
-                  placeholder="Title*"
+                  placeholder="Title"
                 />
               )}
               {language === "en" && (
                 <textarea
                   value={formData.description.en}
                   onChange={(e) => updateFormData('description', {...formData.title, en: e.target.value})}
-                  placeholder="Description*"
+                  placeholder="Description"
                   className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}
@@ -572,7 +548,7 @@ export default function CreateForm({
                 <textarea
                 value={formData.description.ar}
                 onChange={(e) => updateFormData('description', {...formData.title, ar: e.target.value})}
-                  placeholder="*الـوصـف"
+                  placeholder="الـوصـف"
                   className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}

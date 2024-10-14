@@ -83,7 +83,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             : "تقسيط"}
         </span>
 
-        {property.status === "rent" && (
+        {property.rentType !== 'N/A' && property.status === "rent" && (
           <span
             className={`absolute top-1/2 translate-y-[-50%] ${
               lang === "ar" ? "left-14" : "right-14"
@@ -174,8 +174,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             {+property.area > 1 && <span className="text-xs">m²</span>}
           </p>
         </div>
-        {(property.category === "studio" ||
-          property.category === "apartment") && (
+        {property.category === "apartment" && (
           <div className="flex flex-col items-center">
             <PiBuildingsLight className="text-xl text-stone-500" />
             <p className="text-xs text-stone-500 arabic">

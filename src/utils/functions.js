@@ -43,10 +43,14 @@ export const handleUpload = async (images) => {
   return filteredUrls; 
 };
 
-const handleFormData = (property, setFormData, priceRef, bedroomsRef, bathroomsRef, areaRef) => {
+const handleFormData = (property, setFormData) => {
   setFormData({
     region: { label: property.region?.en, value: property.region },
     title: { en: property.title.en, ar: property.title.ar },
+    price: property.price,
+    beds: property.beds,
+    baths: property.baths,
+    area: property.area,
     description: { en: property.description.en, ar: property.description.ar },
     selectedStatus: property.paymentType === 'cash' ? 
       (property.status === "sale" ? { label: "For Sale", value: "sale" } : { label: "For Rent", value: "rent" }) 
@@ -56,62 +60,48 @@ const handleFormData = (property, setFormData, priceRef, bedroomsRef, bathroomsR
       ? { label: "Cash", value: "cash" } 
       : { label: "Installment", value: "installment" },
     selectedCategory: property.category,
-    villaType: property.villaType,
-    insYears: property.paymentType === "installment" ? property.insYears : 0,
-    floor: property.floor ? property.floor : null,
-    rentType: property.status === 'rent' ? 
-      (property.rentType === "daily" 
-        ? { label: "Daily", value: "daily" } 
-        : { label: "Monthly", value: "monthly" }) 
-      : null,
-    isChalet: (property.category === 'apartment' || property.category === 'studio') ? property.isChalet : false,
-    downPayment: property.paymentType === 'installment' ? property.downPayment : null
+    ...(property.paymentType === 'installment' && {insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0}),
+    ...(property.category === 'villa' && {villaType: property.villaType !== 'N/A' ? property.villaType : 'N/A'}),
+    ...(property.category === 'retail' && {retailType: property.retailType !== 'N/A' ? property.retailType : 'N/A'}),
+    ...(property.category === "apartment" && {
+      floor: property.floor !== 'N/A' ? property.floor : 'N/A',
+      apartmentType: property.apartmentType !== 'N/A' ? {label: property.apartmentType, value: property.apartmentType} : 'N/A'
+    }),
+    ...(property.status === 'rent' && {rentType: property.rentType !== 'N/A' ? property.rentType === "daily" 
+      ? { label: "Daily", value: "daily" } 
+      : { label: "Monthly", value: "monthly" }
+    : 'N/A'})
   });
-
-  // Set the ref values
-  priceRef.current.value = property.price;
-  bedroomsRef.current.value = property.beds;
-  bathroomsRef.current.value = property.baths;
-  areaRef.current.value = property.area;
 };
 
-export const fetchAndSetPropertyData = async (selectedProp, setFormData, priceRef, bedroomsRef, bathroomsRef, areaRef) => {
+export const fetchAndSetPropertyData = async (selectedProp, setFormData) => {
   try {
     const property = await getDocumentData(`${selectedProp.cName}s`, selectedProp.id);
-    handleFormData(property, setFormData, priceRef, bedroomsRef, bathroomsRef, areaRef);
+    console.log('Property : ', property)
+    handleFormData(property, setFormData);
   } catch (error) {
     console.error("Error fetching property data:", error);
   }
 };
 
-export function validateForm(formData, priceRef, bedroomsRef, bathroomsRef, areaRef) {
+export function validateForm(formData) {
   if (
-    !formData.selectedStatus ||
-    (formData.paymentType.value === "installment" && !formData.insYears) ||
-    (formData.paymentType.value === "installment" && !formData.downPayment) ||
-    (formData.selectedCategory === "villa" && !formData.villaType) ||
+    !formData.selectedCategory ||
+    (formData.paymentType.value === 'cash' && !formData.selectedStatus) ||
     !formData.paymentType ||
-    formData.selectedImages.length === 0 ||
-    !formData.title.en ||
-    !formData.title.ar ||
-    !formData.description.en ||
-    !formData.description.ar ||
-    !priceRef.current.value ||
-    !bedroomsRef.current.value ||
-    !bathroomsRef.current.value ||
-    !areaRef.current.value
+    !formData.region
   ) {
     return false;
   }
   return true;
 }
 
-export function buildPropertyData(formData, priceRef, bedroomsRef, bathroomsRef, areaRef) {
+export function buildPropertyData(formData) {
   let propertyData = {
-    area: areaRef.current.value,
-    baths: bathroomsRef.current.value,
-    beds: bedroomsRef.current.value,
-    price: priceRef.current.value,
+    area: formData.area,
+    baths: formData.baths,
+    beds: formData.beds,
+    price: formData.price,
     category: formData.selectedCategory,
     status: formData.selectedStatus.value,
     paymentType: formData.paymentType.value,
@@ -126,20 +116,19 @@ export function buildPropertyData(formData, priceRef, bedroomsRef, bathroomsRef,
       en: formData.title.en,
     },
     ...(formData.paymentType.value === "installment" && {
-      insYears: formData.insYears,
-    }),
-    ...(formData.paymentType.value === "installment" && {
-      downPayment: formData.downPayment,
+      insYears: formData.insYears ? formData.insYears : 0,
+      downPayment: formData.downPayment ? formData.downPayment : 0,
     }),
     ...(formData.selectedCategory === "villa" && {
       villaType: formData.villaType,
     }),
     ...(formData.selectedStatus.value === "rent" && {
-      rentType: formData.rentType.value,
+      rentType: formData.rentType !== 'N/A' ? formData.rentType.value : 'N/A',
     }),
-    ...((formData.selectedCategory === "apartment" || formData.selectedCategory === "studio") && {
-      isChalet: formData.isChalet,
-    }),
+    ...(formData.selectedCategory === "apartment" && {
+      floor: formData.floor ? formData.floor : 'N/A',
+      apartmentType: formData.apartmentType ? formData.apartmentType.value : 'N/A'
+    })
   };
 
   return propertyData;

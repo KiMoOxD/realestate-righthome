@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import {
   regionOptionsEn,
   statusOptions,
   PaymentOptions,
   rentOptions,
+  apartmentTypes,
 } from "../../utils/data";
 import { AnimatePresence, motion } from "framer-motion";
 import { CgSpinner } from "react-icons/cg";
@@ -25,15 +26,14 @@ const initialFormData = {
   title: { en: "", ar: "" },
   description: { en: "", ar: "" },
   selectedStatus: "",
-  paymentType: PaymentOptions[0],
-  insYears: 0,
-  villaType: null,
   selectedCategory: "",
-  floor: 0,
-  isChalet: false,
-  rentType: null,
-  downPayment: null,
-};
+  paymentType: PaymentOptions[0],
+  youtubeLinks: [],
+  price: 0,
+  bedrooms: 0,
+  bathrooms: 0,
+  area: 0,
+}
 
 const initialErrorState = {
   isErr: false,
@@ -50,24 +50,17 @@ export default function EditForm({
   const [language, setLanguage] = useState("en"),
         [formData, setFormData] = useState(initialFormData),
         [error, setError] = useState(initialErrorState),
-        [loading, setLoading] = useState(false);
-  const { selectedProp } = useAllContext();
-  const priceRef = useRef(),
-        bedroomsRef = useRef(),
-        bathroomsRef = useRef(),
-        areaRef = useRef();
+        [loading, setLoading] = useState(false),
+        { selectedProp } = useAllContext();
+  console.log(formData)
 
   useEffect(() => {
     fetchAndSetPropertyData(
       selectedProp,
       setFormData,
-      priceRef,
-      bedroomsRef,
-      bathroomsRef,
-      areaRef
     );
     return () => (document.body.style.overflow = "auto");
-  }, [selectedProp, setFormData, priceRef, bedroomsRef, bathroomsRef, areaRef]);
+  }, [selectedProp, setFormData]);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -79,7 +72,7 @@ export default function EditForm({
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!validateForm(formData, priceRef, bedroomsRef, bathroomsRef, areaRef)) {
+    if (!validateForm(formData)) {
       setErrorMessage(setError, "All fields must be filled out.");
       console.error("All fields must be filled out.");
       return;
@@ -89,11 +82,7 @@ export default function EditForm({
 
     try {
       const propertyData = buildPropertyData(
-        formData,
-        priceRef,
-        bedroomsRef,
-        bathroomsRef,
-        areaRef
+        formData
       );
       await updatePropertyData(
         selectedProp,
@@ -104,6 +93,8 @@ export default function EditForm({
       );
     } catch (error) {
       setErrorMessage(setError, "An error occurred during submission.");
+      setLoading(false)
+      console.error(error)
     }
   }
 
@@ -207,16 +198,98 @@ export default function EditForm({
               value={formData.paymentType}
             />
             <input
-              ref={priceRef}
+              onChange={(e) => updateFormData('price', e.target.value)}
+              value={formData.price}
               className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
               type="text"
               placeholder="Price"
             />
           </div>
+          <AnimatePresence>
+            {formData.selectedCategory === "apartment" && (
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: "auto" }}
+                exit={{ height: 0 }}
+                className="grid grid-cols-2 gap-1"
+              >
+              <Select
+                options={apartmentTypes}
+                placeholder={"Type..."}
+                onChange={(option) => updateFormData("apartmentType", option)}
+                value={formData.apartmentType}
+              />
+              <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {formData.selectedCategory === "retail" && (
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: "auto" }}
+                exit={{ height: 0 }}
+                className="grid grid-cols-2 md:grid-cols-3 gap-1"
+              >
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={(e) => updateFormData('retailType', e.target.value)}
+                    id="office"
+                    type="radio"
+                    value="Office"
+                    name="retailType"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                    checked={formData.retailType === 'Office'}
+                  />
+                  <label
+                    htmlFor="office"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Office
+                  </label>
+                </div>
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={(e) => updateFormData('retailType', e.target.value)}
+                    id="clinic"
+                    type="radio"
+                    value="Clinic"
+                    name="retailType"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                    checked={formData.retailType === 'Clinic'}
+                  />
+                  <label
+                    htmlFor="clinic"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Clinic
+                  </label>
+                </div>
+                <div className="flex items-center ps-2 border border-gray-200 rounded">
+                  <input
+                    onClick={(e) => updateFormData('retailType', e.target.value)}
+                    id="shop"
+                    type="radio"
+                    value="Shop"
+                    name="retailType"
+                    className="text-blue-600 bg-gray-100 border-gray-300"
+                    checked={formData.retailType === 'Shop'}
+                  />
+                  <label
+                    htmlFor="shop"
+                    className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
+                  >
+                    Shop
+                  </label>
+                </div>
+              {/* <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/> */}
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
-            <input ref={bedroomsRef} type="number" placeholder="Bedrooms" />
-            <input ref={bathroomsRef} type="number" placeholder="Bathrooms" />
-            <input ref={areaRef} type="number" placeholder="Area (Sq/M)" />
+            <input value={formData.beds} onChange={(e) => updateFormData('beds', e.target.value)} type="number" placeholder="Bedrooms" />
+            <input value={formData.baths} onChange={(e) => updateFormData('baths', e.target.value)} placeholder="Bathrooms" />
+            <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" placeholder="Area (Sq/M)" />
           </div>
           <AnimatePresence>
             {formData.selectedCategory === "villa" && (
@@ -296,27 +369,6 @@ export default function EditForm({
                 value={formData.rentType}
                 isDisabled={formData.selectedStatus.value === "sale"}
               />
-            )}
-            {formData.paymentType.value === "cash" && (
-              <div className="flex items-center px-2 border border-gray-200 rounded">
-                <input
-                  onChange={(e) => updateFormData("isChalet", e.target.checked)}
-                  id="chalet"
-                  type="checkbox"
-                  disabled={
-                    formData.selectedCategory !== "apartment" &&
-                    formData.selectedCategory !== "studio"
-                  }
-                  checked={formData.isChalet}
-                  className="text-blue-600 bg-gray-100 border-gray-300"
-                />
-                <label
-                  htmlFor="chalet"
-                  className="w-full py-2 ms-1.5 text-sm font-medium text-gray-900 cursor-pointer"
-                >
-                  Chalet ?
-                </label>
-              </div>
             )}
             {formData.paymentType.value === "installment" && (
               <input

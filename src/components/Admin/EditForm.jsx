@@ -205,6 +205,45 @@ export default function EditForm({
               placeholder="Price"
             />
           </div>
+          <div className="grid grid-cols-2 gap-1 ">
+            {formData.paymentType.value === "cash" && <Select
+              options={statusOptions}
+              placeholder={"Status..."}
+              onChange={(option) => updateFormData("selectedStatus", option)}
+              value={formData.selectedStatus}
+              isDisabled={formData.paymentType.value === "installment"}
+            />}
+            {formData.paymentType.value === "cash" && (
+              <Select
+                options={rentOptions}
+                placeholder={"Rent Type..."}
+                onChange={(option) => updateFormData("rentType", option)}
+                value={formData.rentType}
+                isDisabled={formData.selectedStatus.value === "sale"}
+              />
+            )}
+            {formData.paymentType.value === "installment" && (
+              <input
+                onChange={(e) => updateFormData("downPayment", e.target.value)}
+                className="p-2 border text-sm rounded outline-none"
+                type="number"
+                disabled={formData.paymentType.value === "cash"}
+                value={formData.downPayment}
+                placeholder="Down Payment..."
+              />
+            )}
+            {formData.paymentType.value === "installment" && (
+              <input
+                type="number"
+                min={0}
+                value={formData.insYears}
+                disabled={formData.paymentType.value === "cash"}
+                onChange={(e) => updateFormData("insYears", e.target.value)}
+                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
+                placeholder="Installment Years..."
+              />
+            )}
+          </div>
           <AnimatePresence>
             {formData.selectedCategory === "apartment" && (
               <motion.div
@@ -353,45 +392,6 @@ export default function EditForm({
               </motion.div>
             )}
           </AnimatePresence>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 ">
-            <Select
-              options={statusOptions}
-              placeholder={"Status..."}
-              onChange={(option) => updateFormData("selectedStatus", option)}
-              value={formData.selectedStatus}
-              isDisabled={formData.paymentType.value === "installment"}
-            />
-            {formData.paymentType.value === "cash" && (
-              <Select
-                options={rentOptions}
-                placeholder={"Rent Type..."}
-                onChange={(option) => updateFormData("rentType", option)}
-                value={formData.rentType}
-                isDisabled={formData.selectedStatus.value === "sale"}
-              />
-            )}
-            {formData.paymentType.value === "installment" && (
-              <input
-                onChange={(e) => updateFormData("downPayment", e.target.value)}
-                className="p-2 border text-sm rounded outline-none"
-                type="number"
-                disabled={formData.paymentType.value === "cash"}
-                value={formData.downPayment}
-                placeholder="Down Payment..."
-              />
-            )}
-            {formData.paymentType.value === "installment" && (
-              <input
-                type="number"
-                min={0}
-                value={formData.insYears}
-                disabled={formData.paymentType.value === "cash"}
-                onChange={(e) => updateFormData("insYears", e.target.value)}
-                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
-                placeholder="Installment Years..."
-              />
-            )}
-          </div>
           <div className="flex gap-1 items-center">
             <button
               type="button"

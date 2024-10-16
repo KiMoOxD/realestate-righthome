@@ -34,10 +34,10 @@ export default function TypesList({ setCollectionType }) {
       </button>
       <button
         type="button"
-        onClick={() => handleClick('studios')}
+        onClick={() => handleClick('retails')}
         className={`px-4 py-1 ${isSelected === 'studios' ? 'bg-blue-500 text-white' : "bg-stone-100"} rounded-full hover:bg-blue-400 hover:text-white`}
       >
-        {lang === "en" ? "Studio" : "ستوديو"}
+        {lang === "en" ? "Retail" : "تجاري"}
       </button>
       <button
         type="button"

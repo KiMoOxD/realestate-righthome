@@ -77,7 +77,7 @@ font-family: 'Roboto';
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: show 4s ease-in-out forwards
+  animation: show 0.5s 3s ease-in-out forwards
 }
 
 #LOADER {

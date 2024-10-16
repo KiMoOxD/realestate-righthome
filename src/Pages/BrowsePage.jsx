@@ -115,9 +115,12 @@ export default function BrowsePage() {
     setShowFilters(false)
 
     if (selectedTypes.length > 0) {
-      array = array.filter((property) =>
-        selectedTypes.includes(property.category)
-      );
+      array = array.filter((property) => {
+        return (selectedTypes.includes(property.category) ||
+        selectedTypes.includes(property.apartmentType) ||
+        selectedTypes.includes(property.retailType) ||
+        selectedTypes.includes(property.villaType))
+    });
     }
 
     if (selectedRegion && enabledFilters.region) {
@@ -239,6 +242,102 @@ export default function BrowsePage() {
             </div>
             <div className="flex items-center my-0.5">
               <input
+                id="standard"
+                type="checkbox"
+                value="Standard"
+                checked={selectedTypes.includes("Standard")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="standard"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Apartment (Standard)" : "شقة (عادي)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="chalet"
+                type="checkbox"
+                value="Chalet"
+                checked={selectedTypes.includes("Chalet")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="chalet"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Apartment (Chalet)" : "شقة (شالية)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="duplex"
+                type="checkbox"
+                value="Duplex"
+                checked={selectedTypes.includes("Duplex")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="duplex"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Apartment (Duplex)" : "شقة (دوبلكس)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="penthouse"
+                type="checkbox"
+                value="Penthouse"
+                checked={selectedTypes.includes("Penthouse")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="penthouse"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Apartment (Penthouse)" : "شقة (بنتهاوس)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="studio"
+                type="checkbox"
+                value="Studio"
+                checked={selectedTypes.includes("Studio")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="studio"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Apartment (Studio)" : "شقة (ستوديو)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="cabin"
+                type="checkbox"
+                value="Cabin"
+                checked={selectedTypes.includes("Cabin")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="cabin"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Apartment (Cabin)" : "شقة (كوخ)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
                 id="villa"
                 type="checkbox"
                 value="villa"
@@ -255,6 +354,118 @@ export default function BrowsePage() {
             </div>
             <div className="flex items-center my-0.5">
               <input
+                id="standalone"
+                type="checkbox"
+                value="Standalone"
+                checked={selectedTypes.includes("Standalone")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="standalone"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Villa (Standalone)" : "فيلا (مستقلة)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="twinHouse"
+                type="checkbox"
+                value="Twin House"
+                checked={selectedTypes.includes("Twin House")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="twinHouse"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Villa (Twin House)" : "فيلا (توين هاويس)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="townHouse"
+                type="checkbox"
+                value="Town House"
+                checked={selectedTypes.includes("Town House")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="townHouse"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Villa (Town House)" : "فيلا (تاون هاوس)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="retail"
+                type="checkbox"
+                value="retail"
+                checked={selectedTypes.includes("retail")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="retail"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Retail" : "تجاري"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="office"
+                type="checkbox"
+                value="Office"
+                checked={selectedTypes.includes("Office")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="office"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Retail (Office)" : "تجاري (مكتب)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="clinic"
+                type="checkbox"
+                value="Clinic"
+                checked={selectedTypes.includes("Clinic")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="clinic"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Retail (Clinic)" : " تجاري (عيادة)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
+                id="shop"
+                type="checkbox"
+                value="Shop"
+                checked={selectedTypes.includes("Shop")}
+                onChange={handleCheckboxChange}
+                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="shop"
+                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
+              >
+                {lang === "en" ? "Retail (Shop)" : "تجاري (متجر)"}
+              </label>
+            </div>
+            <div className="flex items-center my-0.5">
+              <input
                 id="house"
                 type="checkbox"
                 value="house"
@@ -267,22 +478,6 @@ export default function BrowsePage() {
                 className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
               >
                 {lang === "en" ? "House" : "منزل"}
-              </label>
-            </div>
-            <div className="flex items-center my-0.5">
-              <input
-                id="studio"
-                type="checkbox"
-                value="studio"
-                checked={selectedTypes.includes("studio")}
-                onChange={handleCheckboxChange}
-                className="w-3.5 h-3.5 text-blue-500 bg-gray-100 border-gray-300 rounded cursor-pointer"
-              />
-              <label
-                htmlFor="studio"
-                className="ms-2 text-md font-medium text-gray-900 cursor-pointer"
-              >
-                {lang === "en" ? "Studio" : "ستوديو"}
               </label>
             </div>
           </div>

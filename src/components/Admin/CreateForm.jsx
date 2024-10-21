@@ -8,6 +8,7 @@ import { regionOptionsEn } from "../../utils/data";
 import { handleUpload } from "../../utils/functions";
 import { statusOptions, PaymentOptions, rentOptions, apartmentTypes } from "../../utils/data";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import defImg from '../../images/default.webp'
 
 const initialFormData = {
   region: null,
@@ -91,7 +92,7 @@ export default function CreateForm({
           en: formData.description.en ? formData.description.en : 'There is no description',
         },
         region: formData.region.value,
-        images: uploadedImageUrls.length ? uploadedImageUrls : ['https://media.discordapp.net/attachments/291591227466317824/1295283929951240236/image_fx__5.jpg?ex=670e16aa&is=670cc52a&hm=9b8a79c8879c01f7750231dc0184eb44a03ce7921c5f4cbb4f24d6033a3d4814&=&format=webp&width=648&height=648'], // Use the returned URLs directly
+        images: uploadedImageUrls.length ? uploadedImageUrls : [`${defImg}`], // Use the returned URLs directly
         title: {
           ar: formData.title.ar ? formData.title.ar : `لا يوجد عنوان`,
           en: formData.title.en ? formData.title.en : 'There is no Title',

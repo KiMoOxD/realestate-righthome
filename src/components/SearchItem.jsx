@@ -33,8 +33,8 @@ export default function SearchItem({ result }) {
         </p>
         <p>
           {lang === "en"
-            ? formattedPriceEn.format(result.price).replace("$", "") + " EGP"
-            : formattedPriceAR.format(result.price)}
+            ? !isNaN(result.price) ? `${formattedPriceEn.format(result.price).replace("$", "")}  EGP` : "Contact for price"
+            : !isNaN(result.price) ? formattedPriceAR.format(result.price) : 'تواصل لمعرفة السعر'}
         </p>
       </div>
       <div>

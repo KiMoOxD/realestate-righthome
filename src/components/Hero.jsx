@@ -2,7 +2,7 @@ import { useAllContext } from "../context/AllContext";
 import React, { lazy } from "react";
 import img from "../images/landing.webp";
 import { useEffect, useState } from "react";
-import { getAllCollectionsData, regionOptionsEn } from "../utils/data.js";
+import { getAllCollectionsData, regionOptionsAr, regionOptionsEn } from "../utils/data.js";
 import { motion } from "framer-motion";
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
@@ -16,10 +16,21 @@ const propertyTypes = [
   { label: "House", value: "house" },
   { label: "Retail", value: "retail" },
 ];
+const propertyTypesAr = [
+  { label: "شقة", value: "apartment" },
+  { label: "فيلا", value: "villa" },
+  { label: "منزل", value: "house" },
+  { label: "تجاري", value: "retail" },
+];
 
 const saleTypes = [
   { label: "For Sale", value: "sale" },
   { label: "For Rent", value: "rent" },
+];
+
+const saleTypesAr = [
+  { label: "للبيع", value: "sale" },
+  { label: "للايجار", value: "rent" },
 ];
 
 export default function Hero() {
@@ -105,18 +116,18 @@ export default function Hero() {
             ) : null}
           <div className="grid grid-cols-3 sm:grid-cols-3 gap-1 sm:gap-3 bg-white text-xs sm:text-sm p-1 sm:p-3 rounded">
             <Select
-              options={regionOptionsEn}
-              placeholder={"Location..."}
+              options={lang === 'en' ? regionOptionsEn : regionOptionsAr}
+              placeholder={lang === 'en' ? "Location..." : "المكان..."}
               onChange={(option) => setRegion(option)}
             />
             <Select
-              options={propertyTypes}
-              placeholder={"Property..."}
+              options={lang === 'en' ? propertyTypes: propertyTypesAr}
+              placeholder={lang === 'en' ? "Property..." : "العقار..."}
               onChange={(option) => setType(option)}
             />
             <Select
-              options={saleTypes}
-              placeholder={"Status..."}
+              options={lang === 'en' ? saleTypes : saleTypesAr}
+              placeholder={lang === 'en' ? "Status..." : "الملكية..."}
               onChange={(option) => setStatus(option)}
             />
           </div>

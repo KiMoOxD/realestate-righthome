@@ -124,7 +124,11 @@ export default function PropertyCard({ property }) {
         </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
         </AnimatePresence>
         
-        <p className="py-0.5">{lang === 'en' ? property.price ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : 'Contact for Price' : property.price ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}</p>
+        <p className="py-0.5">
+          {lang === 'en' ? 
+          !isNaN(property.price) ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : 'Contact for Price' 
+          : 
+          !isNaN(property.price) ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}</p>
       </div>
     </div>
   );

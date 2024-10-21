@@ -21,10 +21,9 @@ export default function PropertyInfo({ property }) {
 Hello,\n
 I would like to get more information about this property:\n
 Type: ${property.category}\n
-Price: ${property.price} EGP\n
 Location: ${property.region.en}\n
 Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
-  `;
+`;
 
   console.log(property)
   return (
@@ -66,8 +65,8 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
         }`}
       >
         {lang === "en"
-          ? `${formattedPriceEn.format(property.price).replace("$", "")} EGP`
-          : formattedPriceAR.format(property.price)}
+          ? !isNaN(property.price) ? `${formattedPriceEn.format(property.price).replace("$", "")} EGP` : 'Contact for price'
+          : !isNaN(property.price) ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}
 
         <span
           className={`absolute top-1/2 translate-y-[-50%] ${

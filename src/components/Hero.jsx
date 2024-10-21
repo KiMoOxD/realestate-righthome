@@ -2,7 +2,7 @@ import { useAllContext } from "../context/AllContext";
 import React, { lazy } from "react";
 import img from "../images/landing.webp";
 import { useEffect, useState } from "react";
-import { getAllCollectionsData, regionOptionsAr, regionOptionsEn } from "../utils/data.js";
+import { getAllCollectionsData } from "../utils/data.js";
 import { motion } from "framer-motion";
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
@@ -33,6 +33,20 @@ const saleTypesAr = [
   { label: "للايجار", value: "rent" },
 ];
 
+const regionOptionsAr = [
+  { label: "اكتوبر و زايد", value: "OZ" },
+  { label: "القاهرة الجديدة", value: "cairo" },
+  { label: "العين السخنة", value: "sokhna" },
+  { label: "الساحل الشمالي", value: "NC" },
+];
+
+const regionOptionsEn = [
+  { label: "October & Zayed", value: "OZ" },
+  { label: "New Cairo", value: "cairo" },
+  { label: "Sokhna", value: "sokhna" },
+  { label: "North Coast", value: "NC" },
+];
+
 export default function Hero() {
   let { lang } = useAllContext();
   let [SearchResult, setSearchResult] = useState([]);
@@ -55,7 +69,15 @@ export default function Hero() {
     let results = SearchData;
     
     if (region) {
-      results = results.filter(result => result.region.en === region.value.en)
+      if (region.value === 'OZ') {
+        results = results.filter(result => result.region.en === 'October' || result.region.en === 'Zayed')
+      } else if (region.value === 'NC') {
+        results = results.filter(result => result.region.en === 'North Coast' || result.region.en === 'New Alamein')
+      } else if (region.value === 'cairo') {
+        results = results.filter(result => result.region.en === 'The Fifth Settlement' || result.region.en === 'New Capital' || result.region.en === 'Mostakbal City')
+      } else if (region.value === 'sokhna') {
+        results = results.filter(result => result.region.en === 'Sokhna' || result.region.en === 'Galala City' || result.region.en === 'Gouna')
+      } 
     }
     if (status) {
       results = results.filter(result => result.status === status.value)

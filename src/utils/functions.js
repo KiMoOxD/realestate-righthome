@@ -126,8 +126,8 @@ export function buildPropertyData(formData) {
       rentType: formData.rentType !== 'N/A' ? formData.rentType.value : 'N/A',
     }),
     ...(formData.selectedCategory === "apartment" && {
-      floor: formData.floor ? formData.floor : 'N/A',
-      apartmentType: formData.apartmentType ? formData.apartmentType.value : 'N/A'
+      floor: formData.floor !== 'N/A' ? formData.floor : 'N/A',
+      apartmentType: formData.apartmentType !== 'N/A' ? formData.apartmentType.value : 'N/A'
     })
   };
 

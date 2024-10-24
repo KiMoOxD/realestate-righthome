@@ -27,7 +27,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
 
   console.log(property)
   return (
-    <div className="w-full order-2 flex flex-col">
+    <div className="w-full lg:max-w-[400px] xl:max-w-[600px] order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.category?.toUpperCase()}{' '}

@@ -172,7 +172,7 @@ export default function EditForm({
                 </div>
               );
             })}
-            <div className="size-10 bg-stone-100 flex items-center justify-center border rounded hover:shadow cursor-pointer">
+            <div className="size-12 bg-stone-100 flex items-center justify-center border rounded hover:shadow cursor-pointer">
               <label
                 htmlFor="dropzone-file"
                 className="text-stone-400 text-xl cursor-pointer"

@@ -19,6 +19,8 @@ import {
   setErrorMessage,
   updatePropertyData,
 } from "../../utils/functions";
+import { CiImageOn } from "react-icons/ci";
+
 
 const initialFormData = {
   region: null,
@@ -33,6 +35,7 @@ const initialFormData = {
   bedrooms: 0,
   bathrooms: 0,
   area: 0,
+  preview: 0
 }
 
 const initialErrorState = {
@@ -136,16 +139,17 @@ export default function EditForm({
         </AnimatePresence>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div className="flex flex-wrap gap-2">
-            {formData.selectedImages.map((img) => {
+            {formData.selectedImages.map((img, idx) => {
+              console.log(formData.preview, idx)
               return (
                 <div
-                  key={img}
+                  key={img+idx}
                   className="relative cursor-pointer border rounded hover:border-blue-600 transition"
                 >
                   <img
                     src={img}
                     alt=""
-                    className="size-10 rounded"
+                    className="size-12 rounded"
                     onClick={() => {
                       setSingleImage(img);
                       setSingleModal(true);
@@ -164,6 +168,7 @@ export default function EditForm({
                       })
                     }
                   />
+                  <CiImageOn onClick={() => updateFormData('preview', idx)} className={`absolute bottom-0.5 left-0.5 ${formData.preview === idx ? 'bg-blue-700 text-white' : 'text-blue-700 bg-white'} text-base rounded z-10`} />
                 </div>
               );
             })}

@@ -67,7 +67,7 @@ export default function PropertyCard({ property }) {
           <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-[1] transition opacity-0 group-hover:opacity-75"></div>
           {!isLoading && <img
             className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] min-w-[430px]"
-            src={property.images[0]}
+            src={property.preview ? property.images[property.preview] : property.images[0]}
             alt={property.title.en}
             loading="lazy"
           />}

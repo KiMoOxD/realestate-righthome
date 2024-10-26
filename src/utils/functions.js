@@ -51,6 +51,7 @@ const handleFormData = (property, setFormData) => {
     beds: property.beds,
     baths: property.baths,
     area: property.area,
+    preview: property.preview ? property.preview : 0,
     description: { en: property.description.en, ar: property.description.ar },
     selectedStatus: property.paymentType === 'cash' ? 
       (property.status === "sale" ? { label: "For Sale", value: "sale" } : { label: "For Rent", value: "rent" }) 
@@ -105,6 +106,7 @@ export function buildPropertyData(formData) {
     category: formData.selectedCategory,
     status: formData.selectedStatus.value,
     paymentType: formData.paymentType.value,
+    preview: formData.preview ? formData.preview : 0,
     description: {
       ar: formData.description.ar,
       en: formData.description.en,

@@ -175,7 +175,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
                   />
                   <DeleteIcon deleteProperty={deleteProperty} prop={prop} />
                   <img
-                    src={prop.images[0]}
+                    src={prop.preview ? prop.images[prop.preview] : prop.images[0]}
                     alt=""
                     className="size-16 min-w-16 object-cover rounded cursor-pointer"
                     onClick={() => {setImages(prop.images); setShowImages(true)}}

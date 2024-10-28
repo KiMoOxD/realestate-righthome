@@ -43,6 +43,20 @@ const initialErrorState = {
   content: "",
 };
 
+let insTypeOptions = [
+  {label: 'Monthly', value: 'monthly'},
+  {label: 'Three Months (Quarterly)', value: 'quarterly '},
+]
+
+let recieveDateOptions = [
+  {label: 'Instant', value: 'instant'},
+  {label: '1 Year', value: 1},
+  {label: '2 Years', value: 2},
+  {label: '3 Years', value: 3},
+  {label: '4 Years', value: 4},
+  {label: '5 Years', value: 5},
+]
+
 export default function EditForm({
   CloseEditModal,
   setSingleImage,
@@ -248,6 +262,16 @@ export default function EditForm({
                 placeholder="Installment Years..."
               />
             )}
+            {formData.paymentType.value === "installment" && <Select
+              options={insTypeOptions}
+              placeholder={"Installment Type..."}
+              onChange={(option) => updateFormData('insType', option)}
+            />}
+            {formData.paymentType.value === "installment" && <Select
+              options={recieveDateOptions}
+              placeholder={"Handover Date..."}
+              onChange={(option) => updateFormData('recieveDate', option)}
+            />}
           </div>
           <AnimatePresence>
             {formData.selectedCategory === "apartment" && (
@@ -397,6 +421,9 @@ export default function EditForm({
               </motion.div>
             )}
           </AnimatePresence>
+          <div>
+              <input type="text" value={formData.youtubeLinks} onChange={(e) => updateFormData('youtubeLinks', e.target.value.replace(' ', '').split(','))} placeholder="YoutubeLink1,YoutubeLink1,..." className="outline-none w-full p-2 rounded border text-sm"/>
+          </div>
           <div className="flex gap-1 items-center">
             <button
               type="button"

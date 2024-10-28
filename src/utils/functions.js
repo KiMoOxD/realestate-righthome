@@ -52,6 +52,7 @@ const handleFormData = (property, setFormData) => {
     baths: property.baths,
     area: property.area,
     preview: property.preview ? property.preview : 0,
+    youtubeLinks: property.youtubeLinks,
     description: { en: property.description.en, ar: property.description.ar },
     selectedStatus: property.paymentType === 'cash' ? 
       (property.status === "sale" ? { label: "For Sale", value: "sale" } : { label: "For Rent", value: "rent" }) 
@@ -61,7 +62,7 @@ const handleFormData = (property, setFormData) => {
       ? { label: "Cash", value: "cash" } 
       : { label: "Installment", value: "installment" },
     selectedCategory: property.category,
-    ...(property.paymentType === 'installment' && {insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0}),
+    ...(property.paymentType === 'installment' && {insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0, insType: property.insType ? {label: property.insType, value: property.insType} : 'N/A', recieveDate: property.recieveDate ? {label: property.recieveDate, value: property.recieveDate} : 'N/A'}),
     ...(property.category === 'villa' && {villaType: property.villaType !== 'N/A' ? property.villaType : 'N/A'}),
     ...(property.category === 'retail' && {retailType: property.retailType !== 'N/A' ? property.retailType : 'N/A'}),
     ...(property.category === "apartment" && {
@@ -107,6 +108,7 @@ export function buildPropertyData(formData) {
     status: formData.selectedStatus.value,
     paymentType: formData.paymentType.value,
     preview: formData.preview ? formData.preview : 0,
+    youtubeLinks: formData.youtubeLinks,
     description: {
       ar: formData.description.ar,
       en: formData.description.en,
@@ -120,6 +122,8 @@ export function buildPropertyData(formData) {
     ...(formData.paymentType.value === "installment" && {
       insYears: formData.insYears ? formData.insYears : 0,
       downPayment: formData.downPayment ? formData.downPayment : 0,
+      insType: formData.insType.value ? formData.insType.value : 'N/A', 
+      recieveDate: formData.recieveDate.value ? formData.recieveDate.value : 'N/A'
     }),
     ...(formData.selectedCategory === "villa" && {
       villaType: formData.villaType,

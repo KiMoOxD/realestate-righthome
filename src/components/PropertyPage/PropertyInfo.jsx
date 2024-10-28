@@ -11,6 +11,10 @@ import { useLocation } from "react-router-dom";
 import { GiProgression } from "react-icons/gi";
 import { formattedPriceEn, formattedPriceAR } from "../../utils/functions";
 import { PiBuildingsLight } from "react-icons/pi";
+import { HiOutlineCollection } from "react-icons/hi";
+import { HiOutlineBadgeCheck } from "react-icons/hi";
+
+
 
 export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
@@ -118,7 +122,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
         </p>
       )}
       {property.paymentType === "installment" && (
-        <div className="flex justify-evenly items-center mt-4">
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4">
           <div className="flex flex-col items-center">
             <LiaMoneyBillWaveAltSolid className="text-xl text-stone-500" />
             <p className="text-xs text-stone-500 arabic">
@@ -126,10 +130,8 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             </p>
             <p className="text-sm">
               {lang === "en"
-                ? `${formattedPriceEn
-                    .format(property.downPayment)
-                    .replace("$", "")} EGP`
-                : formattedPriceAR.format(property.downPayment)}
+                ? property.downPayment ? `${formattedPriceEn.format(property.downPayment).replace("$", "")} EGP` : '-'
+                : property.downPayment ? formattedPriceAR.format(property.downPayment) : '-'}
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -137,7 +139,21 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             <p className="text-xs text-stone-500 arabic">
               {lang === "en" ? "Duration (Year)" : "(سنة) مدة التقسيط"}
             </p>
-            <p className="text-sm">{property.insYears}</p>
+            <p className="text-sm">{property.insYears ? property.insYears : '-'}</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <HiOutlineCollection className="text-xl text-stone-500" />
+            <p className="text-xs text-stone-500 arabic">
+              {lang === "en" ? "Installment Type" : "نوع التقسيط"}
+            </p>
+            <p className="text-sm">{property.insType ? property.insType : '-'}</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <HiOutlineBadgeCheck className="text-xl text-stone-500" />
+            <p className="text-xs text-stone-500 arabic">
+              {lang === "en" ? "Handover Date (Years)" : "(سنة) مدة الاستلام"}
+            </p>
+            <p className="text-sm">{property.recieveDate ? property.recieveDate : '-'}</p>
           </div>
         </div>
       )}

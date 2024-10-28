@@ -25,6 +25,20 @@ const initialFormData = {
   area: 0,
 }
 
+let insTypeOptions = [
+  {label: 'Monthly', value: 'monthly'},
+  {label: 'Three Months (Quarterly)', value: 'quarterly '},
+]
+
+let recieveDateOptions = [
+  {label: 'Instant', value: 'instant'},
+  {label: '1 Year', value: 1},
+  {label: '2 Years', value: 2},
+  {label: '3 Years', value: 3},
+  {label: '4 Years', value: 4},
+  {label: '5 Years', value: 5},
+]
+
 export default function CreateForm({
   CloseModal,
   setSingleImage,
@@ -98,7 +112,7 @@ export default function CreateForm({
           en: formData.title.en ? formData.title.en : 'There is no Title',
         },
         youtubeLinks: formData.youtubeLinks,
-        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0 }),
+        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0, insType: formData.insType.value ? formData.insType.value : 'N/A', recieveDate: formData.recieveDate.value ? formData.recieveDate.value : 'N/A' }),
         ...(formData.selectedCategory === "villa" && { villaType: formData.villaType ? formData.villaType : 'N/A' }),
         ...(formData.selectedCategory === "retail" && { retailType: formData.retailType ? formData.retailType : 'N/A' }),
         ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType ? formData.rentType.value : 'N/A' }),
@@ -305,6 +319,16 @@ export default function CreateForm({
                 placeholder={"Rent Type..."}
                 onChange={(option) => updateFormData('rentType', option)}
                 isDisabled={formData.selectedStatus.value === 'sale'}
+              />}
+              {formData.paymentType.value === "installment" && <Select
+                options={insTypeOptions}
+                placeholder={"Installment Type..."}
+                onChange={(option) => updateFormData('insType', option)}
+              />}
+              {formData.paymentType.value === "installment" && <Select
+                options={recieveDateOptions}
+                placeholder={"Handover Date..."}
+                onChange={(option) => updateFormData('recieveDate', option)}
               />}
             </div>
 

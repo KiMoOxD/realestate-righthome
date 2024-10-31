@@ -53,6 +53,7 @@ const handleFormData = (property, setFormData) => {
     area: property.area,
     preview: property.preview ? property.preview : 0,
     youtubeLinks: property.youtubeLinks,
+    about: { en: property.about ? property.about.en : '-', ar: property.about ? property.about.ar : '-' },
     description: { en: property.description.en, ar: property.description.ar },
     selectedStatus: property.paymentType === 'cash' ? 
       (property.status === "sale" ? { label: "For Sale", value: "sale" } : { label: "For Rent", value: "rent" }) 
@@ -109,6 +110,10 @@ export function buildPropertyData(formData) {
     paymentType: formData.paymentType.value,
     preview: formData.preview ? formData.preview : 0,
     youtubeLinks: formData.youtubeLinks,
+    about: {
+      ar: formData.about.ar,
+      en: formData.about.en,
+    },
     description: {
       ar: formData.description.ar,
       en: formData.description.en,

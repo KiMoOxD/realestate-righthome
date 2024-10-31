@@ -14,6 +14,7 @@ const initialFormData = {
   region: null,
   selectedImages: [],
   title: { en: "", ar: "" },
+  about: { en: "", ar: "" },
   description: { en: "", ar: "" },
   selectedStatus: "",
   selectedCategory: "",
@@ -101,6 +102,10 @@ export default function CreateForm({
         category: formData.selectedCategory,
         status: formData.paymentType.value === 'cash' ? formData.selectedStatus.value : 'sale',
         paymentType: formData.paymentType.value,
+        about: {
+          ar: formData.about.ar ? formData.about.ar : 'لا يوجد تفاصيل',
+          en: formData.about.en ? formData.about.en : 'There is no About',
+        },
         description: {
           ar: formData.description.ar ? formData.description.ar : 'لا يوجد وصف',
           en: formData.description.en ? formData.description.en : 'There is no description',
@@ -564,17 +569,33 @@ export default function CreateForm({
               {language === "en" && (
                 <textarea
                   value={formData.description.en}
-                  onChange={(e) => updateFormData('description', {...formData.title, en: e.target.value})}
+                  onChange={(e) => updateFormData('description', {...formData.description, en: e.target.value})}
                   placeholder="Description"
-                  className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
+                  className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
+                ></textarea>
+              )}
+              {language === "en" && (
+                <textarea
+                  value={formData.about.en}
+                  onChange={(e) => updateFormData('about', {...formData.about, en: e.target.value})}
+                  placeholder="About"
+                  className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}
               {language === "ar" && (
                 <textarea
                 value={formData.description.ar}
-                onChange={(e) => updateFormData('description', {...formData.title, ar: e.target.value})}
+                onChange={(e) => updateFormData('description', {...formData.description, ar: e.target.value})}
                   placeholder="الـوصـف"
-                  className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
+                  className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
+                ></textarea>
+              )}
+              {language === "ar" && (
+                <textarea
+                value={formData.about.ar}
+                onChange={(e) => updateFormData('about', {...formData.about, ar: e.target.value})}
+                  placeholder="تفاصيل"
+                  className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
                 ></textarea>
               )}
             </div>

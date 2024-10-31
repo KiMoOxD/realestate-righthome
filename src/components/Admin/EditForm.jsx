@@ -482,6 +482,19 @@ export default function EditForm({
                 className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
               ></textarea>
             )}
+            {language === "en" && (
+              <textarea
+                value={formData.about?.en}
+                onChange={(e) =>
+                  updateFormData("about", {
+                    ...formData.about,
+                    en: e.target.value,
+                  })
+                }
+                placeholder="About"
+                className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
+              ></textarea>
+            )}
             {language === "ar" && (
               <textarea
                 value={formData.description.ar}
@@ -493,6 +506,19 @@ export default function EditForm({
                 }
                 placeholder="الـوصـف"
                 className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
+              ></textarea>
+            )}
+            {language === "ar" && (
+              <textarea
+                value={formData.about?.ar}
+                onChange={(e) =>
+                  updateFormData("about", {
+                    ...formData.about,
+                    ar: e.target.value,
+                  })
+                }
+                placeholder="تفاصيل"
+                className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
               ></textarea>
             )}
           </div>

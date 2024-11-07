@@ -2,12 +2,7 @@ import { useAllContext } from "../../context/AllContext";
 import { PiBathtubLight } from "react-icons/pi";
 import { BiArea } from "react-icons/bi";
 import { IoIosBed } from "react-icons/io";
-import { FaWhatsapp } from "react-icons/fa";
-import { IoIosCall } from "react-icons/io";
 import { LiaMoneyBillWaveAltSolid } from "react-icons/lia";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
 import { GiProgression } from "react-icons/gi";
 import { formattedPriceEn, formattedPriceAR } from "../../utils/functions";
 import { PiBuildingsLight } from "react-icons/pi";
@@ -18,20 +13,20 @@ import { HiOutlineBadgeCheck } from "react-icons/hi";
 
 export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
-  let [showNumber, setShowNumber] = useState(false);
-  let pathName = useLocation();
-  let phoneNumber = "+201019363939";
-  let message = `
-Hello,\n
-I would like to get more information about this property:\n
-Type: ${property.category}\n
-Location: ${property.region.en}\n
-Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
-`;
+//   let [showNumber, setShowNumber] = useState(false);
+//   let pathName = useLocation();
+//   let phoneNumber = "+201019363939";
+//   let message = `
+// Hello,\n
+// I would like to get more information about this property:\n
+// Type: ${property.category}\n
+// Location: ${property.region.en}\n
+// Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
+// `;
 
   console.log(property)
   return (
-    <div className="w-full lg:max-w-[400px] xl:max-w-[600px] order-2 flex flex-col">
+    <div className="max-w-full w-full md:w-[100%] lg:max-w-[800px] xl:max-w-[900px] mt-5 order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.category?.toUpperCase()}{' '}
@@ -102,16 +97,6 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
           </span>
         )}
       </p>
-      <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
-        {lang === "en" ? "Description" : "الوصف"}
-      </p>
-      <pre
-        className={`bg-stone-100 text-sm p-3 max-h-[174px] overflow-y-auto text-stone-700 mt-2 ${
-          lang === "ar" && "text-right arabic"
-        }`}
-      >
-        {lang === "en" ? property.description.en : property.description.ar}
-      </pre>
       {property.paymentType === "installment" && (
         <p
           className={`text-xs text-stone-400 mt-2 ${
@@ -199,7 +184,21 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
           </div>
         )}
       </div>
-      <hr className="my-2" />
+      <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
+        {lang === "en" ? "About" : "تفاصيل"}
+      </p>
+      <pre className={`bg-stone-100 text-sm p-3 text-wrap text-stone-700 mt-2 min-h-[44px] ${lang === "ar" && "text-right arabic"}`}>
+        {lang === "en" ? property.about?.en ? property.about.en : '-' : property.about?.ar ? property.about.ar : '-'}
+      </pre>
+      <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
+        {lang === "en" ? "Description" : "الوصف"}
+      </p>
+      <pre
+        className={`bg-stone-100 text-sm p-3 text-wrap text-stone-700 mt-2 ${
+          lang === "ar" && "text-right arabic"
+        }`}
+      >{lang === "en" ? property.description.en : property.description.ar}</pre>
+      {/* <hr className="my-2" />
       <div className="flex items-center gap-1 mt-2 *:w-1/2 *:text-sm md:*:text-base *:flex-grow text-white">
         <a
           href={`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
@@ -240,7 +239,7 @@ Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
             )}
           </AnimatePresence>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

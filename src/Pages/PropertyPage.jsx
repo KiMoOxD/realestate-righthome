@@ -2,12 +2,11 @@ import { Link, useLoaderData, useParams } from "react-router-dom";
 import { getCollectionData, getDocumentData } from "../utils/data";
 import { useEffect, useState } from "react";
 import ImageSlider from "../components/ImageSlider";
-import ImagesList from "../components/PropertyPage/ImagesList";
 import MainImage from "../components/PropertyPage/MainImage";
-import PropertyInfo from "../components/PropertyPage/PropertyInfo";
 import { useAllContext } from "../context/AllContext";
 import SkeletonCard from "../components/SkeletonCard.jsx";
 import PropertyCard from "../components/PropertyCard";
+import CallInfo from "../components/PropertyPage/CallInfo.jsx";
 
 export default function PropertyPage() {
   let property = useLoaderData(),
@@ -59,19 +58,21 @@ export default function PropertyPage() {
               modal={modal}
               setModal={setModal}
             />
-            <div className="flex flex-col lg:flex-row items-center gap-4 px-4 2xl:px-0 mt-5">
-              <ImagesList
+            <div className="flex flex-col lg:flex-row items-start gap-6 px-4 2xl:px-0 mt-5">
+              {/* <ImagesList
                 images={property.images}
                 imgCont={imgCont}
                 setImgCont={setImgCont}
-              />
+              /> */}
               <MainImage
                 imgCont={imgCont}
                 title={property.title}
                 OpenModal={OpenModal}
                 youtubeLinks={property.youtubeLinks}
+                property={property}
               />
-              <PropertyInfo property={property} />
+              {/* <PropertyInfo property={property} /> */}
+              <CallInfo property={property} />
             </div>
             <p className="text-md font-semibold text-blue-600 arabic-bold mx-auto mt-10">
               {lang === "en" ? "Discover" : "اسـتكـشف"}

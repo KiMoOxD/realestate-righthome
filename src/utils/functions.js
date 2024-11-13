@@ -70,7 +70,7 @@ const handleFormData = (property, setFormData) => {
       floor: property.floor !== 'N/A' ? property.floor : 'N/A',
       apartmentType: property.apartmentType !== 'N/A' ? {label: property.apartmentType, value: property.apartmentType} : 'N/A'
     }),
-    ...(property.status === 'rent' && {rentType: property.rentType !== 'N/A' ? property.rentType === "daily" 
+    ...(property.status === 'rent' && {rentType: property.rentType && property.rentType !== 'N/A' ? property.rentType === "daily" 
       ? { label: "Daily", value: "daily" } 
       : { label: "Monthly", value: "monthly" }
     : 'N/A'})
@@ -127,14 +127,14 @@ export function buildPropertyData(formData) {
     ...(formData.paymentType.value === "installment" && {
       insYears: formData.insYears ? formData.insYears : 0,
       downPayment: formData.downPayment ? formData.downPayment : 0,
-      insType: formData.insType.value ? formData.insType.value : 'N/A', 
-      recieveDate: formData.recieveDate.value ? formData.recieveDate.value : 'N/A'
+      insType: formData.insType ? formData.insType.value : 'N/A', 
+      recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A'
     }),
     ...(formData.selectedCategory === "villa" && {
       villaType: formData.villaType,
     }),
     ...(formData.selectedStatus.value === "rent" && {
-      rentType: formData.rentType !== 'N/A' ? formData.rentType.value : 'N/A',
+      rentType: formData.rentType && formData.rentType !== 'N/A' ? formData.rentType.value : 'N/A',
     }),
     ...(formData.selectedCategory === "apartment" && {
       floor: formData.floor !== 'N/A' ? formData.floor : 'N/A',

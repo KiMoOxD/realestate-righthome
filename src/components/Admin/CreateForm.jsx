@@ -117,7 +117,7 @@ export default function CreateForm({
           en: formData.title.en ? formData.title.en : 'There is no Title',
         },
         youtubeLinks: formData.youtubeLinks,
-        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0, insType: formData.insType.value ? formData.insType.value : 'N/A', recieveDate: formData.recieveDate.value ? formData.recieveDate.value : 'N/A' }),
+        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0, insType: formData.insType ? formData.insType.value : 'N/A', recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A' }),
         ...(formData.selectedCategory === "villa" && { villaType: formData.villaType ? formData.villaType : 'N/A' }),
         ...(formData.selectedCategory === "retail" && { retailType: formData.retailType ? formData.retailType : 'N/A' }),
         ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType ? formData.rentType.value : 'N/A' }),

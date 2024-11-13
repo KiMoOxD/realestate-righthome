@@ -69,7 +69,7 @@ export default function EditForm({
         [error, setError] = useState(initialErrorState),
         [loading, setLoading] = useState(false),
         { selectedProp } = useAllContext();
-  console.log(formData)
+        console.log(formData)
 
   useEffect(() => {
     fetchAndSetPropertyData(
@@ -265,11 +265,13 @@ export default function EditForm({
             {formData.paymentType.value === "installment" && <Select
               options={insTypeOptions}
               placeholder={"Installment Type..."}
+              value={formData.insType}
               onChange={(option) => updateFormData('insType', option)}
             />}
             {formData.paymentType.value === "installment" && <Select
               options={recieveDateOptions}
               placeholder={"Handover Date..."}
+              value={formData.recieveDate}
               onChange={(option) => updateFormData('recieveDate', option)}
             />}
           </div>

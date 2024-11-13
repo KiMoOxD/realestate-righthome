@@ -43,7 +43,7 @@ export default function PropertyCard({ property }) {
     setIsLoading(false)
   }, [property.id])
   return (
-    <div className="rounded-md overflow-hidden bg-white shadow-md h-full group cursor-pointer hover:shadow-lg transition">
+    <div className="relative rounded-md overflow-hidden bg-white shadow-md h-full group cursor-pointer hover:shadow-lg transition">
       <Link to={`/browse/${property.category}s/${property.id}`} onClick={() => setIsLoading(true)}>
         <div className="relative h-[220px] overflow-hidden">
           {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin2 text-5xl text-blue-700"/>}
@@ -80,6 +80,9 @@ export default function PropertyCard({ property }) {
           >
             {lang === "en" ? property.title.en : property.title.ar}
           </p>
+          {property.paymentType === 'installment' && property.developer && <p className="text-xs p-1 text-stone-50 w-fit absolute bottom-[43%] right-3 bg-stone-800/40 z-[1] rounded-md">
+            Developer: {property.developer}
+          </p>}
           <div
             className={`flex flex-wrap ${
               lang === "ar" && "flex-row-reverse"
@@ -88,47 +91,56 @@ export default function PropertyCard({ property }) {
             <span
               className={`flex ${
                 lang === "ar" && "flex-row-reverse"
-              } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
+              } items-center gap-1.5 bg-stone-100 p-2 rounded`}
             >
-              <IoIosBed /> {lang === "en" ? `Beds:` : "سرير :"} {property.beds ? property.beds : '-'}
+              {/* {lang === "en" ? `Beds:` : "سرير :"} */}
+              <IoIosBed className="text-lg" /> {property.beds ? property.beds : '-'}
             </span>
             <span
               className={`flex ${
                 lang === "ar" && "flex-row-reverse"
-              } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
+              } items-center gap-1.5 bg-stone-100 p-2 rounded`}
             >
-              <PiBathtubLight /> {lang === "en" ? `Baths:` : "دورة مياة :"}{" "}
+              {/* {lang === "en" ? `Baths:` : "دورة مياة :"} */}
+              <PiBathtubLight className="text-lg" /> {" "}
               {property.baths ? property.baths : '-'}
             </span>
             <span
               className={`flex ${
                 lang === "ar" && "flex-row-reverse"
-              } items-center gap-1 bg-stone-100 px-2 py-1 rounded`}
+              } items-center gap-1 bg-stone-100 p-2 rounded`}
             >
-              <BiArea /> {lang === "en" ? `Area:` : "مساحة :"} {property.area ? property.area : '-'}
-              {property.area > 1 && <span>{(lang === "en") ? `m` : "م"}</span>}
+              {/* {lang === "en" ? `Area:` : "مساحة :"} */}
+              <BiArea className="text-lg" />  {property.area ? property.area : '-'}
+              {property.area > 1 && <span className="text-xs">{(lang === "en") ? `Sq/M` : "م/مربع"}</span>}
             </span>
           </div>
         </div>
       </Link>
-      <hr />
-      <div className="relative flex items-center justify-between py-3 px-5">
+      <div className="relative flex items-center justify-between pb-2 px-5">
         <AnimatePresence>
         {!showNumber ? <motion.div initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="flex items-center gap-2">
             <a href={`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
               message
             )}`}
             target="_blank"
-            rel="noreferrer" className="bg-green-500 rounded-full p-1"><FaWhatsapp className="text-xl text-white peer/whatsapp" /></a>
-            <a href={`tel:${phoneNumber}`} className="bg-blue-500 rounded-full p-1"><IoIosCall onClick={() => setShowNumber(true)} className="text-xl text-white peer/call" /></a>
+            rel="noreferrer" className="bg-green-500 rounded-full size-8 flex justify-center items-center"><FaWhatsapp className="text-xl text-white peer/whatsapp" /></a>
+            <a href={`tel:${phoneNumber}`} className="bg-blue-500 rounded-full size-8 flex justify-center items-center"><IoIosCall onClick={() => setShowNumber(true)} className="text-xl text-white peer/call" /></a>
         </motion.div> : <motion.p initial={{opacity: 0, y: 30}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 30}} className="text-base flex items-center gap-1.5">{phoneNumber} <IoMdClose onClick={() => setShowNumber(false)} className="bg-blue-500 text-white size-4 text-xs rounded-full"/></motion.p>}
         </AnimatePresence>
         
-        <p className="py-0.5">
-          {lang === 'en' ? 
-          !isNaN(property.price) ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : 'Contact for Price' 
-          : 
-          !isNaN(property.price) ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}</p>
+        <div className="flex flex-col text-s h-full">
+          <p>
+            {lang === 'en' ? 
+            !isNaN(property.price) ? `EGP ${formattedPriceEn.format(property.price).replace("$", "")}` : 'Contact for Price' 
+            : 
+            !isNaN(property.price) ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}
+          </p>
+          {property.paymentType === 'installment' && property.monthlyPrice && property.insYears ? <p className="text-xs">
+           {property.monthlyPrice} Monthly / {property.insYears} Years
+          </p> : null}
+        </div>
+
       </div>
     </div>
   );

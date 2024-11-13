@@ -9,8 +9,6 @@ import { PiBuildingsLight } from "react-icons/pi";
 import { HiOutlineCollection } from "react-icons/hi";
 import { HiOutlineBadgeCheck } from "react-icons/hi";
 
-
-
 export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
 
@@ -18,9 +16,11 @@ export default function PropertyInfo({ property }) {
     <div className="max-w-full w-full md:w-full lg:w-[700px] xl:w-[900px] mt-5 order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
-          {property.category?.toUpperCase()}{' '}
-          {property.category === 'apartment' && '('+ property.apartmentType?.toUpperCase() +')'}
-          {property.category === 'retail' && '('+ property.retailType?.toUpperCase() +')'}
+          {property.category?.toUpperCase()}{" "}
+          {property.category === "apartment" &&
+            "(" + property.apartmentType?.toUpperCase() + ")"}
+          {property.category === "retail" &&
+            "(" + property.retailType?.toUpperCase() + ")"}
         </p>
         {property.category === "villa" && (
           <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
@@ -44,6 +44,9 @@ export default function PropertyInfo({ property }) {
       >
         {lang === "en" ? property.title.en : property.title.ar}
       </h1>
+      {property.paymentType === 'installment' && property.developer && <p className={`text-sm mb-1 px-2 py-1 w-fit ${lang === 'en' ? 'mr-auto' : 'ml-auto'} bg-stone-100 rounded-md`}>
+            Developer: {property.developer}
+          </p>}
       <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
         {lang === "en" ? "Price" : "الـسعر"}
       </p>
@@ -53,8 +56,12 @@ export default function PropertyInfo({ property }) {
         }`}
       >
         {lang === "en"
-          ? !isNaN(property.price) ? `${formattedPriceEn.format(property.price).replace("$", "")} EGP` : 'Contact for price'
-          : !isNaN(property.price) ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}
+          ? !isNaN(property.price)
+            ? `${formattedPriceEn.format(property.price).replace("$", "")} EGP`
+            : "Contact for price"
+          : !isNaN(property.price)
+          ? formattedPriceAR.format(property.price)
+          : "تواصل لمعرفة السعر"}
 
         <span
           className={`absolute top-1/2 translate-y-[-50%] ${
@@ -70,7 +77,7 @@ export default function PropertyInfo({ property }) {
             : "تقسيط"}
         </span>
 
-        {property.rentType !== 'N/A' && property.status === "rent" && (
+        {property.rentType !== "N/A" && property.status === "rent" && (
           <span
             className={`absolute top-1/2 translate-y-[-50%] ${
               lang === "ar" ? "left-14" : "right-14"
@@ -86,6 +93,9 @@ export default function PropertyInfo({ property }) {
           </span>
         )}
       </p>
+      {property.paymentType === 'installment' && property.monthlyPrice && property.insYears ? <p className={`text-xs ${lang === 'en' ? 'mr-auto' : 'ml-auto'}`}>
+           {property.monthlyPrice} Monthly / {property.insYears} Years
+          </p> : null}
       {property.paymentType === "installment" && (
         <p
           className={`text-xs text-stone-400 mt-2 ${
@@ -104,8 +114,14 @@ export default function PropertyInfo({ property }) {
             </p>
             <p className="text-sm">
               {lang === "en"
-                ? property.downPayment ? `${formattedPriceEn.format(property.downPayment).replace("$", "")} EGP` : '-'
-                : property.downPayment ? formattedPriceAR.format(property.downPayment) : '-'}
+                ? property.downPayment
+                  ? `${formattedPriceEn
+                      .format(property.downPayment)
+                      .replace("$", "")} EGP`
+                  : "-"
+                : property.downPayment
+                ? formattedPriceAR.format(property.downPayment)
+                : "-"}
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -113,21 +129,27 @@ export default function PropertyInfo({ property }) {
             <p className="text-xs text-stone-500 arabic">
               {lang === "en" ? "Duration (Year)" : "(سنة) مدة التقسيط"}
             </p>
-            <p className="text-sm">{property.insYears ? property.insYears : '-'}</p>
+            <p className="text-sm">
+              {property.insYears ? property.insYears : "-"}
+            </p>
           </div>
           <div className="flex flex-col items-center">
             <HiOutlineCollection className="text-xl text-stone-500" />
             <p className="text-xs text-stone-500 arabic">
               {lang === "en" ? "Installment Type" : "نوع التقسيط"}
             </p>
-            <p className="text-sm">{property.insType ? property.insType : '-'}</p>
+            <p className="text-sm">
+              {property.insType ? property.insType : "-"}
+            </p>
           </div>
           <div className="flex flex-col items-center">
             <HiOutlineBadgeCheck className="text-xl text-stone-500" />
             <p className="text-xs text-stone-500 arabic">
               {lang === "en" ? "Handover Date (Years)" : "(سنة) مدة الاستلام"}
             </p>
-            <p className="text-sm">{property.recieveDate ? property.recieveDate : '-'}</p>
+            <p className="text-sm">
+              {property.recieveDate ? property.recieveDate : "-"}
+            </p>
           </div>
         </div>
       )}
@@ -169,24 +191,34 @@ export default function PropertyInfo({ property }) {
             <p className="text-xs text-stone-500 arabic">
               {lang === "en" ? "Floor" : "الدور"}
             </p>
-            <p className="text-sm">{property.floor !== 'N/A' ? property.floor : "-"}</p>
+            <p className="text-sm">
+              {property.floor !== "N/A" ? property.floor : "-"}
+            </p>
           </div>
         )}
       </div>
-      <p className={`text-xs mt-2 text-stone-400 ${lang === "ar" && "text-right"}`}>
+      {/* <p className={`text-xs mt-2 text-stone-400 ${lang === "ar" && "text-right"}`}>
         {lang === "en" ? "About" : "تفاصيل"}
       </p>
       <pre className={`text-sm leading-snug font-sans font-medium text-wrap text-stone-700 mt-2 min-h-[44px] ${lang === "ar" && "text-right arabic"}`}>
         {lang === "en" ? property.about?.en ? property.about.en : '-' : property.about?.ar ? property.about.ar : '-'}
-      </pre>
-      <p className={`text-xs mt-2 text-stone-400 ${lang === "ar" && "text-right"}`}>
-        {lang === "en" ? "Description" : "الوصف"}
-      </p>
-      <pre
-        className={`text-sm leading-tight font-sans font-medium text-wrap text-stone-900 mt-2 min-h-[44px] ${
-          lang === "ar" && "text-right arabic"
-        }`}
-      >{lang === "en" ? property.description.en : property.description.ar}</pre>
+      </pre> */}
+      <div className=" shadow-md rounded-md p-5 mb-1">
+        <p
+          className={`text-xs mt-2 text-stone-400 ${
+            lang === "ar" && "text-right"
+          }`}
+        >
+          {lang === "en" ? "Description" : "الوصف"}
+        </p>
+        <pre
+          className={`text-sm leading-tight font-sans font-medium text-wrap text-stone-900 mt-2 min-h-[44px] ${
+            lang === "ar" && "text-right arabic"
+          }`}
+        >
+          {lang === "en" ? property.description.en : property.description.ar}
+        </pre>
+      </div>
     </div>
   );
 }

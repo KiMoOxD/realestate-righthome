@@ -117,7 +117,7 @@ export default function CreateForm({
           en: formData.title.en ? formData.title.en : 'There is no Title',
         },
         youtubeLinks: formData.youtubeLinks,
-        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0, insType: formData.insType ? formData.insType.value : 'N/A', recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A' }),
+        ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? formData.insYears : 0, downPayment: formData.downPayment ? formData.downPayment : 0, insType: formData.insType ? formData.insType.value : 'N/A', recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A', developer: formData.developer ? formData.developer : 'N/A', monthlyPrice: formData.monthlyPrice ? formData.monthlyPrice : 0 }),
         ...(formData.selectedCategory === "villa" && { villaType: formData.villaType ? formData.villaType : 'N/A' }),
         ...(formData.selectedCategory === "retail" && { retailType: formData.retailType ? formData.retailType : 'N/A' }),
         ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType ? formData.rentType.value : 'N/A' }),
@@ -181,7 +181,7 @@ export default function CreateForm({
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative w-[600px] max-w-full p-5 bg-white rounded"
+          className="relative w-[700px] max-w-full p-5 bg-white rounded"
         >
           <AnimatePresence>
             {error.isErr && (
@@ -299,7 +299,7 @@ export default function CreateForm({
               />
             </div>
 
-            <div className={`grid grid-cols-2 gap-1 `}>
+            <div className={`grid ${formData.paymentType.value === "cash" ? 'grid-cols-2' : 'grid-cols-3'} gap-1`}>
               {formData.paymentType.value === 'cash' && <Select
                 options={statusOptions}
                 placeholder={"Status*"}
@@ -318,6 +318,19 @@ export default function CreateForm({
                 onChange={(e) => updateFormData('insYears', e.target.value)}
                 className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
                 placeholder="Installment Years..."
+              />}
+              {formData.paymentType.value === "installment" && <input
+                onChange={(e) => updateFormData('developer', e.target.value)}
+                className="p-2 border text-sm rounded outline-none"
+                type="text"
+                placeholder="Developer..."
+              />}
+              {formData.paymentType.value === "installment" && <input
+                onChange={(e) => updateFormData('monthlyPrice', e.target.value)}
+                className="p-2 border text-sm rounded outline-none"
+                type="number"
+                min={0}
+                placeholder="Monthly Price..."
               />}
               {formData.paymentType.value === 'cash' && <Select
                 options={rentOptions}

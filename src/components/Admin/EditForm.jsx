@@ -137,7 +137,7 @@ export default function EditForm({
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative w-[600px] max-w-full p-5 bg-white rounded"
+        className="relative w-[700px] max-w-full p-5 bg-white rounded"
       >
         <AnimatePresence>
           {error.isErr && (
@@ -224,7 +224,8 @@ export default function EditForm({
               placeholder="Price"
             />
           </div>
-          <div className="grid grid-cols-2 gap-1 ">
+
+          <div className={`grid ${formData.paymentType.value === "cash" ? 'grid-cols-2' : 'grid-cols-3'} gap-1`}>
             {formData.paymentType.value === "cash" && <Select
               options={statusOptions}
               placeholder={"Status..."}
@@ -258,6 +259,27 @@ export default function EditForm({
                 value={formData.insYears}
                 disabled={formData.paymentType.value === "cash"}
                 onChange={(e) => updateFormData("insYears", e.target.value)}
+                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
+                placeholder="Installment Years..."
+              />
+            )}
+            {formData.paymentType.value === "installment" && (
+              <input
+                type="text"
+                value={formData.developer}
+                disabled={formData.paymentType.value === "cash"}
+                onChange={(e) => updateFormData("developer", e.target.value)}
+                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
+                placeholder="Developer"
+              />
+            )}
+            {formData.paymentType.value === "installment" && (
+              <input
+                type="number"
+                min={0}
+                value={formData.monthlyPrice}
+                disabled={formData.paymentType.value === "cash"}
+                onChange={(e) => updateFormData("monthlyPrice", e.target.value)}
                 className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
                 placeholder="Installment Years..."
               />
@@ -303,7 +325,7 @@ export default function EditForm({
               >
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={(e) => updateFormData('retailType', e.target.value)}
+                    onChange={(e) => updateFormData('retailType', e.target.value)}
                     id="office"
                     type="radio"
                     value="Office"
@@ -320,7 +342,7 @@ export default function EditForm({
                 </div>
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={(e) => updateFormData('retailType', e.target.value)}
+                    onChange={(e) => updateFormData('retailType', e.target.value)}
                     id="clinic"
                     type="radio"
                     value="Clinic"
@@ -337,7 +359,7 @@ export default function EditForm({
                 </div>
                 <div className="flex items-center ps-2 border border-gray-200 rounded">
                   <input
-                    onClick={(e) => updateFormData('retailType', e.target.value)}
+                    onChange={(e) => updateFormData('retailType', e.target.value)}
                     id="shop"
                     type="radio"
                     value="Shop"

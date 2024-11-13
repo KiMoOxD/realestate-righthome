@@ -63,7 +63,7 @@ const handleFormData = (property, setFormData) => {
       ? { label: "Cash", value: "cash" } 
       : { label: "Installment", value: "installment" },
     selectedCategory: property.category,
-    ...(property.paymentType === 'installment' && {insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0, insType: property.insType ? {label: property.insType, value: property.insType} : 'N/A', recieveDate: property.recieveDate ? {label: property.recieveDate, value: property.recieveDate} : 'N/A'}),
+    ...(property.paymentType === 'installment' && {insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0, insType: property.insType ? {label: property.insType, value: property.insType} : 'N/A', recieveDate: property.recieveDate ? {label: property.recieveDate, value: property.recieveDate} : 'N/A', developer: property.developer ? property.developer : 'N/A', monthlyPrice: property.monthlyPrice ? property.monthlyPrice : 0}),
     ...(property.category === 'villa' && {villaType: property.villaType !== 'N/A' ? property.villaType : 'N/A'}),
     ...(property.category === 'retail' && {retailType: property.retailType !== 'N/A' ? property.retailType : 'N/A'}),
     ...(property.category === "apartment" && {
@@ -128,10 +128,15 @@ export function buildPropertyData(formData) {
       insYears: formData.insYears ? formData.insYears : 0,
       downPayment: formData.downPayment ? formData.downPayment : 0,
       insType: formData.insType ? formData.insType.value : 'N/A', 
-      recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A'
+      recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A',
+      developer: formData.developer ? formData.developer : 'N/A',
+      monthlyPrice: formData.monthlyPrice ? formData.monthlyPrice : 0
     }),
     ...(formData.selectedCategory === "villa" && {
       villaType: formData.villaType,
+    }),
+    ...(formData.selectedCategory === "retail" && {
+      retailType: formData.retailType,
     }),
     ...(formData.selectedStatus.value === "rent" && {
       rentType: formData.rentType && formData.rentType !== 'N/A' ? formData.rentType.value : 'N/A',

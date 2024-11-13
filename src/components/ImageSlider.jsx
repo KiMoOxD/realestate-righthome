@@ -48,7 +48,7 @@ export default function ImageSlider({imgs, modal, setModal}) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{type: 'tween'}}
-            className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[80%] sm:max-h-[85%]"
+            className="relative flex max-w-[450px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[1000px] max-h-[80%] sm:max-h-[70%]"
           >
             {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin2 text-5xl text-blue-700"/>}
             <AnimatePresence mode="wait">

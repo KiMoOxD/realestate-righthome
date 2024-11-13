@@ -58,7 +58,7 @@ export default function PropertyPage() {
               modal={modal}
               setModal={setModal}
             />
-            <div className="flex flex-col lg:flex-row items-start gap-6 px-1 2xl:px-0 mt-5">
+            <div className="flex flex-col lg:flex-row items-start gap-4 px-2 2xl:px-0 mt-5">
               <MainImage
                 imgCont={imgCont}
                 title={property.title}

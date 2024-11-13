@@ -13,20 +13,9 @@ import { HiOutlineBadgeCheck } from "react-icons/hi";
 
 export default function PropertyInfo({ property }) {
   let { lang } = useAllContext();
-//   let [showNumber, setShowNumber] = useState(false);
-//   let pathName = useLocation();
-//   let phoneNumber = "+201019363939";
-//   let message = `
-// Hello,\n
-// I would like to get more information about this property:\n
-// Type: ${property.category}\n
-// Location: ${property.region.en}\n
-// Link: https://realestate-righthome-553z.vercel.app${pathName.pathname}\n
-// `;
 
-  console.log(property)
   return (
-    <div className="max-w-full w-full md:w-[100%] lg:max-w-[800px] xl:max-w-[900px] mt-5 order-2 flex flex-col">
+    <div className="max-w-full w-full md:w-full lg:w-[700px] xl:w-[900px] mt-5 order-2 flex flex-col">
       <div className={`flex gap-2 ${lang === "ar" && "justify-end arabic"}`}>
         <p className={`text-xs bg-stone-100 px-3 py-1 text-stone-700 w-fit`}>
           {property.category?.toUpperCase()}{' '}
@@ -184,62 +173,20 @@ export default function PropertyInfo({ property }) {
           </div>
         )}
       </div>
-      <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
+      <p className={`text-xs mt-2 text-stone-400 ${lang === "ar" && "text-right"}`}>
         {lang === "en" ? "About" : "تفاصيل"}
       </p>
-      <pre className={`bg-stone-100 text-sm p-3 text-wrap text-stone-700 mt-2 min-h-[44px] ${lang === "ar" && "text-right arabic"}`}>
+      <pre className={`text-sm leading-snug font-sans font-medium text-wrap text-stone-700 mt-2 min-h-[44px] ${lang === "ar" && "text-right arabic"}`}>
         {lang === "en" ? property.about?.en ? property.about.en : '-' : property.about?.ar ? property.about.ar : '-'}
       </pre>
-      <p className={`text-xs text-stone-400 ${lang === "ar" && "text-right"}`}>
+      <p className={`text-xs mt-2 text-stone-400 ${lang === "ar" && "text-right"}`}>
         {lang === "en" ? "Description" : "الوصف"}
       </p>
       <pre
-        className={`bg-stone-100 text-sm p-3 text-wrap text-stone-700 mt-2 ${
+        className={`text-sm leading-tight font-sans font-medium text-wrap text-stone-900 mt-2 min-h-[44px] ${
           lang === "ar" && "text-right arabic"
         }`}
       >{lang === "en" ? property.description.en : property.description.ar}</pre>
-      {/* <hr className="my-2" />
-      <div className="flex items-center gap-1 mt-2 *:w-1/2 *:text-sm md:*:text-base *:flex-grow text-white">
-        <a
-          href={`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
-            message
-          )}`}
-          target="_blank"
-          rel="noreferrer"
-          className="flex justify-center items-center gap-2 text-lg bg-green-500 py-2 group transition"
-        >
-          <FaWhatsapp className="text-2xl" /> WhatsApp
-        </a>
-        <button
-          className="flex justify-center items-center gap-2 text-lg bg-blue-500 py-2"
-          onClick={() => setShowNumber((prev) => !prev)}
-        >
-          <AnimatePresence mode="wait">
-            {!showNumber ? (
-              <motion.a
-                key="phone-text"
-                initial={{ opacity: 0, scale: 0, y: 50 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0, y: 50 }}
-                className="flex gap-2 items-center"
-                href={`tel:${phoneNumber}`}
-              >
-                <IoIosCall className="text-2xl" /> Phone Number
-              </motion.a>
-            ) : (
-              <motion.span
-                key="phone-number"
-                initial={{ opacity: 0, scale: 0, y: 50 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0, y: 50 }}
-                className="py-0.5 md:py-0"
-              >
-                +201145034531
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
-      </div> */}
     </div>
   );
 }

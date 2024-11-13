@@ -58,12 +58,7 @@ export default function PropertyPage() {
               modal={modal}
               setModal={setModal}
             />
-            <div className="flex flex-col lg:flex-row items-start gap-6 px-4 2xl:px-0 mt-5">
-              {/* <ImagesList
-                images={property.images}
-                imgCont={imgCont}
-                setImgCont={setImgCont}
-              /> */}
+            <div className="flex flex-col lg:flex-row items-start gap-6 px-1 2xl:px-0 mt-5">
               <MainImage
                 imgCont={imgCont}
                 title={property.title}
@@ -71,7 +66,6 @@ export default function PropertyPage() {
                 youtubeLinks={property.youtubeLinks}
                 property={property}
               />
-              {/* <PropertyInfo property={property} /> */}
               <CallInfo property={property} />
             </div>
             <p className="text-md font-semibold text-blue-600 arabic-bold mx-auto mt-10">

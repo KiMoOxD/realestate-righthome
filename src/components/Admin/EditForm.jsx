@@ -243,46 +243,58 @@ export default function EditForm({
               />
             )}
             {formData.paymentType.value === "installment" && (
-              <input
-                onChange={(e) => updateFormData("downPayment", e.target.value)}
-                className="p-2 border text-sm rounded outline-none"
-                type="number"
-                disabled={formData.paymentType.value === "cash"}
-                value={formData.downPayment}
-                placeholder="Down Payment..."
-              />
+              <div className="relative">
+                <input
+                  onChange={(e) => updateFormData("downPayment", e.target.value)}
+                  className="p-2 border text-sm rounded outline-none w-full"
+                  type="number"
+                  disabled={formData.paymentType.value === "cash"}
+                  value={formData.downPayment}
+                  placeholder="Down Payment..."
+                />
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Down Payment</span>
+              </div>
             )}
             {formData.paymentType.value === "installment" && (
-              <input
-                type="number"
-                min={0}
-                value={formData.insYears}
-                disabled={formData.paymentType.value === "cash"}
-                onChange={(e) => updateFormData("insYears", e.target.value)}
-                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
-                placeholder="Installment Years..."
-              />
+              <div className="relative">
+                <input
+                  type="number"
+                  min={0}
+                  value={formData.insYears}
+                  disabled={formData.paymentType.value === "cash"}
+                  onChange={(e) => updateFormData("insYears", e.target.value)}
+                  className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
+                  placeholder="Installment Years..."
+                />
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Installment Years</span>
+              </div>
             )}
             {formData.paymentType.value === "installment" && (
-              <input
-                type="text"
-                value={formData.developer}
-                disabled={formData.paymentType.value === "cash"}
-                onChange={(e) => updateFormData("developer", e.target.value)}
-                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
-                placeholder="Developer"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.developer}
+                  disabled={formData.paymentType.value === "cash"}
+                  onChange={(e) => updateFormData("developer", e.target.value)}
+                  className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
+                  placeholder="Developer"
+                />
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Developer</span>
+              </div>
             )}
             {formData.paymentType.value === "installment" && (
-              <input
-                type="number"
-                min={0}
-                value={formData.monthlyPrice}
-                disabled={formData.paymentType.value === "cash"}
-                onChange={(e) => updateFormData("monthlyPrice", e.target.value)}
-                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1"
-                placeholder="Installment Years..."
-              />
+              <div className="relative">
+                <input
+                  type="number"
+                  min={0}
+                  value={formData.monthlyPrice}
+                  disabled={formData.paymentType.value === "cash"}
+                  onChange={(e) => updateFormData("monthlyPrice", e.target.value)}
+                  className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
+                  placeholder="Installment Years..."
+                />
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Monthly Price</span>
+              </div>
             )}
             {formData.paymentType.value === "installment" && <Select
               options={insTypeOptions}
@@ -311,7 +323,10 @@ export default function EditForm({
                 onChange={(option) => updateFormData("apartmentType", option)}
                 value={formData.apartmentType}
               />
-              <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/>
+              <div className="relative">
+                <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm w-full h-full rounded"/>
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Floor Number</span>
+              </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -379,9 +394,18 @@ export default function EditForm({
             )}
           </AnimatePresence>
           <div className="grid grid-cols-3 gap-1 *:py-2 *:border *:p-2 *:text-sm *:rounded *:outline-none">
-            <input value={formData.beds} onChange={(e) => updateFormData('beds', e.target.value)} type="number" placeholder="Bedrooms" />
-            <input value={formData.baths} onChange={(e) => updateFormData('baths', e.target.value)} placeholder="Bathrooms" />
-            <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" placeholder="Area (Sq/M)" />
+            <div className="relative">
+              <input value={formData.beds} onChange={(e) => updateFormData('beds', e.target.value)} type="number" placeholder="Bedrooms" />
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Bedrooms</span>
+            </div>
+            <div className="relative">
+              <input value={formData.baths} onChange={(e) => updateFormData('baths', e.target.value)} placeholder="Bathrooms" />
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Bathrooms</span>
+            </div>
+            <div className="relative">
+              <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" placeholder="Area (Sq/M)" />
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Area</span>
+            </div>       
           </div>
           <AnimatePresence>
             {formData.selectedCategory === "villa" && (
@@ -480,6 +504,7 @@ export default function EditForm({
               />
             )}
             {language === "en" && (
+              <div className="relative">
               <input
                 value={formData.title.en}
                 onChange={(e) =>
@@ -492,8 +517,11 @@ export default function EditForm({
                 type="text"
                 placeholder="Title"
               />
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Title</span>
+              </div>
             )}
             {language === "en" && (
+              <div className="relative">
               <textarea
                 value={formData.description.en}
                 onChange={(e) =>
@@ -505,8 +533,11 @@ export default function EditForm({
                 placeholder="Description"
                 className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
               ></textarea>
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Description</span>
+              </div>
             )}
             {language === "en" && (
+              <div className="relative">
               <textarea
                 value={formData.about?.en}
                 onChange={(e) =>
@@ -518,6 +549,8 @@ export default function EditForm({
                 placeholder="About"
                 className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
               ></textarea>
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">About</span>
+              </div>
             )}
             {language === "ar" && (
               <textarea

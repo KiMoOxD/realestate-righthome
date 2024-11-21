@@ -19,7 +19,7 @@ export default function BrowsePage() {
     villas: { rent: [], sale: [] },
     apartments: { rent: [], sale: [] },
     offices: { rent: [], sale: [] },
-    studios: { rent: [], sale: [] },
+    retails: { rent: [], sale: [] },
     houses: { rent: [], sale: [] },
   });
   let [showFilters, setShowFilters] = useState(false);
@@ -46,7 +46,7 @@ export default function BrowsePage() {
       let villasData = await getCollectionData("villas");
       let apartmentsData = await getCollectionData("apartments");
       let officesData = await getCollectionData("offices");
-      let studiosData = await getCollectionData("studios");
+      let retailsData = await getCollectionData("retails");
       let housesData = await getCollectionData("houses");
 
       setProperties({
@@ -58,9 +58,9 @@ export default function BrowsePage() {
           rent: apartmentsData.filter((apartment) => apartment.status === "rent").length === 0 ? 'empty' : apartmentsData.filter((apartment) => apartment.status === "rent"),
           sale: apartmentsData.filter((apartment) => apartment.status === "sale").length === 0 ? 'empty' : apartmentsData.filter((apartment) => apartment.status === "sale"),
         },
-        studios: {
-          rent: studiosData.filter((studio) => studio.status === "rent").length === 0 ? 'empty' : studiosData.filter((studio) => studio.status === "rent"),
-          sale: studiosData.filter((studio) => studio.status === "sale").length === 0 ? 'empty' : studiosData.filter((studio) => studio.status === "sale"),
+        retails: {
+          rent: retailsData.filter((retail) => retail.status === "rent").length === 0 ? 'empty' : retailsData.filter((retail) => retail.status === "rent"),
+          sale: retailsData.filter((retail) => retail.status === "sale").length === 0 ? 'empty' : retailsData.filter((retail) => retail.status === "sale"),
         },
         houses: {
           rent: housesData.filter((house) => house.status === "rent").length === 0 ? 'empty' : housesData.filter((house) => house.status === "rent"),
@@ -72,7 +72,7 @@ export default function BrowsePage() {
         ...villasData,
         ...apartmentsData,
         ...officesData,
-        ...studiosData,
+        ...retailsData,
         ...housesData,
       ]);
     }
@@ -665,13 +665,13 @@ export default function BrowsePage() {
             /> */}
 
             <Section
-              title={{ en: "Studios", ar: "استوديوهات" }}
+              title={{ en: "Retail", ar: "تجاري" }}
               subtitle={{
-                sale: { en: "Studios For Sale", ar: "استوديوهات للبيع" },
-                rent: { en: "Studios For Rent", ar: "استوديوهات للايجار" },
+                sale: { en: "Retail For Sale", ar: "تجاري للبيع" },
+                rent: { en: "Retail For Rent", ar: "تجاري للايجار" },
               }}
-              saleList={properties.studios.sale}
-              rentList={properties.studios.rent}
+              saleList={properties.retails.sale}
+              rentList={properties.retails.rent}
             />
 
             <Section

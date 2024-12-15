@@ -225,7 +225,7 @@ export default function EditForm({
             />
           </div>
 
-          <div className={`grid ${formData.paymentType.value === "cash" ? 'grid-cols-2' : 'grid-cols-3'} gap-1`}>
+          <div className={`grid grid-cols-3 gap-1`}>
             {formData.paymentType.value === "cash" && <Select
               options={statusOptions}
               placeholder={"Status..."}
@@ -272,19 +272,6 @@ export default function EditForm({
             {formData.paymentType.value === "installment" && (
               <div className="relative">
                 <input
-                  type="text"
-                  value={formData.developer}
-                  disabled={formData.paymentType.value === "cash"}
-                  onChange={(e) => updateFormData("developer", e.target.value)}
-                  className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
-                  placeholder="Developer"
-                />
-                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Developer</span>
-              </div>
-            )}
-            {formData.paymentType.value === "installment" && (
-              <div className="relative">
-                <input
                   type="number"
                   min={0}
                   value={formData.monthlyPrice}
@@ -308,6 +295,16 @@ export default function EditForm({
               value={formData.recieveDate}
               onChange={(option) => updateFormData('recieveDate', option)}
             />}
+            <div className="relative">
+                <input
+                  type="text"
+                  value={formData.developer}
+                  onChange={(e) => updateFormData("developer", e.target.value)}
+                  className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
+                  placeholder="Developer"
+                />
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Developer</span>
+            </div>
           </div>
           <AnimatePresence>
             {formData.selectedCategory === "apartment" && (

@@ -40,7 +40,7 @@ export const handleUpload = async (images) => {
 
   const imageUrls = await Promise.all(imagePromises);
   const filteredUrls = imageUrls.filter((url) => url !== null);
-  return filteredUrls; 
+  return filteredUrls;
 };
 
 const handleFormData = (property, setFormData) => {
@@ -55,25 +55,28 @@ const handleFormData = (property, setFormData) => {
     youtubeLinks: property.youtubeLinks,
     about: { en: property.about ? property.about.en : '-', ar: property.about ? property.about.ar : '-' },
     description: { en: property.description.en, ar: property.description.ar },
-    selectedStatus: property.paymentType === 'cash' ? 
-      (property.status === "sale" ? { label: "For Sale", value: "sale" } : { label: "For Rent", value: "rent" }) 
+    selectedStatus: property.paymentType === 'cash' ?
+      (property.status === "sale" ? { label: "For Sale", value: "sale" } : { label: "For Rent", value: "rent" })
       : { label: "For Sale", value: "sale" },
     selectedImages: property.images,
-    paymentType: property.paymentType === "cash" 
-      ? { label: "Cash", value: "cash" } 
+    developer: property.developer ? property.developer : 'N/A',
+    paymentType: property.paymentType === "cash"
+      ? { label: "Cash", value: "cash" }
       : { label: "Installment", value: "installment" },
     selectedCategory: property.category,
-    ...(property.paymentType === 'installment' && {insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0, insType: property.insType ? {label: property.insType, value: property.insType} : 'N/A', recieveDate: property.recieveDate ? {label: property.recieveDate, value: property.recieveDate} : 'N/A', developer: property.developer ? property.developer : 'N/A', monthlyPrice: property.monthlyPrice ? property.monthlyPrice : 0}),
-    ...(property.category === 'villa' && {villaType: property.villaType !== 'N/A' ? property.villaType : 'N/A'}),
-    ...(property.category === 'retail' && {retailType: property.retailType !== 'N/A' ? property.retailType : 'N/A'}),
+    ...(property.paymentType === 'installment' && { insYears: property.insYears ? property.insYears : 0, downPayment: property.downPayment ? property.downPayment : 0, insType: property.insType ? { label: property.insType, value: property.insType } : 'N/A', recieveDate: property.recieveDate ? { label: property.recieveDate, value: property.recieveDate } : 'N/A', monthlyPrice: property.monthlyPrice ? property.monthlyPrice : 0 }),
+    ...(property.category === 'villa' && { villaType: property.villaType !== 'N/A' ? property.villaType : 'N/A' }),
+    ...(property.category === 'retail' && { retailType: property.retailType !== 'N/A' ? property.retailType : 'N/A' }),
     ...(property.category === "apartment" && {
       floor: property.floor !== 'N/A' ? property.floor : 'N/A',
-      apartmentType: property.apartmentType !== 'N/A' ? {label: property.apartmentType, value: property.apartmentType} : 'N/A'
+      apartmentType: property.apartmentType !== 'N/A' ? { label: property.apartmentType, value: property.apartmentType } : 'N/A'
     }),
-    ...(property.status === 'rent' && {rentType: property.rentType && property.rentType !== 'N/A' ? property.rentType === "daily" 
-      ? { label: "Daily", value: "daily" } 
-      : { label: "Monthly", value: "monthly" }
-    : 'N/A'})
+    ...(property.status === 'rent' && {
+      rentType: property.rentType && property.rentType !== 'N/A' ? property.rentType === "daily"
+        ? { label: "Daily", value: "daily" }
+        : { label: "Monthly", value: "monthly" }
+        : 'N/A'
+    })
   });
 };
 
@@ -124,12 +127,12 @@ export function buildPropertyData(formData) {
       ar: formData.title.ar,
       en: formData.title.en,
     },
+    developer: formData.developer ? formData.developer : 'N/A',
     ...(formData.paymentType.value === "installment" && {
       insYears: formData.insYears ? formData.insYears : 0,
       downPayment: formData.downPayment ? formData.downPayment : 0,
-      insType: formData.insType ? formData.insType.value : 'N/A', 
+      insType: formData.insType ? formData.insType.value : 'N/A',
       recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A',
-      developer: formData.developer ? formData.developer : 'N/A',
       monthlyPrice: formData.monthlyPrice ? formData.monthlyPrice : 0
     }),
     ...(formData.selectedCategory === "villa" && {

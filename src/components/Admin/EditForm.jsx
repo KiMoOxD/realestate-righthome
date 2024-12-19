@@ -44,17 +44,17 @@ const initialErrorState = {
 };
 
 let insTypeOptions = [
-  {label: 'Monthly', value: 'monthly'},
-  {label: 'Three Months (Quarterly)', value: 'quarterly '},
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Three Months (Quarterly)', value: 'quarterly ' },
 ]
 
 let recieveDateOptions = [
-  {label: 'Instant', value: 'instant'},
-  {label: '1 Year', value: 1},
-  {label: '2 Years', value: 2},
-  {label: '3 Years', value: 3},
-  {label: '4 Years', value: 4},
-  {label: '5 Years', value: 5},
+  { label: 'Instant', value: 'instant' },
+  { label: '1 Year', value: 1 },
+  { label: '2 Years', value: 2 },
+  { label: '3 Years', value: 3 },
+  { label: '4 Years', value: 4 },
+  { label: '5 Years', value: 5 },
 ]
 
 export default function EditForm({
@@ -63,13 +63,13 @@ export default function EditForm({
   setSingleModal,
   setConfirmMsg,
 }) {
-  
+
   const [language, setLanguage] = useState("en"),
-        [formData, setFormData] = useState(initialFormData),
-        [error, setError] = useState(initialErrorState),
-        [loading, setLoading] = useState(false),
-        { selectedProp } = useAllContext();
-        console.log(formData)
+    [formData, setFormData] = useState(initialFormData),
+    [error, setError] = useState(initialErrorState),
+    [loading, setLoading] = useState(false),
+    { selectedProp } = useAllContext();
+  console.log(formData)
 
   useEffect(() => {
     fetchAndSetPropertyData(
@@ -130,7 +130,7 @@ export default function EditForm({
       style={{ top: `${window.scrollY}px` }}
     >
       <div
-        onClick={CloseEditModal}
+        // onClick={CloseEditModal}
         className="absolute w-full h-full bg-black/80"
       ></div>
 
@@ -157,7 +157,7 @@ export default function EditForm({
               console.log(formData.preview, idx)
               return (
                 <div
-                  key={img+idx}
+                  key={img + idx}
                   className="relative cursor-pointer border rounded hover:border-blue-600 transition"
                 >
                   <img
@@ -296,14 +296,14 @@ export default function EditForm({
               onChange={(option) => updateFormData('recieveDate', option)}
             />}
             <div className="relative">
-                <input
-                  type="text"
-                  value={formData.developer}
-                  onChange={(e) => updateFormData("developer", e.target.value)}
-                  className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
-                  placeholder="Developer"
-                />
-                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Developer</span>
+              <input
+                type="text"
+                value={formData.developer}
+                onChange={(e) => updateFormData("developer", e.target.value)}
+                className="py-2 border p-2 text-sm rounded outline-none col-span-2 sm:col-span-1 w-full"
+                placeholder="Developer"
+              />
+              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Developer</span>
             </div>
           </div>
           <AnimatePresence>
@@ -314,16 +314,16 @@ export default function EditForm({
                 exit={{ height: 0 }}
                 className="grid grid-cols-2 gap-1"
               >
-              <Select
-                options={apartmentTypes}
-                placeholder={"Type..."}
-                onChange={(option) => updateFormData("apartmentType", option)}
-                value={formData.apartmentType}
-              />
-              <div className="relative">
-                <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm w-full h-full rounded"/>
-                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Floor Number</span>
-              </div>
+                <Select
+                  options={apartmentTypes}
+                  placeholder={"Type..."}
+                  onChange={(option) => updateFormData("apartmentType", option)}
+                  value={formData.apartmentType}
+                />
+                <div className="relative">
+                  <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm w-full h-full rounded" />
+                  <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Floor Number</span>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -386,7 +386,7 @@ export default function EditForm({
                     Shop
                   </label>
                 </div>
-              {/* <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/> */}
+                {/* <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number..." className="ps-2 outline-none border text-sm"/> */}
               </motion.div>
             )}
           </AnimatePresence>
@@ -402,7 +402,7 @@ export default function EditForm({
             <div className="relative">
               <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" placeholder="Area (Sq/M)" />
               <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Area</span>
-            </div>       
+            </div>
           </div>
           <AnimatePresence>
             {formData.selectedCategory === "villa" && (
@@ -467,7 +467,7 @@ export default function EditForm({
             )}
           </AnimatePresence>
           <div>
-              <input type="text" value={formData.youtubeLinks} onChange={(e) => updateFormData('youtubeLinks', e.target.value.replace(' ', '').split(','))} placeholder="YoutubeLink1,YoutubeLink1,..." className="outline-none w-full p-2 rounded border text-sm"/>
+            <input type="text" value={formData.youtubeLinks} onChange={(e) => updateFormData('youtubeLinks', e.target.value.replace(' ', '').split(','))} placeholder="YoutubeLink1,YoutubeLink1,..." className="outline-none w-full p-2 rounded border text-sm" />
           </div>
           <div className="flex gap-1 items-center">
             <button
@@ -502,51 +502,51 @@ export default function EditForm({
             )}
             {language === "en" && (
               <div className="relative">
-              <input
-                value={formData.title.en}
-                onChange={(e) =>
-                  updateFormData("title", {
-                    ...formData.title,
-                    en: e.target.value,
-                  })
-                }
-                className="p-2 border text-sm rounded outline-none w-full mb-1"
-                type="text"
-                placeholder="Title"
-              />
-              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Title</span>
+                <input
+                  value={formData.title.en}
+                  onChange={(e) =>
+                    updateFormData("title", {
+                      ...formData.title,
+                      en: e.target.value,
+                    })
+                  }
+                  className="p-2 border text-sm rounded outline-none w-full mb-1"
+                  type="text"
+                  placeholder="Title"
+                />
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Title</span>
               </div>
             )}
             {language === "en" && (
               <div className="relative">
-              <textarea
-                value={formData.description.en}
-                onChange={(e) =>
-                  updateFormData("description", {
-                    ...formData.description,
-                    en: e.target.value,
-                  })
-                }
-                placeholder="Description"
-                className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
-              ></textarea>
-              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Description</span>
+                <textarea
+                  value={formData.description.en}
+                  onChange={(e) =>
+                    updateFormData("description", {
+                      ...formData.description,
+                      en: e.target.value,
+                    })
+                  }
+                  placeholder="Description"
+                  className="w-full h-10 lg:h-24 border outline-none rounded resize-none p-2 text-sm"
+                ></textarea>
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">Description</span>
               </div>
             )}
             {language === "en" && (
               <div className="relative">
-              <textarea
-                value={formData.about?.en}
-                onChange={(e) =>
-                  updateFormData("about", {
-                    ...formData.about,
-                    en: e.target.value,
-                  })
-                }
-                placeholder="About"
-                className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
-              ></textarea>
-              <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">About</span>
+                <textarea
+                  value={formData.about?.en}
+                  onChange={(e) =>
+                    updateFormData("about", {
+                      ...formData.about,
+                      en: e.target.value,
+                    })
+                  }
+                  placeholder="About"
+                  className="w-full h-10 lg:h-16 border outline-none rounded resize-none p-2 text-sm"
+                ></textarea>
+                <span className="absolute top-0 right-8 translate-y-[-50%] text-[10px] bg-white">About</span>
               </div>
             )}
             {language === "ar" && (

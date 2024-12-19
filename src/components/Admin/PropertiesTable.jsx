@@ -58,6 +58,8 @@ export default function PropertiesTable({ setModal, setEditModal }) {
     deletePropertyMutation.mutate({ collectionName, id })
   }
 
+  console.log('Sorting', propertiesData && propertiesData.sort((a, b) => a.price - b.price))
+
 
   return (
     <div className="w-full shadow-md sm:rounded-lg mx-auto my-2 p-2 min-h-[580px]">
@@ -155,7 +157,7 @@ export default function PropertiesTable({ setModal, setEditModal }) {
       <AnimatePresence mode="wait">
         {propertiesData && (
           <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-2 w-full">
-            {propertiesData.map((prop) => {
+            {propertiesData.sort((a, b) => a.id.charCodeAt(0) - b.id.charCodeAt(0)).map((prop) => {
               return (
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}

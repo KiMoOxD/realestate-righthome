@@ -74,13 +74,13 @@ export default function PropertyCard({ property }) {
         </div>
         <div className="py-4 px-5">
           <p
-            className={`text-xl ${lang === "ar" && "text-right"
+            className={`text-lg ${lang === "ar" && "text-right"
               } text-stone-800 font-semibold truncate`}
           >
             {lang === "en" ? property.title.en : property.title.ar}
           </p>
           {property.developer && property.developer !== 'N/A' && <p className="text-xs p-1 text-stone-50 w-fit absolute bottom-[43%] right-3 bg-stone-800/40 z-[1] rounded-md">
-            Developer: {property.developer}
+            {property.developer}
           </p>}
           <div
             className={`flex flex-wrap ${lang === "ar" && "flex-row-reverse"

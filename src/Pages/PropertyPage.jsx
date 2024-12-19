@@ -78,7 +78,7 @@ export default function PropertyPage() {
           {properties === "empty" ? (
             <p className="w-full text-center my-10">No Simillar Properties</p>
           ) : (
-            <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 w-full gap-3 mx-auto my-7">
+            <div className="px-4 max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full gap-3 mx-auto my-7">
               {" "}
               {properties.length > 0 ? (
                 properties.map((apartment) => (
@@ -86,7 +86,6 @@ export default function PropertyPage() {
                 ))
               ) : (
                 <>
-                  <SkeletonCard />
                   <SkeletonCard />
                   <SkeletonCard />
                   <SkeletonCard />

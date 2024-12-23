@@ -15,6 +15,9 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   let [showImages, setShowImages] = useState(false)
   let { setSelectedProp, logout } = useAllContext();
   let queryClient = useQueryClient();
+  let [totalSize, setTotalSize] = useState(0);
+
+      console.log(totalSize)
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ['propertiesTable'],
@@ -22,8 +25,18 @@ export default function PropertiesTable({ setModal, setEditModal }) {
   });
 
   useEffect(() => {
+    let total = 0;
     setPropertiesData(properties);
     setData(properties);
+
+    properties?.forEach((doc) => {
+      const docSize = JSON.stringify(doc).length; // Calculate size in bytes
+      total += docSize / (1024 * 1024)
+      
+    });
+
+    setTotalSize(total.toFixed(2))
+    
   }, [properties])
 
   function handleSearch(e) {
@@ -58,12 +71,15 @@ export default function PropertiesTable({ setModal, setEditModal }) {
     deletePropertyMutation.mutate({ collectionName, id })
   }
 
-  console.log('Sorting', propertiesData && propertiesData.sort((a, b) => a.price - b.price))
+  // console.log('Sorting', propertiesData && propertiesData.sort((a, b) => a.price - b.price))
 
 
   return (
     <div className="w-full shadow-md sm:rounded-lg mx-auto my-2 p-2 min-h-[580px]">
       {showImages && <ImageSlider imgs={images} modal={showImages} setModal={setShowImages} />}
+      <div className="flex justify-center">
+        <p>Database Size : {totalSize}MB/1GB</p>
+      </div>
       <div className="pb-4 flex items-center justify-between flex-wrap px-2">
         <label htmlFor="table-search" className="sr-only">
           Search

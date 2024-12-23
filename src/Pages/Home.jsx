@@ -45,7 +45,7 @@ export default function Home() {
         </p>
         <TypesList setCollectionType={setCollectionType} />
         
-          {properties === 'empty' ? <p className="min-h-[150px] flex items-center">{lang === 'en' ? 'No Properties here yet': 'لا يوجد عقارات منشورة هنا بعد'}</p> : <div className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-3">
+          {properties === 'empty' ? <p className="min-h-[150px] flex items-center">{lang === 'en' ? 'No Properties here yet': 'لا يوجد عقارات منشورة هنا بعد'}</p> : <div className="px-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full gap-3">
           {properties.length > 0 ? (
             properties.map((property) => (
               <PropertyCard key={property.id} property={property } />

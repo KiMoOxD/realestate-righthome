@@ -53,7 +53,7 @@ export default function Hero() {
   let [SearchData, setSearchData] = useState([]);
   let [status, setStatus] = useState();
   let [region, setRegion] = useState();
-  let [type, setType] = useState();
+  let [type, setType] = useState([]);
 
   useEffect(() => {
     async function getData() {
@@ -82,15 +82,18 @@ export default function Hero() {
     if (status) {
       results = results.filter(result => result.status === status.value)
     }
-    if (type) {
-      results = results.filter(result => result.category === type.value)
+    if (type.length > 0) {
+      // results = results.filter(result => result.category === type.value)
+      results = results.filter(result => type.some(tInstance => tInstance.value === result.category))
     }
-    if (!region && !type && !status) {
+    if (!region && type.length === 0 && !status) {
       results = []
     }
-
+    console.log('result :', results)
     setSearchResult(results.length > 0 ? results : "empty");
   }, [status, region, type, SearchData])
+
+  console.log('search :', SearchResult)
 
   return (
     <section
@@ -124,7 +127,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {SearchResult === "empty" && (region || type || status) && (
+          {SearchResult === "empty" && (region || type.length > 0 || status) && (
             <div className="absolute top-[105%] hide-scrollbar left-0 overflow-scroll shadow-lg overflow-x-hidden w-full max-h-[200px] md:max-h-[300px] rounded bg-white flex flex-col gap-1 p-1">
               No Results
             </div>
@@ -146,6 +149,7 @@ export default function Hero() {
               options={lang === 'en' ? propertyTypes: propertyTypesAr}
               placeholder={lang === 'en' ? "Property..." : "العقار..."}
               onChange={(option) => setType(option)}
+              isMulti
             />
             <Select
               options={lang === 'en' ? saleTypes : saleTypesAr}

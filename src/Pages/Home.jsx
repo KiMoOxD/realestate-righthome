@@ -13,6 +13,9 @@ import { IoArrowForward } from "react-icons/io5";
 import reviewImg from '../images/reviews.png'
 import sideImg from '../images/realestate.png'
 import pattern from '../images/magicpattern.png'
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 
 
 export default function Home() {
@@ -67,8 +70,8 @@ export default function Home() {
         </Link>
       </div>
       <div className="relative flex gap-2 flex-col items-center mx-auto md:px-8 2xl:px-0 mb-10">
-        <img src={pattern} alt=""  className="absolute w-full h-full opacity-70"/>
-        <img src={reviewImg} alt="Reviews"  className="relative md:rounded-lg w-full lg:w-[65%] mt-10 drop-shadow-md"/>
+        <LazyLoadImage src={pattern} alt=""  className="absolute w-full h-full opacity-70"/>
+        <LazyLoadImage src={reviewImg} alt="Reviews"  className="relative md:rounded-lg w-full lg:w-[65%] mt-10 drop-shadow-md"/>
         <div className="relative w-full flex gap-5 flex-col items-center justify-center my-10">
           <p className="text-2xl sm:text-3xl text-stone-800">
             {lang === 'en' ? 'Nice People Says About Us!' : '!آراء عملائنا عنا'}
@@ -84,8 +87,9 @@ export default function Home() {
       <div className="lg:px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:rounded-2xl lg:mx-4 2xl:mx-auto overflow-hidden max-w-screen-2xl mb-10">
           <div className="overflow-hidden max-h-[600px] flex justify-center items-center">
-            <img
-              className="w-[700px]"
+            <LazyLoadImage
+              effect="blur"
+              width={700}
               src={sideImg}
               alt=""
             />

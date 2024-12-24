@@ -8,6 +8,7 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import Select from "react-select";
 import { FaWhatsapp } from "react-icons/fa";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const SearchItem = lazy(() => import("./SearchItem.jsx"));
 
 const propertyTypes = [
@@ -98,8 +99,9 @@ export default function Hero() {
   return (
     <section
       className="relative flex items-center justify-center min-h-[80vh] bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${img})` }}
+      // style={{ backgroundImage: `url(${img})` }}
     >
+      <LazyLoadImage src={img} className="absolute w-full h-full object-cover" alt="background" />
       <div className="absolute inset-0 z-2 bg-gray-900/50 sm:from-cyan-900/95 sm:to-gray-900/25"></div>
       <div className="relative p-2 text-center text-white w-[780px]">
         <p

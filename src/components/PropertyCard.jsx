@@ -13,6 +13,10 @@ import { IoMdClose } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
 import { CgSpinner } from "react-icons/cg";
 import { formattedPriceEn, formattedPriceAR } from "../utils/functions";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
+
 
 const tourismRegions = [
   "Galala City",
@@ -65,11 +69,14 @@ export default function PropertyCard({ property }) {
             <TiCameraOutline className="text-xl text-stone-300" /> {property.images.length}
           </span>
           <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-[1] transition opacity-0 group-hover:opacity-75"></div>
-          {!isLoading && <img
-            className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] min-w-[430px]"
+          {!isLoading && <LazyLoadImage
+            className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
             src={property.preview ? property.images[property.preview] : property.images[0]}
             alt={property.title.en}
             loading="lazy"
+            effect="blur"
+            width={'100%'}
+            height={'100%'}
           />}
         </div>
         <div className="py-4 px-5">

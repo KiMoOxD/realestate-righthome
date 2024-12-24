@@ -9,6 +9,8 @@ import { HiOutlineHome } from "react-icons/hi2";
 import { MdManageSearch } from "react-icons/md";
 import { RiAdminLine } from "react-icons/ri";
 import logo from '../../images/RIGHT_HOME.png'
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 
 
@@ -17,7 +19,7 @@ export default function Header() {
   return (
     <div className={`bg-white sticky w-full top-0 z-40 shadow-md ${lang === 'ar' && 'arabic'}`}>
       <div className="flex px-4 rounded-lg max-w-screen-2xl h-14 mx-auto justify-between items-center">
-        <Link to={'/'}><img src={logo} alt="Logo" className="w-16 md:w-[70px]" /></Link>
+        <Link to={'/'}><LazyLoadImage src={logo} alt="Logo" className="w-16 md:w-[70px]" /></Link>
         <NavLinks />
         <div className="flex items-center h-full gap-2">
           <button

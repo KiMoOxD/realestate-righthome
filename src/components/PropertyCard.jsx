@@ -82,7 +82,7 @@ export default function PropertyCard({ property }) {
         <div className="py-4 px-5">
           <p
             className={`text-lg ${lang === "ar" && "text-right"
-              } text-stone-800 font-semibold truncate`}
+              } text-stone-800 font-semibold `}
           >
             {lang === "en" ? property.title.en : property.title.ar}
           </p>

@@ -47,7 +47,7 @@ export default function PropertyCard({ property }) {
     setIsLoading(false)
   }, [property.id])
   return (
-    <div className="relative rounded-md overflow-hidden bg-white shadow-md h-full group cursor-pointer hover:shadow-lg transition">
+    <div className="relative rounded-md overflow-hidden bg-white shadow-md h-fit group cursor-pointer hover:shadow-lg transition">
       <Link to={`/browse/${property.category}s/${property.id}`} onClick={() => setIsLoading(true)}>
         <div className="relative h-[220px] overflow-hidden">
           {isLoading && <CgSpinner className="absolute top-1/2 left-1/2 animate-spin2 text-5xl text-blue-700" />}
@@ -68,6 +68,9 @@ export default function PropertyCard({ property }) {
           <span className={`absolute flex items-center gap-1.5 bottom-2 left-3 py-1 bg-black/30 px-1.5 text-center rounded-lg z-10 text-xs text-white`}>
             <TiCameraOutline className="text-xl text-stone-300" /> {property.images.length}
           </span>
+          {property.developer && property.developer !== 'N/A' && <p className="text-xs p-1 text-stone-50 w-fit absolute bottom-2 right-3 bg-stone-800/40 z-[1] rounded-md">
+            {property.developer}
+          </p>}
           <div className="absolute top-0 left-0 h-full w-full bg-stone-800/40 z-[1] transition opacity-0 group-hover:opacity-75"></div>
           {!isLoading && <LazyLoadImage
             className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
@@ -82,13 +85,10 @@ export default function PropertyCard({ property }) {
         <div className="py-4 px-5">
           <p
             className={`text-lg ${lang === "ar" && "text-right"
-              } text-stone-800 font-semibold `}
+              } text-stone-800 font-semibold h-14 text-wrap overflow-hidden`}
           >
             {lang === "en" ? property.title.en : property.title.ar}
           </p>
-          {property.developer && property.developer !== 'N/A' && <p className="text-xs p-1 text-stone-50 w-fit absolute bottom-[43%] right-3 bg-stone-800/40 z-[1] rounded-md">
-            {property.developer}
-          </p>}
           <div
             className={`flex flex-wrap ${lang === "ar" && "flex-row-reverse"
               } gap-1 md:gap-2 items-center text-sm mt-2 text-stone-500`}

@@ -22,7 +22,7 @@ export default function SearchItem({ result }) {
         </div>
       ) : (
         <img
-          src={result.images[0]}
+          src={result.images[result.preview ? result.preview : 0]}
           alt=""
           className="size-10 lg:size-14 object-cover rounded"
         />

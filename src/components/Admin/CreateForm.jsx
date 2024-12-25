@@ -128,7 +128,6 @@ export default function CreateForm({
         })
       };
 
-      console.log(PropertyData)
       addPropertyMutation.mutate({ collectionName: `${formData.selectedCategory}s`, PropertyData });
       setLoading(false);
       setConfirmMsg({ show: true, status: true, content: 'Property Added Successfully.' })
@@ -291,10 +290,10 @@ export default function CreateForm({
               onChange={(option) => updateFormData('paymentType', option)}
             />
             <input
-              // value={formData.price}
+              value={formData.price}
               onChange={(e) => updateFormData('price', e.target.value)}
               className="p-2 border text-sm rounded outline-none col-span-2 md:col-span-1"
-              type="number"
+              type="text"
               min={0}
               placeholder="Price..."
             />

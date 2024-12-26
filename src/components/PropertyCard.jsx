@@ -139,7 +139,7 @@ export default function PropertyCard({ property }) {
               !isNaN(property.price) ? formattedPriceAR.format(property.price) : 'تواصل لمعرفة السعر'}
           </p>
           {property.paymentType === 'installment' && property.monthlyPrice && property.insYears ? <p className="text-xs">
-            {property.monthlyPrice} Monthly / {property.insYears} Years
+            {formattedPriceEn.format(property.monthlyPrice).replace("$", "")} Monthly / {property.insYears} Years
           </p> : null}
         </div>
 

@@ -23,6 +23,39 @@ import { CiImageOn } from "react-icons/ci";
 import { HiCheckCircle, HiExclamationCircle } from "react-icons/hi";
 
 
+// NEW: A self-contained component for inputs with floating labels
+const FloatingLabelInput = ({ label, value, onChange, type = 'text', as = 'input', ...props }) => {
+    const InputComponent = as;
+    return (
+        <div className="relative">
+            <InputComponent
+                id={label}
+                value={value}
+                onChange={onChange}
+                type={type}
+                className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" " // Important: placeholder must not be empty
+                {...props}
+            />
+            <label
+                htmlFor={label}
+                className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1"
+            >
+                {label}
+            </label>
+        </div>
+    );
+};
+
+// NEW: Helper for styling React-Select labels
+const floatingSelectLabel = (hasValue) => 
+    `absolute text-sm duration-300 transform z-10 origin-[0] bg-white px-2 start-1 pointer-events-none ${
+        hasValue 
+        ? 'text-blue-600 -translate-y-4 scale-75 top-2' 
+        : 'text-gray-500 scale-100 -translate-y-1/2 top-1/2'
+    }`;
+
+
 const initialFormData = {
   region: null,
   selectedImages: [],
@@ -85,6 +118,7 @@ export default function EditForm({
     [formData, setFormData] = useState(initialFormData),
     [notification, setNotification] = useState({ show: false, type: '', message: '' }),
     [loading, setLoading] = useState(false),
+    [isSaving, setIsSaving] = useState(false),
     { selectedProp } = useAllContext();
   const queryClient = useQueryClient();
 
@@ -108,15 +142,12 @@ export default function EditForm({
   const updatePropertyMutation = useMutation({
     mutationFn: ({ collectionName, docId, propertyData }) => updateDocument(collectionName, docId, propertyData),
     onSuccess: () => {
-        queryClient.invalidateQueries(['propertiesTable']);
     },
   });
 
-  // NEW: Mutation for publishing an archived property
   const publishPropertyMutation = useMutation({
     mutationFn: ({ archivedDocId, propertyData }) => publishDocument(archivedDocId, propertyData),
     onSuccess: () => {
-        // Invalidate both lists on success
         queryClient.invalidateQueries(['propertiesTable']);
         queryClient.invalidateQueries(['archivedProperties']);
     }
@@ -152,19 +183,18 @@ export default function EditForm({
       );
       
       if (isArchived) {
-        // PUBLISH logic for archived items
         await publishPropertyMutation.mutateAsync({
             archivedDocId: selectedProp.id,
             propertyData
         });
         showNotification('success', 'Property Published Successfully.');
       } else {
-        // UPDATE logic for active items
         await updatePropertyMutation.mutateAsync({
             collectionName: `${selectedProp.cName}s`,
             docId: selectedProp.id,
             propertyData
         });
+        queryClient.invalidateQueries(['propertiesTable']);
         showNotification('success', 'Property Updated Successfully.');
       }
 
@@ -181,6 +211,31 @@ export default function EditForm({
     }
   }
 
+  async function handleSaveOnly(e) {
+      e.preventDefault();
+      if(!validateForm(formData)) {
+          showNotification('error', "All fields marked with * must be filled out.");
+          return;
+      }
+      setIsSaving(true);
+      try {
+          const propertyData = buildPropertyData(formData);
+          await updatePropertyMutation.mutateAsync({
+              collectionName: 'archived',
+              docId: selectedProp.id,
+              propertyData
+          });
+          queryClient.invalidateQueries(['archivedProperties']);
+          showNotification('success', 'Archived property saved.');
+      } catch (error) {
+          console.error("Error saving archived property:", error);
+          showNotification('error', `An error occurred: ${error.message}`);
+      } finally {
+          setIsSaving(false);
+      }
+  }
+
+
   async function handleImageAdd(e) {
     const files = Array.from(e.target.files);
     const uploadedImageUrls = await handleUpload(files);
@@ -191,7 +246,6 @@ export default function EditForm({
   }
 
   return (
-    // CHANGE: Switched to `position: fixed` to cover the viewport and lock scrolling.
     <div className="fixed inset-0 z-20 flex items-center justify-center p-5">
         <AnimatePresence>
             {notification.show && (
@@ -204,7 +258,6 @@ export default function EditForm({
             className="absolute inset-0 bg-black/80"
         ></div>
 
-        {/* CHANGE: Increased max-width to 6xl for the three-column layout */}
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -215,7 +268,6 @@ export default function EditForm({
             </h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-h-[85vh] overflow-y-auto pr-2">
                 
-                {/* CHANGE: Form content is now in a 3-column grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
                     {/* First Column */}
@@ -225,16 +277,8 @@ export default function EditForm({
                            <div className="flex gap-2 flex-wrap">
                              {formData.selectedImages.map((img, idx) => (
                                <div key={img + idx} className="relative cursor-pointer border rounded-md hover:border-blue-600 transition">
-                                 <img
-                                   src={img}
-                                   alt=""
-                                   className="h-14 w-14 object-cover rounded-md"
-                                   onClick={() => { setSingleImage(img); setSingleModal(true); }}
-                                 />
-                                 <IoMdCloseCircleOutline
-                                   className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 text-red-600 text-lg bg-white rounded-full cursor-pointer"
-                                   onClick={() => updateFormData('selectedImages', formData.selectedImages.filter((item) => item !== img))}
-                                 />
+                                 <img src={img} alt="" className="h-14 w-14 object-cover rounded-md" onClick={() => { setSingleImage(img); setSingleModal(true); }} />
+                                 <IoMdCloseCircleOutline className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 text-red-600 text-lg bg-white rounded-full cursor-pointer" onClick={() => updateFormData('selectedImages', formData.selectedImages.filter((item) => item !== img))} />
                                  <CiImageOn onClick={() => updateFormData('preview', idx)} className={`absolute bottom-0.5 left-0.5 ${formData.preview === idx ? 'bg-blue-700 text-white' : 'text-blue-700 bg-white'} text-base rounded z-10`} />
                                </div>
                              ))}
@@ -245,39 +289,57 @@ export default function EditForm({
                            </div>
                          </div>
                         
-                        {/* Basic Info */}
+                        {/* WRAPPER: Basic Info */}
                          <div className="grid grid-cols-2 gap-4">
-                           <Select options={regionOptionsEn} placeholder="Region*" onChange={(option) => updateFormData("region", option)} value={formData.region} required />
-                           <Select options={PaymentOptions} placeholder="Payment*" onChange={(option) => updateFormData("paymentType", option)} value={formData.paymentType} required/>
-                           <input onChange={(e) => updateFormData('price', e.target.value)} value={formData.price} className="p-2 border rounded-md text-sm" type="text" placeholder="Price" />
-                           <input onChange={(e) => updateFormData('propertyCode', e.target.value)} value={formData.propertyCode} className="p-2 border rounded-md text-sm" type="text" placeholder="Property Code" />
+                            <div className="relative">
+                                <label className={floatingSelectLabel(formData.region)}>Region*</label>
+                                <Select options={regionOptionsEn} onChange={(option) => updateFormData("region", option)} value={formData.region} required />
+                            </div>
+                            <div className="relative">
+                                <label className={floatingSelectLabel(formData.paymentType)}>Payment*</label>
+                                <Select options={PaymentOptions} onChange={(option) => updateFormData("paymentType", option)} value={formData.paymentType} required/>
+                            </div>
+                            <FloatingLabelInput label="Price" value={formData.price} onChange={(e) => updateFormData('price', e.target.value)} />
+                            <FloatingLabelInput label="Property Code" value={formData.propertyCode} onChange={(e) => updateFormData('propertyCode', e.target.value)} />
                          </div>
 
-                        {/* Conditional Payment Fields */}
+                        {/* WRAPPER: Conditional Payment Fields */}
                          {formData.paymentType?.value === 'cash' ? (
                            <div className="grid grid-cols-2 gap-4">
-                             <Select options={statusOptions} placeholder="Status*" onChange={(option) => updateFormData("selectedStatus", option)} value={formData.selectedStatus} isDisabled={formData.paymentType?.value === "installment"} required={formData.paymentType?.value === 'cash'} />
-                             <Select options={rentOptions} placeholder="Rent Type..." onChange={(option) => updateFormData("rentType", option)} value={formData.rentType} isDisabled={!formData.selectedStatus || formData.selectedStatus?.value === "sale"} />
+                             <div className="relative">
+                                <label className={floatingSelectLabel(formData.selectedStatus)}>Status*</label>
+                                <Select options={statusOptions} onChange={(option) => updateFormData("selectedStatus", option)} value={formData.selectedStatus} isDisabled={formData.paymentType?.value === "installment"} required={formData.paymentType?.value === 'cash'} />
+                             </div>
+                             <div className="relative">
+                                <label className={floatingSelectLabel(formData.rentType)}>Rent Type</label>
+                                <Select options={rentOptions} onChange={(option) => updateFormData("rentType", option)} value={formData.rentType} isDisabled={!formData.selectedStatus || formData.selectedStatus?.value === "sale"} />
+                             </div>
                            </div>
                          ) : (
                            <div className="grid grid-cols-2 gap-4">
-                             <input onChange={(e) => updateFormData("downPayment", e.target.value)} className="p-2 border rounded-md text-sm" type="number" value={formData.downPayment} placeholder="Down Payment" />
-                             <input type="number" min={0} value={formData.insYears} onChange={(e) => updateFormData("insYears", e.target.value)} className="p-2 border rounded-md text-sm" placeholder="Installment Years" />
-                             <input type="number" min={0} value={formData.monthlyPrice} onChange={(e) => updateFormData("monthlyPrice", e.target.value)} className="p-2 border rounded-md text-sm" placeholder="Monthly Price" />
-                             <Select options={insTypeOptions} placeholder="Installment Type..." value={formData.insType} onChange={(option) => updateFormData('insType', option)} />
-                             <Select options={recieveDateOptions} placeholder="Handover Date..." value={formData.recieveDate} onChange={(option) => updateFormData('recieveDate', option)} />
+                             <FloatingLabelInput label="Down Payment" type="number" value={formData.downPayment} onChange={(e) => updateFormData("downPayment", e.target.value)} />
+                             <FloatingLabelInput label="Installment Years" type="number" min={0} value={formData.insYears} onChange={(e) => updateFormData("insYears", e.target.value)} />
+                             <FloatingLabelInput label="Monthly Price" type="number" min={0} value={formData.monthlyPrice} onChange={(e) => updateFormData("monthlyPrice", e.target.value)} />
+                             <div className="relative">
+                                <label className={floatingSelectLabel(formData.insType)}>Installment Type</label>
+                                <Select options={insTypeOptions} value={formData.insType} onChange={(option) => updateFormData('insType', option)} />
+                             </div>
+                             <div className="relative">
+                                <label className={floatingSelectLabel(formData.recieveDate)}>Handover Date</label>
+                                <Select options={recieveDateOptions} value={formData.recieveDate} onChange={(option) => updateFormData('recieveDate', option)} />
+                             </div>
                            </div>
                          )}
                     </div>
 
                     {/* Second Column */}
                     <div className="flex flex-col gap-4">
-                        {/* Category Display (Not editable, shown for context) */}
+                        {/* Category Display */}
                          <div className="p-3 border rounded-md bg-gray-100 text-sm text-gray-700 w-full">
                            Category: <span className="font-semibold">{formData.selectedCategory?.charAt(0).toUpperCase() + formData.selectedCategory?.slice(1)}</span>
                          </div>
 
-                        {/* Category Specific Fields */}
+                        {/* WRAPPER: Category Specific Fields */}
                          <AnimatePresence>
                            {formData.selectedCategory === 'villa' && (
                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid grid-cols-3 gap-2">
@@ -291,8 +353,11 @@ export default function EditForm({
                            )}
                            {formData.selectedCategory === 'apartment' && (
                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid grid-cols-2 gap-2">
-                               <Select options={apartmentTypes} placeholder="Type..." onChange={(option) => updateFormData("apartmentType", option)} value={formData.apartmentType} />
-                               <input type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} placeholder="Floor Number" className="ps-2 border rounded-md text-sm" />
+                               <div className="relative">
+                                <label className={floatingSelectLabel(formData.apartmentType)}>Type</label>
+                                <Select options={apartmentTypes} onChange={(option) => updateFormData("apartmentType", option)} value={formData.apartmentType} />
+                               </div>
+                               <FloatingLabelInput label="Floor Number" type="number" value={formData.floor} onChange={(e) => updateFormData('floor', e.target.value)} />
                              </motion.div>
                            )}
                            {formData.selectedCategory === 'retail' && (
@@ -308,24 +373,25 @@ export default function EditForm({
                          </AnimatePresence>
 
                         <div className="grid grid-cols-3 gap-2">
-                           <input value={formData.beds} onChange={(e) => updateFormData('beds', e.target.value)} type="number" placeholder="Beds" className="p-2 border rounded-md text-sm" />
-                           <input value={formData.baths} onChange={(e) => updateFormData('baths', e.target.value)} type="number" placeholder="Baths" className="p-2 border rounded-md text-sm" />
-                           <input value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} type="number" placeholder="Area (m²)" className="p-2 border rounded-md text-sm" />
+                            <FloatingLabelInput label="Beds" type="number" value={formData.beds} onChange={(e) => updateFormData('beds', e.target.value)} />
+                            <FloatingLabelInput label="Baths" type="number" value={formData.baths} onChange={(e) => updateFormData('baths', e.target.value)} />
+                            <FloatingLabelInput label="Area (m²)" type="number" value={formData.area} onChange={(e) => updateFormData('area', e.target.value)} />
                          </div>
-
-                        <input type="text" value={formData.developer} onChange={(e) => updateFormData("developer", e.target.value)} className="p-2 border rounded-md text-sm" placeholder="Developer" />
+                        
+                        <FloatingLabelInput label="Developer" value={formData.developer} onChange={(e) => updateFormData("developer", e.target.value)} />
                          
-                         <textarea
-                             value={formData.propertyLocation}
-                             onChange={(e) => updateFormData('propertyLocation', e.target.value)}
-                             placeholder="Property Location (Google Maps Link or <iframe>)"
-                             className="outline-none w-full p-2 rounded-md border text-sm h-24 resize-y"
-                         />
+                        <FloatingLabelInput
+                            label="Property Location (Google Maps Link or <iframe>)"
+                            as="textarea"
+                            value={formData.propertyLocation}
+                            onChange={(e) => updateFormData('propertyLocation', e.target.value)}
+                            className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer h-24 resize-y"
+                        />
                     </div>
 
-                    {/* Third Column */}
+                    {/* WRAPPER: Third Column */}
                     <div className="flex flex-col gap-4">
-                        <input type="text" value={formData.youtubeLinks} onChange={(e) => updateFormData('youtubeLinks', e.target.value.replace(/ /g, '').split(','))} placeholder="YouTube Links (comma-separated)" className="outline-none w-full p-2 rounded-md border text-sm" />
+                        <FloatingLabelInput label="YouTube Links (comma-separated)" value={formData.youtubeLinks} onChange={(e) => updateFormData('youtubeLinks', e.target.value.replace(/ /g, '').split(','))} />
                          
                         <div>
                            <div className="flex gap-2 items-center mb-2">
@@ -335,15 +401,15 @@ export default function EditForm({
                            <div className="flex flex-col gap-2">
                              {language === "ar" ? (
                                <>
-                                 <input value={formData.title?.ar} onChange={(e) => updateFormData("title", { ...formData.title, ar: e.target.value })} className="p-2 border rounded-md text-sm w-full" type="text" placeholder="العنوان" />
-                                 <textarea value={formData.description?.ar} onChange={(e) => updateFormData("description", { ...formData.description, ar: e.target.value })} placeholder="الـوصـف" className="w-full h-24 border rounded-md resize-y p-2 text-sm"></textarea>
-                                 <textarea value={formData.about?.ar} onChange={(e) => updateFormData("about", { ...formData.about, ar: e.target.value })} placeholder="تفاصيل" className="w-full h-24 border rounded-md resize-y p-2 text-sm"></textarea>
+                                 <FloatingLabelInput label="العنوان" value={formData.title?.ar} onChange={(e) => updateFormData("title", { ...formData.title, ar: e.target.value })} />
+                                 <FloatingLabelInput label="الـوصـف" as="textarea" value={formData.description?.ar} onChange={(e) => updateFormData("description", { ...formData.description, ar: e.target.value })} className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 h-24 resize-y"/>
+                                 <FloatingLabelInput label="تفاصيل" as="textarea" value={formData.about?.ar} onChange={(e) => updateFormData("about", { ...formData.about, ar: e.target.value })} className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 h-24 resize-y"/>
                                </>
                              ) : (
                                <>
-                                 <input value={formData.title?.en} onChange={(e) => updateFormData("title", { ...formData.title, en: e.target.value })} className="p-2 border rounded-md text-sm w-full" type="text" placeholder="Title" />
-                                 <textarea value={formData.description?.en} onChange={(e) => updateFormData("description", { ...formData.description, en: e.target.value })} placeholder="Description" className="w-full h-24 border rounded-md resize-y p-2 text-sm"></textarea>
-                                 <textarea value={formData.about?.en} onChange={(e) => updateFormData("about", { ...formData.about, en: e.target.value })} placeholder="About" className="w-full h-24 border rounded-md resize-y p-2 text-sm"></textarea>
+                                 <FloatingLabelInput label="Title" value={formData.title?.en} onChange={(e) => updateFormData("title", { ...formData.title, en: e.target.value })} />
+                                 <FloatingLabelInput label="Description" as="textarea" value={formData.description?.en} onChange={(e) => updateFormData("description", { ...formData.description, en: e.target.value })} className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 h-24 resize-y"/>
+                                 <FloatingLabelInput label="About" as="textarea" value={formData.about?.en} onChange={(e) => updateFormData("about", { ...formData.about, en: e.target.value })} className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 h-24 resize-y"/>
                                </>
                              )}
                            </div>
@@ -351,12 +417,23 @@ export default function EditForm({
                     </div>
                 </div>
 
-                {/* Action Buttons with conditional text */}
+                {/* Action Buttons are unchanged */}
                 <div className="flex justify-end gap-4 mt-4">
                     <button onClick={CloseEditModal} type="button" className="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300">Cancel</button>
-                    <button type="submit" className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 w-36 disabled:bg-blue-400" disabled={loading}>
-                        {loading ? <CgSpinner className="animate-spin text-2xl mx-auto" /> : (isArchived ? "Save & Publish" : "Save Changes")}
-                    </button>
+                    {isArchived ? (
+                        <>
+                            <button onClick={handleSaveOnly} type="button" className="bg-gray-500 text-white py-2 px-6 rounded-md hover:bg-gray-700 w-36 disabled:bg-gray-400" disabled={loading || isSaving} >
+                                {isSaving ? <CgSpinner className="animate-spin text-2xl mx-auto" /> : "Save Only"}
+                            </button>
+                            <button type="submit" className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 w-36 disabled:bg-blue-400" disabled={loading || isSaving}>
+                                {loading ? <CgSpinner className="animate-spin text-2xl mx-auto" /> : "Save & Publish"}
+                            </button>
+                        </>
+                    ) : (
+                        <button type="submit" className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 w-36 disabled:bg-blue-400" disabled={loading}>
+                            {loading ? <CgSpinner className="animate-spin text-2xl mx-auto" /> : "Save Changes"}
+                        </button>
+                    )}
                 </div>
             </form>
         </motion.div>

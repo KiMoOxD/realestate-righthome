@@ -69,7 +69,9 @@ export default function CreateForm({
     let [language, setLanguage] = useState("en"),
         [formData, setFormData] = useState(initialFormData),
         [notification, setNotification] = useState({ show: false, type: '', message: '' }),
-        [loading, setLoading] = useState(false);
+        [loading, setLoading] = useState(false),
+        // NEW: Loading state for the archive action
+        [isArchiving, setIsArchiving] = useState(false);
     let queryClient = useQueryClient();
 
     // This useEffect properly locks and unlocks body scrolling.
@@ -89,6 +91,14 @@ export default function CreateForm({
             queryClient.invalidateQueries(['propertiesTable']);
         },
     });
+    
+    // NEW: Mutation for adding to the 'archived' collection
+    const archivePropertyMutation = useMutation({
+        mutationFn: ({ PropertyData }) => addToCollection('archived', PropertyData),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['archivedProperties']);
+        },
+    });
 
     const updateFormData = (field, value) => {
         setFormData(prevState => ({
@@ -104,6 +114,46 @@ export default function CreateForm({
         }, 2500);
     };
 
+    // NEW: Helper function to build the data payload, using your existing logic
+    const buildPropertyPayload = async (currentFormData) => {
+        const uploadedImageUrls = await handleUpload(currentFormData.selectedImages);
+        return {
+            propertyCode: currentFormData.propertyCode ? currentFormData.propertyCode : 'N/A',
+            area: currentFormData.area ? Number(currentFormData.area) : 0,
+            baths: currentFormData.bathrooms ? Number(currentFormData.bathrooms) : 0,
+            beds: currentFormData.bedrooms ? Number(currentFormData.bedrooms) : 0,
+            price: currentFormData.price ? Number(currentFormData.price) : 0,
+            category: currentFormData.selectedCategory,
+            status: currentFormData.paymentType.value === 'cash' ? currentFormData.selectedStatus.value : 'sale',
+            paymentType: currentFormData.paymentType.value,
+            propertyLocation: currentFormData.propertyLocation ? currentFormData.propertyLocation : 'N/A',
+            about: {
+                ar: currentFormData.about.ar ? currentFormData.about.ar : 'لا يوجد تفاصيل',
+                en: currentFormData.about.en ? currentFormData.about.en : 'There is no About',
+            },
+            description: {
+                ar: currentFormData.description.ar ? currentFormData.description.ar : 'لا يوجد وصف',
+                en: currentFormData.description.en ? currentFormData.description.en : 'There is no description',
+            },
+            region: currentFormData.region.value,
+            images: uploadedImageUrls.length ? uploadedImageUrls : [`${defImg}`],
+            title: {
+                ar: currentFormData.title.ar ? currentFormData.title.ar : `لا يوجد عنوان`,
+                en: currentFormData.title.en ? currentFormData.title.en : 'There is no Title',
+            },
+            developer: currentFormData.developer ? currentFormData.developer : 'N/A',
+            youtubeLinks: currentFormData.youtubeLinks,
+            ...(currentFormData.paymentType.value === "installment" && { insYears: currentFormData.insYears ? Number(currentFormData.insYears) : 0, downPayment: currentFormData.downPayment ? Number(currentFormData.downPayment) : 0, insType: currentFormData.insType ? currentFormData.insType.value : 'N/A', recieveDate: currentFormData.recieveDate ? currentFormData.recieveDate.value : 'N/A', monthlyPrice: currentFormData.monthlyPrice ? Number(currentFormData.monthlyPrice) : 0 }),
+            ...(currentFormData.selectedCategory === "villa" && { villaType: currentFormData.villaType ? currentFormData.villaType : 'N/A' }),
+            ...(currentFormData.selectedCategory === "retail" && { retailType: currentFormData.retailType ? currentFormData.retailType : 'N/A' }),
+            ...(currentFormData.selectedStatus.value === "rent" && { rentType: currentFormData.rentType ? currentFormData.rentType.value : 'N/A' }),
+            ...(currentFormData.selectedCategory === "apartment" && {
+                floor: currentFormData.floor ? currentFormData.floor : 'N/A',
+                apartmentType: currentFormData.apartmentType ? currentFormData.apartmentType.value : 'N/A'
+            })
+        };
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
         if (!formData.selectedCategory || (formData.paymentType.value === 'cash' && !formData.selectedStatus) || !formData.paymentType || !formData.region) {
@@ -114,44 +164,7 @@ export default function CreateForm({
         setLoading(true);
 
         try {
-            const uploadedImageUrls = await handleUpload(formData.selectedImages);
-
-            let PropertyData = {
-                propertyCode: formData.propertyCode ? formData.propertyCode : 'N/A',
-                area: formData.area ? Number(formData.area) : 0,
-                baths: formData.bathrooms ? Number(formData.bathrooms) : 0,
-                beds: formData.bedrooms ? Number(formData.bedrooms) : 0,
-                price: formData.price ? Number(formData.price) : 0,
-                category: formData.selectedCategory,
-                status: formData.paymentType.value === 'cash' ? formData.selectedStatus.value : 'sale',
-                paymentType: formData.paymentType.value,
-                propertyLocation: formData.propertyLocation ? formData.propertyLocation : 'N/A',
-                about: {
-                    ar: formData.about.ar ? formData.about.ar : 'لا يوجد تفاصيل',
-                    en: formData.about.en ? formData.about.en : 'There is no About',
-                },
-                description: {
-                    ar: formData.description.ar ? formData.description.ar : 'لا يوجد وصف',
-                    en: formData.description.en ? formData.description.en : 'There is no description',
-                },
-                region: formData.region.value,
-                images: uploadedImageUrls.length ? uploadedImageUrls : [`${defImg}`],
-                title: {
-                    ar: formData.title.ar ? formData.title.ar : `لا يوجد عنوان`,
-                    en: formData.title.en ? formData.title.en : 'There is no Title',
-                },
-                developer: formData.developer ? formData.developer : 'N/A',
-                youtubeLinks: formData.youtubeLinks,
-                ...(formData.paymentType.value === "installment" && { insYears: formData.insYears ? Number(formData.insYears) : 0, downPayment: formData.downPayment ? Number(formData.downPayment) : 0, insType: formData.insType ? formData.insType.value : 'N/A', recieveDate: formData.recieveDate ? formData.recieveDate.value : 'N/A', monthlyPrice: formData.monthlyPrice ? Number(formData.monthlyPrice) : 0 }),
-                ...(formData.selectedCategory === "villa" && { villaType: formData.villaType ? formData.villaType : 'N/A' }),
-                ...(formData.selectedCategory === "retail" && { retailType: formData.retailType ? formData.retailType : 'N/A' }),
-                ...(formData.selectedStatus.value === "rent" && { rentType: formData.rentType ? formData.rentType.value : 'N/A' }),
-                ...(formData.selectedCategory === "apartment" && {
-                    floor: formData.floor ? formData.floor : 'N/A',
-                    apartmentType: formData.apartmentType ? formData.apartmentType.value : 'N/A'
-                })
-            };
-
+            const PropertyData = await buildPropertyPayload(formData);
             await addPropertyMutation.mutateAsync({ collectionName: `${formData.selectedCategory}s`, PropertyData });
             
             setLoading(false);
@@ -167,6 +180,33 @@ export default function CreateForm({
             showNotification('error', 'An error occurred during submission.');
         }
     }
+    
+    // NEW: Handler function for the archive button
+    async function handleArchive(e) {
+        e.preventDefault();
+        if (!formData.selectedCategory || (formData.paymentType.value === 'cash' && !formData.selectedStatus) || !formData.paymentType || !formData.region) {
+            showNotification('error', 'All fields marked with * must be filled out.');
+            return;
+        }
+
+        setIsArchiving(true);
+        try {
+            const PropertyData = await buildPropertyPayload(formData);
+            await archivePropertyMutation.mutateAsync({ PropertyData });
+
+            setIsArchiving(false);
+            showNotification('success', 'Property Archived Successfully.');
+
+            setTimeout(() => {
+                CloseModal();
+            }, 2000);
+        } catch (error) {
+            console.error("Error during archiving:", error);
+            setIsArchiving(false);
+            showNotification('error', 'An error occurred during archiving.');
+        }
+    }
+
 
     async function handleImageChange(e) {
         // ... (handleImageChange logic remains the same)
@@ -191,6 +231,7 @@ export default function CreateForm({
                 className="relative w-full max-w-6xl p-6 bg-white rounded-lg shadow-xl"
             >
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-h-[85vh] overflow-y-auto pr-2">
+                    {/* The entire form body remains unchanged */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* First Column */}
                         <div className="flex flex-col gap-4">
@@ -344,10 +385,25 @@ export default function CreateForm({
                             </div>
                         </div>
                     </div>
-
+                    {/* UPDATED: Buttons area with the new Archive button */}
                     <div className="flex justify-end gap-4 mt-4">
                         <button onClick={CloseModal} type="button" className="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300">Cancel</button>
-                        <button type="submit" className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 w-28">
+                        
+                        {/* NEW: Archive button */}
+                        <button 
+                            onClick={handleArchive}
+                            type="button" 
+                            className="bg-yellow-500 text-white py-2 px-6 rounded-md hover:bg-yellow-600 w-28 disabled:bg-yellow-300"
+                            disabled={loading || isArchiving}
+                        >
+                            {isArchiving ? <CgSpinner className="animate-spin text-2xl mx-auto" /> : "Archive"}
+                        </button>
+                        
+                        <button 
+                            type="submit" 
+                            className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 w-28 disabled:bg-blue-400"
+                            disabled={loading || isArchiving}
+                        >
                             {loading ? <CgSpinner className="animate-spin text-2xl mx-auto" /> : "Create"}
                         </button>
                     </div>

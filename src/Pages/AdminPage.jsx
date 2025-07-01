@@ -4,7 +4,8 @@ import { HiOutlineCheckCircle, HiExclamationCircle } from "react-icons/hi";
 import { FiMail, FiLock, FiLoader } from "react-icons/fi";
 
 import PropertiesTable from "../components/Admin/PropertiesTable";
-import ArchivedTable from "../components/Admin/ArchivedTable"; // New component for archived items
+import ArchivedTable from "../components/Admin/ArchivedTable";
+import UsersTable from "../components/Admin/UsersTable"; // Import the new UsersTable
 import CreateForm from "../components/Admin/CreateForm";
 import EditForm from "../components/Admin/EditForm";
 import SingleImageModal from "../components/Admin/SingleImageModal";
@@ -80,7 +81,7 @@ export default function AdminPage() {
   const emailRef = useRef();
   const passRef = useRef();
 
-  // NEW: State to manage the current view ('published' or 'archived')
+  // State to manage the current view ('published', 'archived', or 'users')
   const [view, setView] = useState('published');
 
   useEffect(() => {
@@ -124,7 +125,6 @@ export default function AdminPage() {
   }
 
   async function handleResetPass() {
-    // (Function unchanged)
     const email = emailRef.current.value;
     if (!email) {
       setLoginError('Please enter your email address to reset the password.');
@@ -162,7 +162,7 @@ export default function AdminPage() {
         <motion.div >
           {isAdmin ? (
             <div className="min-h-screen">
-               {/* NEW: View switching UI */}
+               {/* View switching UI */}
               <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 lg:px-8 py-3">
                 <div className="flex items-center space-x-2 sm:space-x-4">
                   <button
@@ -185,10 +185,19 @@ export default function AdminPage() {
                   >
                     Archived
                   </button>
+                  {/* New button for Users view */}
+                  <button
+                    onClick={() => setView('users')}
+                    className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                      view === 'users' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    Users
+                  </button>
                 </div>
               </div>
 
-              {/* NEW: Conditional rendering of tables */}
+              {/* Conditional rendering of tables */}
               <AnimatePresence mode="wait">
                 <motion.div
                     key={view}
@@ -197,15 +206,12 @@ export default function AdminPage() {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2 }}
                 >
-                    {view === 'published' ? (
-                        <PropertiesTable setModal={setModal} setEditModal={setEditModal} />
-                    ) : (
-                        <ArchivedTable setEditModal={setEditModal} />
-                    )}
+                    {view === 'published' ? <PropertiesTable setModal={setModal} setEditModal={setEditModal} />
+                    : view === 'archived' ? <ArchivedTable setEditModal={setEditModal} />
+                    : <UsersTable />}
                 </motion.div>
               </AnimatePresence>
 
-              {/* Modals are now passed an `isArchived` prop where needed */}
               {modal && (
                 <CreateForm
                   CloseModal={CloseModal}
@@ -233,7 +239,6 @@ export default function AdminPage() {
             </div>
           ) : (
             <div className="min-h-screen grid md:grid-cols-2">
-              {/* Left Branding Side (unchanged) */}
               <div className="relative hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 overflow-hidden">
                   <FloatingShape className="w-64 h-64 top-20 left-10" />
                   <FloatingShape className="w-48 h-48 bottom-10 right-20" transition={{ duration: 12 }} />
@@ -245,7 +250,6 @@ export default function AdminPage() {
                   </div>
               </div>
 
-              {/* Right Form Side (unchanged) */}
               <div className="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-900 p-8">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}

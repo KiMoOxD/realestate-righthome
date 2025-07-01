@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useAllContext } from "../../context/AllContext";
+import { useAllContext } from "../../context/AllContext"; // <-- Import context for language
 import { FaWhatsapp, FaFacebookF, FaInstagram } from "react-icons/fa";
 import { IoCallOutline, IoMailOutline, IoPersonOutline, IoChatboxEllipsesOutline } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
-import { addToCollection } from "../../utils/data"; // Import the Firestore function
+import emailjs from '@emailjs/browser';
 
 // --- Centralized Translations Object ---
 const translations = {
@@ -22,6 +22,7 @@ const translations = {
         revealPhoneBtn: "Reveal Phone Number",
         formSuccess: "Message sent successfully!",
         formError: "Failed to send message. Please try again.",
+        formRateLimit: (minutes) => `You can only submit one form per hour. Please try again in ${minutes} minutes.`,
         whatsAppMessage: (property, path) => `
 Hello,
 I'm interested in this property:
@@ -45,6 +46,7 @@ Could you please provide more information?
         revealPhoneBtn: "إظهار رقم الهاتف",
         formSuccess: "تم إرسال الرسالة بنجاح!",
         formError: "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.",
+        formRateLimit: (minutes) => `يمكنك إرسال نموذج واحد فقط كل ساعة. يرجى المحاولة مرة أخرى خلال ${minutes} دقيقة.`,
         whatsAppMessage: (property, path) => `
 مرحباً،
 أنا مهتم بهذا العقار:
@@ -67,6 +69,7 @@ const FormInput = ({ icon, type, placeholder, name, required = false }) => (
             name={name}
             placeholder={placeholder}
             required={required}
+            // Use ps (padding-start) and pe (padding-end) for automatic RTL/LTR support
             className="w-full bg-stone-100 border-2 border-transparent focus:border-sky-500 focus:bg-white transition-colors rounded-lg py-3 ps-10 pe-4 text-stone-800 placeholder:text-stone-400 focus:outline-none rtl:text-right"
             aria-label={name}
         />
@@ -75,8 +78,8 @@ const FormInput = ({ icon, type, placeholder, name, required = false }) => (
 
 // --- MAIN CALLINFO COMPONENT ---
 export default function CallInfo({ property }) {
-    const { lang } = useAllContext();
-    const t = translations[lang];
+    const { lang } = useAllContext(); // <-- Get language from context
+    const t = translations[lang]; // <-- Select translation object
 
     const [showNumber, setShowNumber] = useState(false);
     const pathName = useLocation();
@@ -92,17 +95,28 @@ export default function CallInfo({ property }) {
         setFormLoadTime(Date.now());
     }, []);
 
-    const phoneNumber = "+201019363939";
+    const phoneNumber = "+201019363939"; // This can also be in a config file
     const whatsappMessage = t.whatsAppMessage(property, pathName.pathname);
 
-    const handleSubmit = async (e) => {
+    const sendEmail = (e) => {
         e.preventDefault();
 
-        // Bot protection
+        const lastSubmissionTimestamp = localStorage.getItem('lastSubmissionTimestamp');
+        const oneHourInMs = 60 * 60 * 1000;
+
+        if (lastSubmissionTimestamp && (Date.now() - parseInt(lastSubmissionTimestamp, 10)) < oneHourInMs) {
+            const timeSince = Date.now() - parseInt(lastSubmissionTimestamp, 10);
+            const remainingTime = Math.ceil((oneHourInMs - timeSince) / (60 * 1000));
+            setSubmitMessage(t.formRateLimit(remainingTime));
+            setSubmitError(true);
+            return;
+        }
+        
         if (form.current.honeypot.value) {
             console.log("Bot detected (honeypot).");
             return;
         }
+
         if ((Date.now() - formLoadTime) < 3000) {
             console.log("Bot detected (too fast).");
             return;
@@ -111,50 +125,52 @@ export default function CallInfo({ property }) {
         setIsSubmitting(true);
         setSubmitMessage('');
         setSubmitError(false);
-        
-        try {
-            const formData = new FormData(form.current);
-            const userData = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                message: formData.get('message'),
-                submittedAt: new Date(),
-                property: {
-                    type: property.category,
-                    location_en: property.region.en,
-                    location_ar: property.region.ar,
-                    link: `https://www.righthome.homes${pathName.pathname}`
-                }
-            };
 
-            await addToCollection('users', userData);
+        // It's safer to use environment variables for these keys
+        const serviceID = process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_hfnfrtm';
+        const templateID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_bfhencr';
+        const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'pYsKCeeLOmSQ8vSHE';
 
-            setSubmitMessage(t.formSuccess);
-            setSubmitError(false);
-            form.current.reset();
-            setFormLoadTime(Date.now());
-            localStorage.setItem('lastSubmissionTimestamp', Date.now().toString());
+        const templateParams = {
+            property_type: property.category,
+            // Sending both languages can be helpful for a multilingual team
+            property_location_en: property.region.en,
+            property_location_ar: property.region.ar,
+            property_link: `https://www.righthome.homes${pathName.pathname}`
+        };
 
-        } catch (error) {
-            console.error('SUBMISSION FAILED:', error);
-            setSubmitMessage(t.formError);
-            setSubmitError(true);
-        } finally {
-            setIsSubmitting(false);
-        }
+        emailjs.sendForm(serviceID, templateID, form.current, { publicKey, params: templateParams })
+            .then(() => {
+                setSubmitMessage(t.formSuccess);
+                setSubmitError(false);
+                form.current.reset();
+                setFormLoadTime(Date.now());
+                localStorage.setItem('lastSubmissionTimestamp', Date.now().toString());
+            }, (error) => {
+                console.error('EMAILJS FAILED...', error.text);
+                setSubmitMessage(t.formError);
+                setSubmitError(true);
+            })
+            .finally(() => {
+                setIsSubmitting(false);
+            });
     };
 
     return (
         <div className="w-full flex flex-col gap-5 bg-white border border-stone-200 shadow-xl rounded-2xl p-6">
+            
+            {/* --- Contact Form --- */}
             <div className="rtl:text-right">
                 <h3 className="text-xl font-bold text-stone-800 tracking-tight">{t.title}</h3>
                 <p className="text-sm text-stone-500 mt-1">{t.subtitle}</p>
-                <form ref={form} onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+                
+                <form ref={form} onSubmit={sendEmail} className="mt-6 flex flex-col gap-4">
                     <input type="text" name="honeypot" style={{ display: 'none' }} />
+
                     <FormInput icon={<IoPersonOutline/>} type="text" name="name" placeholder={t.namePlaceholder} required />
                     <FormInput icon={<IoMailOutline/>} type="email" name="email" placeholder={t.emailPlaceholder} required />
                     <FormInput icon={<IoCallOutline/>} type="tel" name="phone" placeholder={t.phonePlaceholder} required />
+                    
                     <div className="relative w-full">
                         <div className="absolute top-4 text-stone-400 ltr:left-3 rtl:right-3">
                             <IoChatboxEllipsesOutline/>
@@ -168,6 +184,7 @@ export default function CallInfo({ property }) {
                             aria-label="message"
                         ></textarea>
                     </div>
+
                     <button type="submit" disabled={isSubmitting} className="w-full bg-sky-600 text-white font-semibold py-3 rounded-lg hover:bg-sky-700 transition-all duration-300 shadow-lg hover:shadow-sky-300/50 transform hover:-translate-y-0.5 disabled:bg-stone-400 disabled:shadow-none disabled:transform-none">
                         {isSubmitting ? t.submittingBtn : t.submitBtn}
                     </button>
@@ -178,11 +195,14 @@ export default function CallInfo({ property }) {
                     )}
                 </form>
             </div>
+
             <div className="flex items-center gap-3">
                 <div className="flex-grow h-px bg-stone-200"></div>
                 <span className="text-xs font-semibold text-stone-400">{t.or}</span>
                 <div className="flex-grow h-px bg-stone-200"></div>
             </div>
+            
+            {/* --- Direct Contact Buttons --- */}
             <div className="flex flex-col gap-3">
                 <a
                     href={`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(whatsappMessage)}`}
@@ -193,6 +213,7 @@ export default function CallInfo({ property }) {
                     <FaWhatsapp className="text-2xl text-white" />
                     <p className="font-semibold text-white">{t.whatsAppBtn}</p>
                 </a>
+
                 <button
                     className="flex justify-center items-center gap-3 bg-stone-800 hover:bg-stone-900 w-full rounded-xl py-3 transition-all duration-300 shadow-lg transform hover:scale-105"
                     onClick={() => setShowNumber((prev) => !prev)}
@@ -220,6 +241,8 @@ export default function CallInfo({ property }) {
                     </AnimatePresence>
                 </button>
             </div>
+
+            {/* --- Social Media Links (No RTL/LTR changes needed) --- */}
             <div className="mt-4 w-full flex justify-center gap-6 text-stone-400">
                 <a href="https://www.facebook.com/profile.php?id=100064228025102" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110 hover:text-sky-600">
                     <FaFacebookF className="text-2xl" />

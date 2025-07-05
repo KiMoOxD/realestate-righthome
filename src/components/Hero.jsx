@@ -1,6 +1,8 @@
 import { useAllContext } from "../context/AllContext";
 import React, { lazy, useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+// --- MODIFIED: Import Link for navigation and Sparkles icon ---
+import { Link, useNavigate } from "react-router-dom";
+import { Sparkles } from 'lucide-react'; 
 import img from "../images/landing.webp";
 import { getAllCollectionsData } from "../utils/data.js";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,7 +35,7 @@ const regionOptionsEn = [
   { label: "Sokhna", value: "sokhna" }, { label: "North Coast", value: "NC" },
 ];
 
-// --- Custom Styles for React-Select to create the glassmorphism effect ---
+// --- Custom Styles for React-Select ---
 const customSelectStyles = {
   control: (provided) => ({
     ...provided,
@@ -46,48 +48,28 @@ const customSelectStyles = {
       borderColor: 'rgba(255, 255, 255, 0.4)',
     },
   }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: 'rgba(255, 255, 255, 0.7)',
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: 'white',
-  }),
-  multiValue: (provided) => ({
-    ...provided,
-    backgroundColor: 'rgba(59, 130, 246, 0.5)',
-  }),
-  multiValueLabel: (provided) => ({
-    ...provided,
-    color: 'white',
-  }),
+  placeholder: (provided) => ({ ...provided, color: 'rgba(255, 255, 255, 0.7)' }),
+  singleValue: (provided) => ({ ...provided, color: 'white' }),
+  multiValue: (provided) => ({ ...provided, backgroundColor: 'rgba(59, 130, 246, 0.5)' }),
+  multiValueLabel: (provided) => ({ ...provided, color: 'white' }),
   multiValueRemove: (provided) => ({
     ...provided,
     color: 'rgba(255, 255, 255, 0.7)',
-    ':hover': {
-      backgroundColor: 'rgba(59, 130, 246, 0.7)',
-      color: 'white',
-    },
+    ':hover': { backgroundColor: 'rgba(59, 130, 246, 0.7)', color: 'white' },
   }),
-  input: (provided) => ({
-    ...provided,
-    color: 'white',
-  }),
+  input: (provided) => ({ ...provided, color: 'white' }),
   menu: (provided) => ({
     ...provided,
     backgroundColor: 'rgba(31, 41, 55, 0.9)',
     backdropFilter: 'blur(10px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '0.5rem',
-    zIndex: 30, // Increased z-index for menu
+    zIndex: 30,
   }),
   option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected ? 'rgba(59, 130, 246, 0.5)' : 'transparent',
-    '&:hover': {
-      backgroundColor: 'rgba(59, 130, 246, 0.3)',
-    },
+    '&:hover': { backgroundColor: 'rgba(59, 130, 246, 0.3)' },
   }),
 };
 
@@ -113,24 +95,19 @@ export default function Hero() {
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-
     const params = new URLSearchParams();
-
     if (status) {
       params.set('status', status.value);
     } else {
       params.set('status', 'sale');
     }
-
     if (type.length > 0) {
       type.forEach(t => params.append('type', t.value));
     }
-
     if (region) {
       const fullRegions = regionMap[region.value] || [];
       fullRegions.forEach(r => params.append('region', r));
     }
-    
     navigate(`/browse?${params.toString()}`);
   };
 
@@ -147,7 +124,6 @@ export default function Hero() {
 
   useEffect(() => {
     let results = searchData;
-    
     if (region) {
       const validRegions = regionMap[region.value] || [];
       if (validRegions.length > 0) {
@@ -241,8 +217,27 @@ export default function Hero() {
           </AnimatePresence>
         </motion.form>
 
+        {/* --- ADDED: AI Assistant Button --- */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-8 text-center"
+        >
+          <p className="text-sm text-stone-300 mb-3">
+            {lang === 'en' ? 'Or let our AI concierge find it for you' : 'أو دع مساعدنا الذكي يجدها لك'}
+          </p>
+          <Link
+            to="/chat"
+            className="inline-flex items-center gap-3 py-3 px-6 font-semibold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
+          >
+            <Sparkles className="w-5 h-5 text-cyan-300" />
+            <span>{lang === 'en' ? 'Ask our AI Assistant' : 'اسأل مساعدنا الذكي'}</span>
+          </Link>
+        </motion.div>
+
         <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8 }} // Adjusted delay
             className="mt-8 flex gap-3 flex-col justify-center items-center"
         >
           <p className="text-sm text-stone-300">{lang === 'en' ? 'Follow us!' : 'تابعنا!'}</p>

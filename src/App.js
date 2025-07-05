@@ -10,6 +10,7 @@ import LoadingScreen from "./components/LoadingScreen";
 const LazyAdmin = React.lazy(() => import('./Pages/AdminPage'))
 const LazyPropertyPage = React.lazy(() => import('./Pages/PropertyPage'))
 const LazyBrowsePage = React.lazy(() => import('./Pages/BrowsePage'))
+const LazyChatPage = React.lazy(() => import('./Pages/ChatPage'))
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
             <LazyAdmin />
           </React.Suspense>
         ) 
+      },
+      { 
+        path: "/chat", 
+        element: (
+          <React.Suspense fallback={<LoadingScreen />}>
+            <LazyChatPage />
+          </React.Suspense>
+        )
       },
     ],
   },

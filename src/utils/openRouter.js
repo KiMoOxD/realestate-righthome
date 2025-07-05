@@ -77,7 +77,7 @@ ${historyString}
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer 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`, // Your key here
+        "Authorization": `Bearer ${process.env.REACT_APP_OPENROUTER_API}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

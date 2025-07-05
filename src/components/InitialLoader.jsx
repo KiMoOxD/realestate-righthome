@@ -1,9 +1,18 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 
 export default function InitialLoader() {
+  // State to determine if the loader should be shown based on the session
+  const [isSessionVisited] = useState(() => {
+    // Check sessionStorage on initial render. Guard against SSR environments.
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('hasLoaderShown') === 'true';
+    }
+    return false;
+  });
+
   // State hooks to control the splash screen's lifecycle (fade-out and unmount)
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [isUnmounted, setIsUnmounted] = useState(false);
+  const [isUnmounted, setIsUnmounted] = useState(isSessionVisited); // Immediately unmount if session is visited
   
   // A ref to the <g> element that contains all the SVG paths to be animated
   const svgContainerRef = useRef(null);
@@ -11,43 +20,51 @@ export default function InitialLoader() {
   // This hook dynamically prepares each path for the drawing animation.
   // It runs only once after the component mounts.
   useLayoutEffect(() => {
+    // If the loader is not going to be shown, don't prepare the SVG
+    if (isSessionVisited) return;
+
     const svg = svgContainerRef.current;
     if (!svg) return;
 
-    // Get all the paths that need to be animated
     const paths = svg.querySelectorAll('.loader-path');
-
     paths.forEach(path => {
-      // 1. Get the exact, measured length of this specific path
       const length = path.getTotalLength();
-
-      // 2. Set the CSS properties on the element itself. This guarantees the dash
-      // pattern is the exact length of the path, ensuring a complete draw.
       path.style.strokeDasharray = length;
       path.style.strokeDashoffset = length;
     });
-  }, []); // The empty dependency array ensures this runs only once.
+  }, [isSessionVisited]);
 
 
   // This effect controls the lifecycle of the splash screen
   useEffect(() => {
+    // If the session is already visited, do nothing.
+    if (isSessionVisited) return;
+
+    // --- FIX ---
+    // Set the session flag immediately when the loader starts.
+    // This prevents it from re-appearing on quick navigations or refreshes
+    // before the animation has a chance to finish.
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('hasLoaderShown', 'true');
+    }
+
     // Timer to start fading out after the main animation completes
     const fadeOutTimer = setTimeout(() => {
       setIsFadingOut(true);
-    }, 3200); // Animation is ~3.2s, so we start fade-out here
+    }, 3200);
 
-    // Timer to completely remove the component from the DOM after the fade-out is done
+    // Timer to completely remove the component from the DOM
     const unmountTimer = setTimeout(() => {
       setIsUnmounted(true);
-    }, 3700); // 3200ms + 500ms fade-out duration
+    }, 3700);
 
     return () => {
       clearTimeout(fadeOutTimer);
       clearTimeout(unmountTimer);
     };
-  }, []);
+  }, [isSessionVisited]); // This effect depends on whether the session was visited
 
-  // When the component is unmounted, it renders nothing
+  // If the component is unmounted (either from the start or after animation), render nothing.
   if (isUnmounted) {
     return null;
   }
@@ -58,60 +75,33 @@ export default function InitialLoader() {
         /* --- Animation Keyframes --- */
         @keyframes loader-fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes loader-fade-out { from { opacity: 1; } to { opacity: 0; } }
-        
-        /* Stage 1: The Draw Animation */
-        @keyframes draw {
-          to { stroke-dashoffset: 0; }
-        }
-
-        /* Stage 2: The Fill Animation */
-        @keyframes fill-in {
-          from { fill: transparent; }
-          to { fill: url(#loader-gradient); }
-        }
-
-        /* Stage 3: The Final Pop Animation */
-        @keyframes pop {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.03); }
-        }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+        @keyframes fill-in { from { fill: transparent; } to { fill: url(#loader-gradient); } }
+        @keyframes pop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 
         /* --- Element Styling & Animation Application --- */
-        #LOADER_CONTAINER {
-          animation: loader-fade-in 0.5s ease-out forwards;
-        }
-        #LOADER_CONTAINER.fade-out {
-          animation: loader-fade-out 0.5s ease-out forwards;
-        }
-
+        #LOADER_CONTAINER { animation: loader-fade-in 0.5s ease-out forwards; }
+        #LOADER_CONTAINER.fade-out { animation: loader-fade-out 0.5s ease-out forwards; }
         .loader-path {
-          /* The stroke-dasharray/offset are now set dynamically by JavaScript. */
-          /* We apply the multi-stage animation here. */
           animation: 
             draw 1.5s ease-in-out forwards,
-            fill-in 0.5s ease-out forwards 2s; /* Fill starts after 2s */
-          
-          /* Paths must start transparent to allow the fill animation */
+            fill-in 0.5s ease-out forwards 2s;
           fill: transparent;
         }
-
         #LOADER_SVG {
           transform-origin: center center;
-          /* The final pop animation, timed to run after the others */
           animation: pop 0.5s ease-in-out forwards 2.6s;
         }
 
-        /* Staggering gives the animation a more dynamic, flowing feel */
+        /* Staggering delays */
         .loader-path:nth-child(2) { animation-delay: 0.05s, 2.05s; }
         .loader-path:nth-child(3) { animation-delay: 0.1s, 2.1s; }
         .loader-path:nth-child(4) { animation-delay: 0.15s, 2.15s; }
         .loader-path:nth-child(5) { animation-delay: 0.2s, 2.2s; }
         .loader-path:nth-child(6) { animation-delay: 0.25s, 2.25s; }
         .loader-path:nth-child(7) { animation-delay: 0.3s, 2.3s; }
-        /* ...and so on for all paths */
       `}</style>
       
-      {/* Main container with a premium, cozy background */}
       <div
         id="LOADER_CONTAINER"
         className={`pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-50 to-gray-100 ${isFadingOut ? 'fade-out' : ''}`}
@@ -138,8 +128,7 @@ export default function InitialLoader() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            {/* Using your exact SVG paths, converted for animation */}
-            {/* The invalid duplicate 'id' is replaced with a valid 'className' */}
+            {/* SVG paths remain unchanged */}
             <path className="loader-path" d="M1350 2177 c-69 -45 -184 -120 -255 -167 -72 -47 -134 -87 -138 -89 -5 -2 -6 22 -2 53 10 77 1 86 -89 86 -123 0 -116 9 -116 -144 l0 -131 -48 -30 c-26 -16 -87 -55 -135 -87 l-88 -58 -47 75 c-26 41 -49 74 -52 74 -3 0 -13 -6 -23 -13 -16 -13 -14 -19 39 -97 32 -46 61 -88 65 -93 4 -5 38 11 76 36 367 241 791 512 803 512 15 0 67 -33 575 -366 224 -147 303 -194 312 -186 22 18 15 32 -29 59 -120 74 -613 400 -615 407 -3 12 116 85 129 78 7 -3 193 -125 413 -270 220 -146 403 -266 407 -266 11 0 22 44 12 47 -5 2 -193 125 -419 274 -225 149 -414 273 -420 275 -5 2 -45 -21 -88 -51 -42 -30 -80 -55 -83 -55 -10 0 -143 84 -144 91 0 3 27 23 60 43 53 33 59 40 50 57 -6 10 -14 19 -18 18 -4 0 -63 -37 -132 -82z m-440 -226 l0 -60 -54 -35 c-29 -20 -56 -36 -60 -36 -3 0 -6 43 -6 95 l0 95 60 0 60 0 0 -59z" />
             <path className="loader-path" d="M60 1250 l0 -130 25 0 c23 0 25 3 25 50 0 43 3 50 20 50 14 0 27 -15 45 -50 22 -44 29 -50 56 -50 l31 0 -31 55 c-25 44 -29 57 -17 61 21 8 39 60 32 89 -9 35 -54 55 -126 55 l-60 0 0 -130z m124 74 c19 -18 19 -20 6 -45 -8 -13 -21 -19 -45 -19 -34 0 -35 1 -35 40 0 38 2 40 29 40 16 0 37 -7 45 -16z" />
             <path className="loader-path" d="M370 1250 l0 -130 30 0 30 0 0 130 0 130 -30 0 -30 0 0 -130z" />

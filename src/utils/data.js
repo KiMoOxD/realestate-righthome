@@ -85,6 +85,8 @@ export function filterProperties(properties, filters) {
   if (!filters || Object.keys(filters).length === 0) {
     return properties;
   }
+  console.log("properties", properties)
+  console.log("filters", filters)
   return properties.filter(property => {
     return Object.keys(filters).every(key => {
       const filterValue = filters[key];

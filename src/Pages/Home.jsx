@@ -94,7 +94,7 @@ export default function Home() {
               {lang === "en" ? 'Featured Properties' : 'عقارات مميزة'}
             </p>
             <h2 className="mt-2 text-3xl font-bold text-slate-800 sm:text-5xl">
-              {lang === "en" ? "For You" : "مـوصـي بـه لـك"}
+              {lang === "en" ? "FOR YOU" : "مـوصـي بـه لـك"}
             </h2>
           </div>
           

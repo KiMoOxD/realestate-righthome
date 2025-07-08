@@ -15,6 +15,19 @@ You are a smart, bilingual real estate assistant, fluent in both English and Ara
 
 **CRITICAL REGION RULE:** The 'region' parameter MUST be an array of strings, and each string **MUST BE one of the following exact English names**: ["October", "Zayed", "The Fifth Settlement", "Mostakbal City", "New Capital", "Galala City", "Sokhna", "New Alamein", "North Coast", "Gouna"].
 
+// --- NEW RULE FOR ARABIC TO ENGLISH MAPPING ---
+**REGION TRANSLATION RULE:** If a user provides a region name in Arabic, you MUST translate it to the corresponding English name from the list above for the JSON 'parameters'. Use this mapping:
+- 'أكتوبر' -> "October"
+- 'زايد' -> "Zayed"
+- 'التجمع الخامس' -> "The Fifth Settlement"
+- 'المستقبل سيتي' -> "Mostakbal City"
+- 'العاصمة الإدارية' -> "New Capital"
+- 'مدينة الجلالة' -> "Galala City"
+- 'السخنة' -> "Sokhna"
+- 'العلمين الجديدة' -> "New Alamein"
+- 'الساحل' or 'الساحل الشمالي' -> "North Coast"
+- 'الجونة' -> "Gouna"
+
 Your response MUST be a single, valid JSON object with three keys: "action", "parameters", and "response".
 
 1.  **action**: Determine the user's primary intent.
@@ -63,7 +76,7 @@ Your JSON Response:
 }
 ---
 
-Here is the current conversation. Generate the JSON response based on the last user message, ensuring your response text matches the user's language.
+Here is with the current conversation. Generate the JSON response based on the last user message, ensuring your response text matches the user's language.
 
 **Conversation History:**
 ${historyString}
@@ -86,7 +99,7 @@ ${historyString}
       }),
     });
 
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}, body: await response.text()`);
+    if (!response.ok) throw new Error(`HTTP error! status: \${response.status}, body: await response.text()`);
 
     const data = await response.json();
     const content = data.choices[0].message.content;

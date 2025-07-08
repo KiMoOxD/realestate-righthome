@@ -99,7 +99,8 @@ export default function Hero() {
     if (status) {
       params.set('status', status.value);
     } else {
-      params.set('status', 'sale');
+      params.append('status', 'sale');
+      params.append('status', 'rent');
     }
     if (type.length > 0) {
       type.forEach(t => params.append('type', t.value));
